@@ -4,7 +4,7 @@ import { siteConfig } from "./site-config";
 
 const priceNumber = (p: string) => Number(p.replace(/[^\d.]/g, ""));
 
-/** JSON-LD for the homepage. Contains only visible, factual content. No ratings or reviews. */
+/** JSON-LD for the homepage. Visible, factual content only. No ratings, reviews or counts. */
 export function homepageJsonLd() {
   const { url, company, contact } = siteConfig;
   const orgId = `${url}/#organization`;
@@ -17,19 +17,16 @@ export function homepageJsonLd() {
         "@type": "Organization",
         "@id": orgId,
         name: company.name,
-        legalName: company.name,
         url,
         logo: `${url}/icon.svg`,
         email: contact.email,
-        telephone: contact.phoneE164,
         address: { "@type": "PostalAddress", addressCountry: company.countryCode },
-        identifier: { "@type": "PropertyValue", propertyID: "SSM Registration Number", value: company.registration },
         brand: { "@type": "Brand", name: "10X" },
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "sales",
+          name: contact.label,
           email: contact.email,
-          telephone: contact.phoneE164,
           areaServed: "MY",
           availableLanguage: ["en", "ms"],
         },

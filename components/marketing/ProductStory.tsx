@@ -3,48 +3,42 @@
 /**
  * The page's single scroll-linked experience.
  * Desktop with motion allowed: the product panel stays pinned while scroll moves through six stages.
- * Mobile and reduced motion: the same content, driven by taps instead of scroll.
- * PRODUCT CONCEPT / DEMO STATES: all data is fictional.
+ * Mobile and reduced motion: a vertical list driven by taps; the active stage opens its panel inline.
+ * Guided focus: active stage = full opacity + blue halo, previous = 75%, future = 65%.
+ * PRODUCT DEMO STATES: all data is fictional.
  */
 
 import { useRef, useState } from "react";
 import { AnimatePresence, m, useMotionValueEvent, useScroll } from "framer-motion";
 import { CalendarDays, Check, Clock, RotateCcw } from "lucide-react";
+import { trackOnce } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { prefersReducedMotion } from "@/lib/scroll";
 
 const stages = [
-  { num: "01", title: "Capture", text: "Every enquiry enters the workflow.", state: "Incoming leads" },
-  {
-    num: "02",
-    title: "Respond",
-    text: "The next response happens quickly.",
-    state: "Lead conversation",
-    note: "Sending replies through WhatsApp is integration-dependent.",
-  },
-  { num: "03", title: "Qualify", text: "Ask the right questions.", state: "Qualification" },
-  { num: "04", title: "Book", text: "Turn interest into an appointment.", state: "Booking" },
-  {
-    num: "05",
-    title: "Follow up",
-    text: "Don't rely on memory.",
-    state: "Follow-up",
-    note: "Automated follow-up messages depend on messaging integrations.",
-  },
-  { num: "06", title: "Reactivate", text: "Bring old opportunities back.", state: "Pipeline" },
+  { num: "01", title: "Capture", text: "Every enquiry enters the workflow, with an owner.", state: "Lead arrives" },
+  { num: "02", title: "Respond", text: "The first reply happens while the lead is still interested.", state: "Response" },
+  { num: "03", title: "Qualify", text: "Budget, needs and timing, captured before the call.", state: "Qualification" },
+  { num: "04", title: "Book", text: "Interest becomes an appointment on the calendar.", state: "Booking" },
+  { num: "05", title: "Follow up", text: "Day 1, 3, 7 and 30. Scheduled, not remembered.", state: "Follow-up" },
+  { num: "06", title: "Reactivate", text: "Old opportunities come back into the pipeline.", state: "Reactivation" },
 ] as const;
 
 const DESKTOP_QUERY = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
 
-export function StickyProductStory() {
+export function ProductStory() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
 
+  const activate = (i: number) => {
+    setActive((cur) => (cur === i ? cur : i));
+    trackOnce("workflow_stage_changed", { stage: stages[i]!.title }, `stage_${i}`);
+  };
+
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     if (!window.matchMedia(DESKTOP_QUERY).matches) return;
-    const i = Math.min(stages.length - 1, Math.max(0, Math.floor(p * stages.length)));
-    setActive((cur) => (cur === i ? cur : i));
+    activate(Math.min(stages.length - 1, Math.max(0, Math.floor(p * stages.length))));
   });
 
   const go = (i: number) => {
@@ -52,115 +46,121 @@ export function StickyProductStory() {
     if (el && window.matchMedia(DESKTOP_QUERY).matches) {
       const top = el.getBoundingClientRect().top + window.scrollY;
       const scrollable = el.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: top + ((i + 0.5) / stages.length) * scrollable, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+      window.scrollTo({
+        top: top + ((i + 0.5) / stages.length) * scrollable,
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
     }
-    setActive(i);
+    activate(i);
   };
 
-  const stage = stages[active]!;
-
   return (
-    <div ref={trackRef} className="relative lg:motion-safe:h-[460vh]">
-      <div className="lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-dvh lg:motion-safe:items-start lg:motion-safe:pt-[calc(var(--nav-h)+40px)]">
-        <div className="container-x grid w-full gap-8 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-14">
-          {/* Stage list */}
-          <div className="min-w-0">
-            <div className="relative">
-              <span aria-hidden className="absolute bottom-3 left-[15px] top-3 hidden w-px bg-border lg:block" />
-              <m.span
-                aria-hidden
-                style={{ scaleY: scrollYProgress }}
-                className="absolute bottom-3 left-[15px] top-3 hidden w-px origin-top bg-accent lg:motion-safe:block"
-              />
-            <ol aria-label="Workflow stages" className="flex gap-2 overflow-x-auto scrollbar-none pb-1 lg:flex-col lg:gap-0 lg:overflow-visible lg:pb-0">
+    <div ref={trackRef} className="relative lg:motion-safe:h-[330vh]">
+      <div className="lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-dvh lg:motion-safe:items-start lg:motion-safe:pt-[calc(var(--nav-h)+48px)]">
+        <div className="container-x grid w-full grid-cols-1 gap-10 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-14">
+          {/* Stage list: vertical on every size */}
+          <div className="relative min-w-0">
+            <span aria-hidden className="absolute bottom-4 left-[15px] top-4 w-px bg-border" />
+            <m.span
+              aria-hidden
+              style={{ scaleY: scrollYProgress }}
+              className="absolute bottom-4 left-[15px] top-4 hidden w-px origin-top bg-accent shadow-[0_0_8px_rgb(37_99_235/0.7)] lg:motion-safe:block"
+            />
+            <ol aria-label="Workflow stages" className="relative flex flex-col">
               {stages.map((s, i) => {
                 const isActive = i === active;
+                const isPast = i < active;
                 return (
-                  <li key={s.num} className="shrink-0 lg:shrink">
+                  <li
+                    key={s.num}
+                    className={cn(
+                      "transition-opacity duration-500",
+                      isActive ? "opacity-100" : isPast ? "opacity-75" : "opacity-65",
+                    )}
+                  >
                     <button
                       type="button"
                       onClick={() => go(i)}
                       aria-current={isActive ? "step" : undefined}
-                      className={cn(
-                        "flex items-center gap-2 rounded-full px-3.5 py-2 text-left text-[14px] ring-1 ring-inset transition-colors lg:w-full lg:items-start lg:gap-4 lg:rounded-xl lg:px-0 lg:py-3 lg:ring-0",
-                        isActive ? "bg-white/[0.06] text-fg ring-white/15 lg:bg-transparent" : "text-secondary ring-white/[0.08] hover:text-fg",
-                      )}
+                      aria-expanded={isActive}
+                      className="flex w-full items-start gap-4 rounded-xl py-3 text-left"
                     >
                       <span
                         className={cn(
-                          "font-mono text-[11px] lg:relative lg:z-10 lg:flex lg:size-[31px] lg:shrink-0 lg:items-center lg:justify-center lg:rounded-full lg:border lg:bg-bg",
-                          isActive ? "text-accent-text lg:border-accent" : "lg:border-border",
+                          "relative z-10 flex size-[31px] shrink-0 items-center justify-center rounded-full border bg-bg font-mono text-[11px] transition-all duration-500",
+                          isActive
+                            ? "halo border-accent text-accent-text"
+                            : isPast
+                              ? "border-accent/40 text-fg"
+                              : "border-border text-fg",
                         )}
                       >
                         {s.num}
                       </span>
-                      <span className="lg:pt-1">
-                        <span className="block font-medium uppercase tracking-[0.06em] lg:text-[15px]">{s.title}</span>
+                      <span className="pt-1">
+                        <span className="block text-[15px] font-medium uppercase tracking-[0.06em] text-fg">{s.title}</span>
                         <span
                           className={cn(
-                            "hidden text-[16px] normal-case tracking-normal text-secondary transition-opacity lg:block",
-                            isActive ? "lg:mt-1.5 lg:opacity-100" : "lg:h-0 lg:overflow-hidden lg:opacity-0",
+                            "block text-[16px] text-secondary transition-all duration-500",
+                            isActive ? "mt-1.5 opacity-100" : "h-0 overflow-hidden opacity-0",
                           )}
                         >
                           {s.text}
                         </span>
                       </span>
                     </button>
+                    {/* Mobile / reduced motion: the active stage opens its panel inline. */}
+                    {isActive ? (
+                      <div className="mb-4 mt-1 sm:pl-12 lg:motion-safe:hidden">
+                        <PanelFrame active={active} compact />
+                      </div>
+                    ) : null}
                   </li>
                 );
               })}
             </ol>
-            </div>
-            {/* Mobile description */}
-            <div className="mt-5 lg:hidden" aria-live="polite">
-              <p className="text-title">{stage.title}</p>
-              <p className="mt-1 text-[16px] text-secondary">{stage.text}</p>
-            </div>
           </div>
 
-          {/* Product panel */}
-          <div className="min-w-0">
-            <div className="overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0d0d0e] shadow-window">
-              <div className="flex items-center justify-between border-b border-white/[0.06] bg-[#111112] px-4 py-2.5 sm:px-5">
-                <div className="flex gap-1.5" aria-hidden>
-                  <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
-                  <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
-                  <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
-                </div>
-                <AnimatePresence mode="wait" initial={false}>
-                  <m.span
-                    key={stage.state}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="font-mono text-[11px] uppercase tracking-[0.12em] text-secondary"
-                  >
-                    {stage.state}
-                  </m.span>
-                </AnimatePresence>
-                <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-subtle">Illustrative</span>
-              </div>
-              <div className="relative h-[380px] p-4 sm:h-[420px] sm:p-6">
-                <AnimatePresence mode="wait" initial={false}>
-                  <m.div
-                    key={active}
-                    initial={{ opacity: 0, y: 16, scale: 0.99 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.99, transition: { duration: 0.18 } }}
-                    transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full"
-                  >
-                    <Panel index={active} />
-                  </m.div>
-                </AnimatePresence>
-              </div>
-            </div>
-            <p className="mt-3 min-h-[20px] text-[13px] text-secondary">
-              {"note" in stage ? stage.note : "Illustrative product demo with fictional data."}
-            </p>
+          {/* Desktop product panel */}
+          <div className="hidden min-w-0 lg:motion-safe:block">
+            <PanelFrame active={active} />
+            <p className="mt-3 text-[13px] text-secondary">Illustrative product demo with fictional data.</p>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function PanelFrame({ active, compact }: { active: number; compact?: boolean }) {
+  const stage = stages[active]!;
+  return (
+    <div className="halo-soft overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0d0d0e] shadow-window">
+      <div className="flex items-center justify-between gap-3 border-b border-white/[0.06] bg-[#111112] px-4 py-2.5 sm:px-5">
+        <div className="flex gap-1.5" aria-hidden>
+          <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
+          <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
+          <span className="size-2.5 rounded-full bg-[#2a2a2d]" />
+        </div>
+        <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-fg">
+          <span aria-hidden className="size-1.5 rounded-full bg-accent shadow-[0_0_8px_rgb(37_99_235/0.9)]" />
+          {stage.state}
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-subtle">Illustrative</span>
+      </div>
+      <div className={cn("relative p-4 sm:p-6", compact ? "h-[340px]" : "h-[420px]")}>
+        <AnimatePresence mode="wait" initial={false}>
+          <m.div
+            key={active}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full"
+          >
+            <Panel index={active} />
+          </m.div>
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -255,9 +255,9 @@ function Conversation() {
 
 function Qualification() {
   const fields = [
-    { k: "Budget", v: "RM600k–RM700k" },
+    { k: "Budget", v: "RM700k" },
     { k: "Area", v: "Mont Kiara, KL" },
-    { k: "Timeline", v: "Within 3 months" },
+    { k: "Timeline", v: "This month" },
     { k: "Purpose", v: "Own stay" },
   ];
   return (
@@ -306,7 +306,7 @@ function Booking() {
                   {...rise(di * 0.5 + si * 0.3)}
                   className={cn(
                     "flex flex-1 items-center justify-center rounded-md text-[11px]",
-                    booked ? "bg-success text-accent-fg" : busy ? "bg-white/[0.06] text-subtle" : "border border-dashed border-white/[0.08] text-subtle",
+                    booked ? "bg-success text-success-fg" : busy ? "bg-white/[0.06] text-subtle" : "border border-dashed border-white/[0.08] text-subtle",
                   )}
                 >
                   {booked ? "2:00 PM" : busy ? "Busy" : s}

@@ -77,7 +77,7 @@ const toneDot = {
   success: "bg-success",
 } as const;
 
-export function HeroProductDemo() {
+export function HeroProduct() {
   const reduced = useReducedMotionPref();
   const rich = useRichPointer();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -148,7 +148,7 @@ export function HeroProductDemo() {
     >
       <p className="sr-only">
         Product demo with illustrative data. A new enquiry from Sarah Tan arrives at 11:42 PM, is assigned to Jason,
-        gets a reply, is qualified on budget, area and timeline, a viewing is booked for Saturday at 2:00 PM, and
+        gets a reply, is qualified (budget RM700k, Mont Kiara, this month), a viewing is booked for Saturday at 2:00 PM, and
         follow-ups are scheduled for Day 1, 3, 7 and 30.
       </p>
 
@@ -418,9 +418,9 @@ function Thread({ step }: { step: number }) {
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.12em] text-subtle">Qualification</p>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  ["Budget", "RM650k"],
+                  ["Budget", "RM700k"],
                   ["Area", "Mont Kiara"],
-                  ["Timeline", "3 months"],
+                  ["Timeline", "This month"],
                 ].map(([k, v], i) => (
                   <m.div
                     key={k}
@@ -451,7 +451,7 @@ function Thread({ step }: { step: number }) {
                     key={d}
                     className={cn(
                       "rounded-md py-1.5 text-center text-[11px]",
-                      d === "Sat" ? "bg-success text-accent-fg" : "bg-white/[0.04] text-subtle",
+                      d === "Sat" ? "bg-success text-success-fg" : "bg-white/[0.04] text-subtle",
                     )}
                   >
                     {d}

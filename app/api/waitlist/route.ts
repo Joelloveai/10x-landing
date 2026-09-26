@@ -14,9 +14,9 @@ import { maskPhone, normalizeMalaysianMobile } from "@/lib/phone";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const VERTICALS = new Set(["property", "aesthetic", "dental", "home-services", "other"]);
+const BUSINESS_TYPES = new Set(["property", "clinics", "education", "home-services", "appointments", "other"]);
 const MONTHLY_LEADS = new Set(["under-50", "50-200", "200-500", "500-plus", "not-sure"]);
-const SOURCES = new Set(["audit_form", "audit_form_qualification"]);
+const SOURCES = new Set(["audit_form", "talk_to_sales", "audit_form_qualification"]);
 const MIN_FILL_MS = 1200;
 
 type ErrorCode =
@@ -32,8 +32,8 @@ const MESSAGES: Record<ErrorCode, string> = {
   invalid_phone: "Please enter a valid Malaysian mobile number, for example 012-XXX XXXX.",
   invalid_request: "Something went wrong. Please try again.",
   rate_limited: "Too many attempts. Please wait a few minutes and try again.",
-  not_configured: "We couldn't save your request right now. Please WhatsApp or call us instead.",
-  upstream_failed: "We couldn't save your request right now. Please try again, or WhatsApp us.",
+  not_configured: "We couldn't save your request right now. Please email our sales team at admin@tenx.my.",
+  upstream_failed: "We couldn't save your request right now. Please try again, or email admin@tenx.my.",
 };
 
 function fail(code: ErrorCode, status: number) {
@@ -108,14 +108,14 @@ export async function POST(req: NextRequest) {
   const source = str(body.source, 40) ?? "audit_form";
   if (!SOURCES.has(source)) return fail("invalid_request", 400);
 
-  const vertical = str(body.vertical, 30);
-  if (vertical && !VERTICALS.has(vertical)) return fail("invalid_request", 400);
+  const businessType = str(body.businessType, 30);
+  if (businessType && !BUSINESS_TYPES.has(businessType)) return fail("invalid_request", 400);
   const monthlyLeads = str(body.monthlyLeads, 20);
   if (monthlyLeads && !MONTHLY_LEADS.has(monthlyLeads)) return fail("invalid_request", 400);
 
   const lead = {
     whatsapp: phone.e164,
-    vertical,
+    businessType,
     monthlyLeads,
     source,
     page: str(body.page, 200),
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
   };
 
   // Duplicate protection: an identical request that was already stored in the last 10 minutes.
-  const dedupeKey = `${lead.whatsapp}|${source}|${vertical ?? ""}|${monthlyLeads ?? ""}`;
+  const dedupeKey = `${lead.whatsapp}|${source}|${businessType ?? ""}|${monthlyLeads ?? ""}`;
   const seenAt = recent.get(dedupeKey);
   if (seenAt && Date.now() - seenAt < WINDOW_MS) {
     return NextResponse.json({ ok: true, duplicate: true });
@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, stored: "memory" });
   }
 
-  const payload = { type: "lead_leakage_audit", lead };
+  const payload = { type: source === "talk_to_sales" ? "sales_request" : "lead_leakage_audit", lead };
   const deliveries: Promise<void>[] = [];
   if (webhookUrl) {
     const secret = process.env.WAITLIST_WEBHOOK_SECRET;

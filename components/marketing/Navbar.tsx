@@ -2,20 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { navLinks, sectionIds, siteConfig } from "@/lib/site-config";
+import { navLinks, salesMailto, sectionIds, siteConfig } from "@/lib/site-config";
+import { useActiveChapter } from "@/lib/hooks/useActiveChapter";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Logo } from "@/components/ui/Logo";
-import { OPEN_PALETTE_EVENT } from "./CommandPalette";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
   const close = useCallback(() => setOpen(false), []);
+  const activeChapter = useActiveChapter();
   useFocusTrap(panelRef, open, close);
 
   useEffect(() => {
@@ -41,12 +41,17 @@ export function Navbar() {
   const onNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setOpen(false);
     if (e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
     // Let the menu close before scrolling so focus lands on the section.
     requestAnimationFrame(() => {
-      if (scrollToId(href.slice(1))) return;
-      window.location.hash = href;
+      if (!scrollToId(href.slice(1))) window.location.hash = href;
     });
-    e.preventDefault();
+  };
+
+  // Security lives inside the pricing chapter, so it shares that chapter's highlight.
+  const isActive = (href: string) => {
+    const id = href.slice(1);
+    return id === activeChapter && id !== sectionIds.security;
   };
 
   const solid = scrolled || open;
@@ -54,7 +59,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
+        "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-300",
         solid ? "border-border bg-bg/85 backdrop-blur-md" : "border-transparent bg-transparent",
       )}
     >
@@ -64,43 +69,56 @@ export function Navbar() {
       >
         Skip to content
       </a>
-      <nav aria-label="Primary" className="container-x flex h-16 items-center gap-6">
-        <a href="#top" aria-label="10X home" className="-ml-1 rounded-md px-1 text-[22px]">
+      <nav aria-label="Primary" className="container-x flex h-16 items-center gap-8">
+        <a href="#top" aria-label="10X home" className="-ml-1 rounded-md px-1 text-[20px]">
           <Logo />
         </a>
 
         <ul className="hidden items-center gap-1 lg:flex">
-          {navLinks.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                onClick={(e) => onNavClick(e, l.href)}
-                className="rounded-full px-3 py-2 text-[14px] text-secondary transition-colors hover:text-fg"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
+          {navLinks.map((l) => {
+            const active = isActive(l.href);
+            return (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  onClick={(e) => onNavClick(e, l.href)}
+                  aria-current={active ? "location" : undefined}
+                  className={cn(
+                    "relative rounded-full px-3 py-2 text-[14px] transition-colors duration-300",
+                    active ? "text-fg" : "text-secondary hover:text-fg",
+                  )}
+                >
+                  {l.label}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute inset-x-3 -bottom-px h-px rounded-full bg-accent transition-opacity duration-300",
+                      active ? "opacity-100 shadow-[0_0_10px_rgb(37_99_235/0.9)]" : "opacity-0",
+                    )}
+                  />
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="ml-auto flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            className="hidden h-8 items-center gap-1 rounded-md px-2 font-mono text-[12px] text-subtle ring-1 ring-inset ring-white/10 transition-colors hover:text-secondary xl:inline-flex"
-            aria-label="Open quick navigation (Control or Command K)"
-          >
-            <kbd className="font-mono">⌘K</kbd>
-          </button>
-          <CtaLink
-            href={`#${sectionIds.audit}`}
-            event="nav_cta_click"
-            size="sm"
-          >
+          <span className="hidden sm:contents">
+            <CtaLink
+              href={`#${sectionIds.audit}`}
+              intent="sales"
+              event="talk_to_sales_clicked"
+              eventProps={{ location: "nav" }}
+              variant="secondary"
+              size="sm"
+            >
+              {siteConfig.cta.sales}
+            </CtaLink>
+          </span>
+          <CtaLink href={`#${sectionIds.audit}`} intent="audit" event="nav_cta_clicked" size="sm">
             {siteConfig.cta.primaryShort}
           </CtaLink>
           <button
-            ref={toggleRef}
             type="button"
             className="-mr-2 inline-flex size-10 items-center justify-center rounded-full text-fg lg:hidden"
             aria-expanded={open}
@@ -131,15 +149,18 @@ export function Navbar() {
                   className="flex items-center justify-between border-b border-border py-4 text-[20px] font-medium tracking-[-0.02em]"
                 >
                   {l.label}
-                  <span aria-hidden className="text-subtle">→</span>
+                  <span aria-hidden className="text-subtle">
+                    →
+                  </span>
                 </a>
               </li>
             ))}
           </ul>
-          <div className="container-x pb-10 pt-2">
+          <div className="container-x space-y-3 pb-10 pt-2">
             <CtaLink
               href={`#${sectionIds.audit}`}
-              event="nav_cta_click"
+              intent="audit"
+              event="nav_cta_clicked"
               eventProps={{ location: "mobile_menu" }}
               size="lg"
               className="w-full"
@@ -147,10 +168,24 @@ export function Navbar() {
             >
               {siteConfig.cta.primary}
             </CtaLink>
-            <p className="mt-3 text-center text-[14px] text-secondary">{siteConfig.cta.microcopy}</p>
-            <button type="button" onClick={close} className="sr-only focus:not-sr-only">
-              Close menu
-            </button>
+            <CtaLink
+              href={`#${sectionIds.audit}`}
+              intent="sales"
+              event="talk_to_sales_clicked"
+              eventProps={{ location: "mobile_menu" }}
+              variant="secondary"
+              size="lg"
+              className="w-full"
+              onNavigate={close}
+            >
+              {siteConfig.cta.sales}
+            </CtaLink>
+            <p className="pt-2 text-center text-[14px] text-secondary">
+              {siteConfig.contact.label} ·{" "}
+              <a href={salesMailto} className="text-fg underline decoration-white/30 underline-offset-4">
+                {siteConfig.contact.email}
+              </a>
+            </p>
           </div>
         </div>
       ) : null}

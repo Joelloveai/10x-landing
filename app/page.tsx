@@ -1,86 +1,70 @@
 import { Suspense } from "react";
 import { MotionProvider } from "@/components/providers/MotionProvider";
-import { VerticalProvider } from "@/components/providers/VerticalProvider";
+import { BusinessProvider } from "@/components/providers/BusinessProvider";
 import { AIEmployee } from "@/components/marketing/AIEmployee";
-import { AuditForm } from "@/components/marketing/AuditForm";
-import { BeforeAfter } from "@/components/marketing/BeforeAfter";
-import { CaseStudy } from "@/components/marketing/CaseStudy";
+import { AuditCTA } from "@/components/marketing/AuditCTA";
 import { CommandPalette } from "@/components/marketing/CommandPalette";
-import { CompanyTrust } from "@/components/marketing/CompanyTrust";
-import { FeatureShowcase } from "@/components/marketing/FeatureShowcase";
-import { FinalCTA } from "@/components/marketing/FinalCTA";
+import { FocusSystem } from "@/components/marketing/FocusSystem";
 import { Footer } from "@/components/marketing/Footer";
 import { Hero } from "@/components/marketing/Hero";
-import { InitialTestimonials } from "@/components/marketing/InitialTestimonials";
-import { LeadTimeline } from "@/components/marketing/LeadTimeline";
-import { LossCalculator } from "@/components/marketing/LossCalculator";
+import { LeakSection } from "@/components/marketing/LeakSection";
 import { MobileStickyCTA } from "@/components/marketing/MobileStickyCTA";
 import { Navbar } from "@/components/marketing/Navbar";
-import { ObjectionFAQ } from "@/components/marketing/ObjectionFAQ";
-import { Pricing } from "@/components/marketing/Pricing";
-import { ProblemSection } from "@/components/marketing/ProblemSection";
+import { PricingFAQ } from "@/components/marketing/PricingFAQ";
+import { ProductFeatures } from "@/components/marketing/ProductFeatures";
 import { ScrollDepthTracker } from "@/components/marketing/ScrollDepthTracker";
 import { ScrollProgress } from "@/components/marketing/ScrollProgress";
-import { Security } from "@/components/marketing/Security";
 import { Testimonials } from "@/components/marketing/Testimonials";
-import { VerticalSelector } from "@/components/marketing/VerticalSelector";
-import { WorkflowSection } from "@/components/marketing/WorkflowSection";
+import { Workflow } from "@/components/marketing/Workflow";
 import { homepageJsonLd, jsonLdScript } from "@/lib/structured-data";
 
+/**
+ * Seven chapters: problem → product → workflow → proof → price → trust → sales conversation.
+ * Suspense boundaries let React hydrate chapters in separate, interruptible chunks.
+ */
 export default function HomePage() {
   return (
     <MotionProvider>
-      <VerticalProvider>
+      <BusinessProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(homepageJsonLd()) }} />
         <ScrollProgress />
         <Navbar />
+        <FocusSystem />
         <main id="main" tabIndex={-1} className="focus:outline-none">
-          {/* 1. Understand the problem */}
+          {/* 01 Hero */}
           <Hero />
-          {/* Suspense boundaries let React hydrate below-the-fold sections in separate, interruptible chunks. */}
+          {/* 02 The leak */}
           <Suspense fallback={null}>
-            <InitialTestimonials />
-            <ProblemSection />
-            <LossCalculator />
+            <LeakSection />
           </Suspense>
-          {/* 2. See it fits my business */}
+          {/* 03 How 10X works */}
           <Suspense fallback={null}>
-            <VerticalSelector />
+            <Workflow />
           </Suspense>
-          {/* 3. Understand the workflow */}
-          <Suspense fallback={null}>
-            <WorkflowSection />
-          </Suspense>
+          {/* 04 Your AI employee */}
           <Suspense fallback={null}>
             <AIEmployee />
           </Suspense>
+          {/* 05 Product + proof */}
           <Suspense fallback={null}>
-            <FeatureShowcase />
-            <BeforeAfter />
-            <LeadTimeline />
+            <ProductFeatures>
+              <Testimonials />
+            </ProductFeatures>
           </Suspense>
-          {/* 4. Trust */}
+          {/* 06 Pricing + trust + FAQ */}
           <Suspense fallback={null}>
-            <Testimonials />
-            <CaseStudy />
+            <PricingFAQ />
           </Suspense>
-          {/* 5. Convert */}
+          {/* 07 Book a conversation */}
           <Suspense fallback={null}>
-            <AuditForm />
-            <Pricing />
-            <ObjectionFAQ />
-          </Suspense>
-          <Suspense fallback={null}>
-            <Security />
-            <CompanyTrust />
-            <FinalCTA />
+            <AuditCTA />
           </Suspense>
         </main>
         <Footer />
         <MobileStickyCTA />
         <CommandPalette />
         <ScrollDepthTracker />
-      </VerticalProvider>
+      </BusinessProvider>
     </MotionProvider>
   );
 }

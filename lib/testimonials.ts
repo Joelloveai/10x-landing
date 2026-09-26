@@ -61,8 +61,10 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
-/** The three shown directly under the hero: one per vertical represented. */
-export const heroTestimonials = [testimonials[0], testimonials[5], testimonials[6]];
+/** The three shown under the hero product: Marcus, Audrey, Elaine. */
+export const heroTestimonials = ["Marcus T. K. Loke", "Audrey Wong", "Elaine Choo"].map(
+  (name) => testimonials.find((t) => t.name === name)!,
+);
 
 export function initials(name: string) {
   return name

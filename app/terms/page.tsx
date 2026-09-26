@@ -13,16 +13,15 @@ export default function TermsPage() {
   return (
     <LegalPage title="Terms of Use" updated="26 September 2026">
       <p>
-        These draft terms cover use of the 10X marketing website operated by {company.name} (Registration{" "}
-        {company.registration}), Malaysia. Terms for the 10X software subscription are provided separately when you sign
+        These draft terms cover use of the 10X marketing website operated by {company.name}, Malaysia. Terms for the 10X software subscription are provided separately when you sign
         up.
       </p>
 
       <h2>Information on this website</h2>
       <p>
-        We aim to keep information on this website accurate. Product demos on this website use illustrative data.
-        Capabilities marked &ldquo;Coming soon&rdquo;, &ldquo;Rollout in progress&rdquo; or &ldquo;Integration-dependent&rdquo;
-        are not yet generally available.
+        We aim to keep information on this website accurate. Product demos on this website use illustrative data and
+        fictional names. The exact features available to you depend on your plan and setup, and are confirmed with you
+        before any subscription starts.
       </p>
 
       <h2>Estimates</h2>
@@ -43,7 +42,7 @@ export default function TermsPage() {
 
       <h2>Contact</h2>
       <p>
-        <a href={`mailto:${contact.email}`}>{contact.email}</a> · <a href={`tel:${contact.phoneE164}`}>{contact.phoneDisplay}</a>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
       </p>
     </LegalPage>
   );

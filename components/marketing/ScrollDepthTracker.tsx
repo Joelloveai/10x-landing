@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { trackOnce } from "@/lib/analytics";
 
-const MARKS = [25, 50, 75, 100];
+const MARKS = [25, 50, 75, 100] as const;
 
 /** Records anonymous scroll depth milestones once per page view. */
 export function ScrollDepthTracker() {
@@ -16,7 +16,7 @@ export function ScrollDepthTracker() {
       if (max <= 0) return;
       const pct = (window.scrollY / max) * 100;
       for (const mark of MARKS) {
-        if (pct >= mark - 1) trackOnce("scroll_depth", { depth: mark }, `scroll_${mark}`);
+        if (pct >= mark - 1) trackOnce(`scroll_depth_${mark}` as const);
       }
     };
     const onScroll = () => {

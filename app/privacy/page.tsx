@@ -14,13 +14,13 @@ export default function PrivacyPage() {
     <LegalPage title="Privacy Policy" updated="26 September 2026">
       <p>
         This policy explains what information the 10X website ({siteConfig.url.replace("https://", "")}) collects and how
-        it is used. 10X is a product of {company.name} (Registration {company.registration}), Malaysia.
+        it is used. 10X is a product of {company.name}, Malaysia.
       </p>
 
       <h2>What we collect</h2>
       <ul>
         <li>
-          <strong className="text-fg">Audit requests.</strong> When you request a Lead Leakage Audit, we collect your
+          <strong className="text-fg">Audit requests.</strong> When you request a Lead Leakage Audit or a sales call, we collect your
           WhatsApp number and, if you choose to tell us, your business type and approximate monthly enquiry volume.
         </li>
         <li>
@@ -55,11 +55,10 @@ export default function PrivacyPage() {
 
       <h2>Contact</h2>
       <p>
-        {company.name}
+        {company.name} · {contact.label}
         <br />
         <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        <br />
-        <a href={`tel:${contact.phoneE164}`}>{contact.phoneDisplay}</a>
+
       </p>
     </LegalPage>
   );

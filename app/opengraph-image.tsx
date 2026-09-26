@@ -7,8 +7,8 @@ export const contentType = "image/png";
 
 const rows = [
   { name: "Sarah Tan", status: "Viewing · Sat 2:00 PM", dot: "#16A34A" },
-  { name: "Daniel Lim", status: "Follow-up · Day 3", dot: "#4ADE80" },
-  { name: "Aisyah Rahman", status: "Assigned · Jason", dot: "#4ADE80" },
+  { name: "Daniel Lim", status: "Follow-up · Day 3", dot: "#2563EB" },
+  { name: "Aisyah Rahman", status: "Assigned · Jason", dot: "#2563EB" },
 ];
 
 export default function OpengraphImage() {
@@ -58,7 +58,7 @@ export default function OpengraphImage() {
           <span>After 6 PM</span>
         </div>
         <div style={{ display: "flex", marginTop: 28, maxWidth: 640, fontSize: 26, lineHeight: 1.4, color: "#A1A1AA" }}>
-          Capture, respond, book and follow up. For Malaysian service businesses.
+          Capture, respond, book and follow up. For businesses that run on enquiries.
         </div>
         <div
           style={{

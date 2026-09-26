@@ -5,20 +5,27 @@ import { track, type AnalyticsEvent, type AnalyticsProps } from "@/lib/analytics
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost";
-type Size = "sm" | "md" | "lg";
+/** Fired before scrolling to the contact chapter so the form opens in the right mode. */
+export const INTENT_EVENT = "tenx:intent";
+export type Intent = "audit" | "sales";
+
+type Variant = "primary" | "secondary" | "ghost" | "link";
+type Size = "sm" | "md" | "lg" | "inline";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent text-accent-fg hover:bg-accent-hover shadow-[0_0_0_1px_rgb(255_255_255/0.12)_inset,0_8px_24px_-8px_rgb(22_163_74/0.6)]",
+    "bg-accent text-accent-fg hover:bg-accent-hover shadow-[0_0_0_1px_rgb(255_255_255/0.12)_inset,0_8px_24px_-8px_rgb(37_99_235/0.6)]",
   secondary: "bg-white/[0.04] text-fg ring-1 ring-inset ring-white/12 hover:bg-white/[0.08] hover:ring-white/20",
   ghost: "text-secondary hover:text-fg",
+  link: "text-accent-text hover:text-fg",
 };
 
 const sizes: Record<Size, string> = {
   sm: "h-9 px-3.5 text-[14px] sm:px-4",
   md: "h-11 px-5 text-[15px]",
   lg: "h-13 px-6 text-[16px] sm:h-14 sm:px-7",
+  /** Text-link style: no height or padding. */
+  inline: "text-[14px]",
 };
 
 export function ctaClasses(variant: Variant = "primary", size: Size = "md", className?: string, wrap = false) {
@@ -42,19 +49,22 @@ type Props = {
   onNavigate?: () => void;
   /** Allow the label to wrap onto two lines (long, contextual CTAs). */
   wrap?: boolean;
+  /** Switch the contact form to this mode when navigating to it. */
+  intent?: Intent;
   "aria-label"?: string;
 };
 
 export function CtaLink({
   href,
   children,
-  event = "cta_click",
+  event = "cta_clicked",
   eventProps,
   variant = "primary",
   size = "md",
   className,
   onNavigate,
   wrap,
+  intent,
   ...rest
 }: Props) {
   return (
@@ -63,6 +73,7 @@ export function CtaLink({
       className={ctaClasses(variant, size, className, wrap)}
       onClick={(e) => {
         track(event, eventProps);
+        if (intent) window.dispatchEvent(new CustomEvent<Intent>(INTENT_EVENT, { detail: intent }));
         onNavigate?.();
         if (href.startsWith("#") && !e.metaKey && !e.ctrlKey) {
           if (scrollToId(href.slice(1))) e.preventDefault();

@@ -4,29 +4,29 @@ export const faqs: FaqItem[] = [
   {
     question: "We already use WhatsApp.",
     answer:
-      "That's fine. 10X is built around the way service businesses already communicate. The goal is to make sure important enquiries and follow-up do not disappear.",
+      "That's fine. 10X is designed around the way your customers already talk to you. The goal is to make sure every enquiry that comes in gets captured, answered and followed up, instead of getting buried in chats.",
   },
   {
     question: "We already have software.",
     answer:
-      "That's useful. The real question is whether every enquiry is captured, answered, followed up and visible.",
+      "That's useful. The important question is whether every lead is consistently captured, handled and followed up, and whether you can see what happened to it. If that's already true, great. If not, that's where 10X fits.",
   },
   {
-    question: "My team won't use complicated software.",
-    answer: "10X is designed around the daily workflow rather than a giant list of features.",
-  },
-  {
-    question: "Will AI act without us?",
-    answer: "You control what the AI can do. Sensitive actions can require approval.",
-  },
-  {
-    question: "Can I try it first?",
+    question: "Will my team actually use it?",
     answer:
-      "Start with the free Lead Leakage Audit. We identify the workflow problem before recommending the software.",
+      "10X is organised around the daily workflow: new enquiry, reply, book, follow up. Your team works through the next step, not a long list of features.",
   },
   {
-    question: "Is my data protected?",
+    question: "Is this only for property businesses?",
     answer:
-      "10X is built with access controls, separated workspaces, encrypted connections and data-governance considerations for business use.",
+      "No. 10X is designed for businesses that rely on enquiries, appointments and follow-up. That includes property, clinics, education and training, home services and other appointment-driven businesses.",
+  },
+  {
+    question: "Can I see how it would work for my business?",
+    answer: "Yes. Talk to the sales team and we'll walk through the workflow with you.",
+  },
+  {
+    question: "How do I get started?",
+    answer: "Start with the free Lead Leakage Audit.",
   },
 ];

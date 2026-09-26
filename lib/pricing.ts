@@ -36,16 +36,6 @@ export const pricingPlans: PricingPlan[] = [
     regularPrice: "RM1,999+",
     setupPrice: "RM1,000+",
     description: "For businesses requiring deeper workflows and custom implementation.",
-    cta: "Get Free Audit",
+    cta: "Talk to Sales",
   },
-];
-
-/** Capabilities that are live today. Plan coverage is confirmed after the audit. Keep in sync with productStatus. */
-export const liveCapabilities = [
-  "Lead capture and forms",
-  "Contacts and pipelines",
-  "Calendars and booking pages",
-  "Websites and funnels",
-  "Team members and ownership",
-  "Private workspace",
 ];

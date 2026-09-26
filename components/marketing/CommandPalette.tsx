@@ -7,16 +7,18 @@ import { track } from "@/lib/analytics";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
+import { INTENT_EVENT } from "@/components/ui/CtaLink";
 
 export const OPEN_PALETTE_EVENT = "tenx:open-palette";
 
 const commands = [
-  { label: "Go to Product", target: sectionIds.product },
-  { label: "Go to Solutions", target: sectionIds.solutions },
+  { label: "Go to Solutions", target: sectionIds.leak },
   { label: "Go to How It Works", target: sectionIds.howItWorks },
+  { label: "Go to AI Employee", target: sectionIds.ai },
   { label: "Go to Pricing", target: sectionIds.pricing },
   { label: "Go to Security", target: sectionIds.security },
-  { label: "Get Free Audit", target: sectionIds.audit, primary: true },
+  { label: "Get Free Audit", target: sectionIds.audit, primary: true, intent: "audit" },
+  { label: "Talk to Sales", target: sectionIds.audit, primary: true, intent: "sales" },
 ] as const;
 
 /** Optional Cmd/Ctrl+K quick navigation. A convenience, never the main path. */
@@ -62,7 +64,10 @@ export function CommandPalette() {
     const cmd = results[index];
     if (!cmd) return;
     setOpen(false);
-    if (cmd.target === sectionIds.audit) track("cta_click", { location: "command_palette" });
+    if ("intent" in cmd) {
+      track(cmd.intent === "sales" ? "talk_to_sales_clicked" : "cta_clicked", { location: "command_palette" });
+      window.dispatchEvent(new CustomEvent(INTENT_EVENT, { detail: cmd.intent }));
+    }
     requestAnimationFrame(() => scrollToId(cmd.target));
   };
 

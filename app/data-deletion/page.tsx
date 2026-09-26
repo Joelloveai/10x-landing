@@ -21,9 +21,6 @@ export default function DataDeletionPage() {
           &ldquo;Data deletion request&rdquo;.
         </li>
         <li>Include the WhatsApp number you submitted, so we can find your record.</li>
-        <li>
-          Or message us on <a href={contact.whatsappUrl}>WhatsApp</a> from the same number.
-        </li>
       </ul>
 
       <h2>What happens next</h2>

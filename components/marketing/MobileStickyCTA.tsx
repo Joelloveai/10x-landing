@@ -43,7 +43,7 @@ export function MobileStickyCTA() {
           Free 15-minute review.
           <span className="block">No obligation.</span>
         </p>
-        <CtaLink href={`#${sectionIds.audit}`} event="sticky_cta_click" size="md" className="shrink-0">
+        <CtaLink href={`#${sectionIds.audit}`} event="sticky_cta_clicked" intent="audit" size="md" className="shrink-0">
           {siteConfig.cta.primaryShort}
         </CtaLink>
       </div>

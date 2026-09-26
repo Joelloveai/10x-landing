@@ -4,18 +4,21 @@
 @theme {
   --color-bg: #0a0a0a;
   --color-surface: #111111;
-  --color-elevated: #161616;
+  --color-elevated: #151515;
   --color-border: #242424;
   --color-border-strong: #333336;
   --color-fg: #ffffff;
   --color-secondary: #a1a1aa;
   --color-muted: #71717a;
   --color-subtle: #8b8b94;
-  --color-accent: #16a34a;
-  --color-accent-hover: #1bb352;
-  --color-accent-text: #4ade80;
-  /* Text on accent fills. White on #16a34a is 3.3:1, near-black is 6:1. */
-  --color-accent-fg: #0a0a0a;
+  /* Blue is the interaction color. Green (success) is only for confirmed/completed states. */
+  --color-accent: #2563eb;
+  --color-accent-hover: #3b73f0;
+  --color-accent-text: #60a5fa;
+  /* Text on accent fills (5.2:1). */
+  --color-accent-fg: #ffffff;
+  /* Text on success fills. White on #16a34a is only 3.3:1. */
+  --color-success-fg: #0a0a0a;
   --color-success: #16a34a;
   --color-success-text: #4ade80;
   --color-warning: #ea580c;
@@ -66,7 +69,7 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
   }
-  ::selection { background: rgb(22 163 74 / 0.45); color: #fff; }
+  ::selection { background: rgb(37 99 235 / 0.45); color: #fff; }
 
   :focus-visible {
     outline: 2px solid var(--color-accent-text);
@@ -88,13 +91,13 @@
   }
 
   .text-hero {
-    font-size: clamp(2.75rem, 1.6rem + 5.6vw, 6.25rem);
-    line-height: 0.95;
+    font-size: clamp(2.75rem, 1.9rem + 4vw, 5.5rem);
+    line-height: 0.98;
     letter-spacing: -0.045em;
     font-weight: 600;
   }
   .text-display {
-    font-size: clamp(2rem, 1.1rem + 3.1vw, 4rem);
+    font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3.5rem);
     line-height: 1.02;
     letter-spacing: -0.035em;
     font-weight: 600;
@@ -129,6 +132,18 @@
     box-shadow:
       0 0 0 1px rgb(255 255 255 / 0.08) inset,
       0 24px 60px -12px rgb(0 0 0 / 0.85);
+  }
+
+  /* Guided focus. One active element at a time gets the halo; previous/future steps recede. */
+  .halo {
+    box-shadow:
+      0 0 0 1px rgb(37 99 235 / 0.55),
+      0 0 32px 2px rgb(37 99 235 / 0.1);
+  }
+  .halo-soft {
+    box-shadow:
+      0 0 0 1px rgb(37 99 235 / 0.35),
+      0 0 48px 4px rgb(37 99 235 / 0.06);
   }
 
   /* Soft top edge fade for scrolling threads inside product UI. */
@@ -206,7 +221,7 @@
     border-radius: 999px;
     background: #fff;
     border: 0;
-    box-shadow: 0 0 0 4px rgb(22 163 74 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
+    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
     transition: box-shadow 0.15s;
   }
   .range::-moz-range-thumb {
@@ -215,11 +230,11 @@
     border-radius: 999px;
     background: #fff;
     border: 0;
-    box-shadow: 0 0 0 4px rgb(22 163 74 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
+    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
   }
   .range:focus-visible { outline: none; }
-  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgb(74 222 128 / 0.7); }
-  .range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 6px rgb(74 222 128 / 0.7); }
+  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgb(96 165 250 / 0.7); }
+  .range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 6px rgb(96 165 250 / 0.7); }
 
   .scrollbar-none { scrollbar-width: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }
@@ -234,4 +249,17 @@
   }
   .reveal { opacity: 1; transform: none; }
   .hero-word { animation: none; }
+}
+
+/* Active chapter marker. Unlayered on purpose so it wins over utility classes. */
+html[data-focus="top"] #top .chapter-marker,
+html[data-focus="solutions"] #solutions .chapter-marker,
+html[data-focus="how-it-works"] #how-it-works .chapter-marker,
+html[data-focus="ai-employee"] #ai-employee .chapter-marker,
+html[data-focus="product"] #product .chapter-marker,
+html[data-focus="pricing"] #pricing .chapter-marker,
+html[data-focus="audit"] #audit .chapter-marker {
+  color: #fff;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px rgb(37 99 235 / 0.12), 0 0 20px rgb(37 99 235 / 0.35);
 }

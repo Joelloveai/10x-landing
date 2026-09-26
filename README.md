@@ -1,8 +1,10 @@
 # 10X landing page
 
-Marketing site for **10X** by BTB SOLUTIONS Sdn Bhd (202503175924), Malaysia. https://tenx.my
+Marketing site for **10X** by BTB SOLUTIONS, Malaysia. https://tenx.my
 
-One job: turn visitors into **Free Lead Leakage Audit** requests.
+One job: make the right business owner want to speak to 10X. Primary action: **Get Your Free Lead Leakage Audit**. Secondary: **Talk to Sales**.
+
+The page is seven chapters: Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Book a conversation.
 
 ## Stack
 
@@ -31,22 +33,22 @@ Copy `.env.example` to `.env.local`. Nothing secret is exposed to the browser.
 | `WAITLIST_WEBHOOK_SECRET` | Optional, sent as `X-Webhook-Secret` |
 | `TENX_API_URL` / `TENX_API_KEY` | Optional 10X ingestion endpoint (Bearer auth) |
 
-**Production requires at least one destination.** Without one, `POST /api/waitlist` returns `503` and the form shows an error with WhatsApp and phone alternatives. It never shows success for a lead that was not stored or forwarded. In development, requests without a destination are kept in memory.
+**Production requires at least one destination.** Without one, `POST /api/waitlist` returns `503` and the form shows an error pointing to the Sales Team email. It never shows success for a lead that was not stored or forwarded. In development, requests without a destination are kept in memory.
 
 ### `POST /api/waitlist`
 
 ```json
 {
   "whatsapp": "012-345 6789",
-  "vertical": "property | aesthetic | dental | home-services | other",
+  "businessType": "property | clinics | education | home-services | appointments | other",
   "monthlyLeads": "under-50 | 50-200 | 200-500 | 500-plus | not-sure",
-  "source": "audit_form | audit_form_qualification",
+  "source": "audit_form | talk_to_sales | audit_form_qualification",
   "page": "/",
   "utmSource": "", "utmMedium": "", "utmCampaign": "", "referral": ""
 }
 ```
 
-Forwarded payload: `{ "type": "lead_leakage_audit", "lead": { "whatsapp": "+60123456789", ... , "submittedAt": "..." } }`.
+Forwarded payload: `{ "type": "lead_leakage_audit" | "sales_request", "lead": { "whatsapp": "+60123456789", ... , "submittedAt": "..." } }`.
 
 Protection: Malaysian mobile validation and normalisation to E.164, honeypot field, minimum fill time, per-IP rate limit (in memory, per instance, so add a platform rate limit for multi-instance deployments), duplicate suppression, masked phone numbers in logs, generic error messages.
 
@@ -54,8 +56,8 @@ Protection: Malaysian mobile validation and normalisation to E.164, honeypot fie
 
 Edit data, not JSX:
 
-- `lib/site-config.ts`: company details, CTAs, nav, founding offer switch, **product status (what is live vs coming)**
-- `lib/verticals.ts`: the four vertical workflows and demo data
+- `lib/site-config.ts`: company details, public contact, CTAs, nav, chapters, founding offer switch
+- `lib/businesses.ts`: the five business types (workflow, AI examples, demo data)
 - `lib/pricing.ts`, `lib/testimonials.ts` (verbatim, never edit), `lib/faq.ts`
 
 ## Analytics
@@ -64,7 +66,7 @@ Edit data, not JSX:
 
 ## Product truth
 
-Demo UI uses fictional data and is labelled "Illustrative" or "Concept preview". AI employee, WhatsApp sending, outbound email, payments and advanced reporting are shown as not yet generally available. Update `productStatus` in `lib/site-config.ts` when that changes.
+Demo UI uses fictional data and is labelled "Illustrative". The homepage does not publish internal roadmap status; anything that depends on a customer's setup is routed to Talk to Sales. Never present an unreleased capability as live.
 
 ## Legal pages
 

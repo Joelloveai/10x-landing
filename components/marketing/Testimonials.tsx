@@ -1,29 +1,24 @@
 import { testimonials } from "@/lib/testimonials";
 import { Reveal } from "@/components/ui/Reveal";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TestimonialCard } from "./TestimonialCard";
 import { TestimonialTracker } from "./TestimonialTracker";
 
 /**
- * Mobile: horizontal swipe with snap.
- * Desktop: slow marquee that pauses on hover, focus and touch.
- * Reduced motion (desktop): a static grid. The duplicate set used for the loop is hidden from assistive tech.
+ * All seven testimonials, verbatim, with initials avatars (no photos, no ratings).
+ * Mobile: swipe. Desktop: slow marquee that pauses on hover/focus/touch. Reduced motion: grid.
  */
 export function Testimonials() {
   return (
-    <section id="testimonials" aria-labelledby="testimonials-title" className="border-t border-border py-28 md:py-36">
-      <div className="container-x">
-        <SectionHeader
-          id="testimonials-title"
-          eyebrow="Feedback"
-          title="Real feedback from early users."
-          lead="Actual feedback from people using 10X. Unedited."
-        />
-      </div>
+    <div id="testimonials" className="mt-24">
+      <Reveal className="max-w-2xl">
+        <h3 className="text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+          Real feedback from early users.
+        </h3>
+        <p className="mt-3 text-[16px] text-secondary">Actual feedback. Unedited.</p>
+      </Reveal>
 
-      <Reveal className="mt-14">
-        <TestimonialTracker className="marquee">
-          {/* Motion-safe desktop marquee */}
+      <Reveal className="mt-10">
+        <TestimonialTracker className="marquee -mx-5 md:-mx-8 min-[1264px]:mx-[calc((1200px-100vw)/2+32px)]">
           <div className="fade-x hidden overflow-hidden md:motion-safe:block">
             <div className="marquee-track items-start px-4">
               {[...testimonials, ...testimonials].map((t, i) => {
@@ -31,22 +26,18 @@ export function Testimonials() {
                 return (
                   <div
                     key={`${t.name}-${i}`}
-                    className="w-[400px] shrink-0"
+                    className="w-[380px] shrink-0"
                     aria-hidden={duplicate || undefined}
                     inert={duplicate || undefined}
                   >
-                    <TestimonialCard t={t} size="lg" />
+                    <TestimonialCard t={t} />
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Mobile swipe list */}
-          <ul
-            aria-label="Testimonials"
-            className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-none px-5 pb-2 md:hidden"
-          >
+          <ul aria-label="Testimonials" className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-none px-5 pb-2 md:hidden">
             {testimonials.map((t) => (
               <li key={t.name} className="w-[85%] max-w-[360px] shrink-0 snap-center">
                 <TestimonialCard t={t} />
@@ -54,8 +45,7 @@ export function Testimonials() {
             ))}
           </ul>
 
-          {/* Reduced-motion desktop grid */}
-          <ul className="container-x hidden gap-4 md:motion-reduce:grid md:motion-reduce:grid-cols-2 lg:motion-reduce:grid-cols-3">
+          <ul className="hidden gap-4 px-8 md:motion-reduce:grid md:motion-reduce:grid-cols-2 lg:motion-reduce:grid-cols-3">
             {testimonials.map((t) => (
               <li key={t.name}>
                 <TestimonialCard t={t} />
@@ -63,8 +53,8 @@ export function Testimonials() {
             ))}
           </ul>
         </TestimonialTracker>
-        <p className="container-x mt-4 text-[13px] text-secondary md:hidden">Swipe to read more</p>
+        <p className="mt-4 text-[13px] text-secondary md:hidden">Swipe to read more</p>
       </Reveal>
-    </section>
+    </div>
   );
 }

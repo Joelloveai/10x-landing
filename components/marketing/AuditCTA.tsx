@@ -4,12 +4,12 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { track, trackOnce } from "@/lib/analytics";
+import { businessTypeOptions, type BusinessTypeOption } from "@/lib/businesses";
 import { normalizeMalaysianMobile } from "@/lib/phone";
-import { sectionIds, siteConfig } from "@/lib/site-config";
-import { verticalOptions, type VerticalOption } from "@/lib/verticals";
+import { salesMailto, sectionIds, siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import { useVertical } from "@/components/providers/VerticalProvider";
-import { ctaClasses } from "@/components/ui/CtaLink";
+import { useBusiness } from "@/components/providers/BusinessProvider";
+import { ctaClasses, INTENT_EVENT, type Intent } from "@/components/ui/CtaLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { TrackedAnchor } from "@/components/ui/TrackedAnchor";
 
@@ -28,6 +28,23 @@ const PHONE_ERRORS = {
   format: "Please enter a Malaysian mobile number, for example 012-XXX XXXX.",
   invalid: "That number doesn't look right. Please check it and try again.",
 } as const;
+
+const copy: Record<Intent, { tab: string; title: string; body: string; submit: string; source: string }> = {
+  audit: {
+    tab: "Free audit",
+    title: "Find the leaks before you buy more leads.",
+    body: "We'll review how enquiries move through your business and show you where response, follow-up or booking breaks down.",
+    submit: siteConfig.cta.formSubmit,
+    source: "audit_form",
+  },
+  sales: {
+    tab: "Talk to Sales",
+    title: "Talk to Sales",
+    body: "Tell us how your business currently handles enquiries and appointments. We'll show you where 10X fits.",
+    submit: siteConfig.cta.salesSubmit,
+    source: "talk_to_sales",
+  },
+};
 
 function attribution() {
   const params = new URLSearchParams(window.location.search);
@@ -67,12 +84,14 @@ async function submitLead(body: Record<string, unknown>) {
   return data;
 }
 
-export function AuditForm() {
-  const { vertical, chosen } = useVertical();
+/** Chapter 07. The audit and the sales conversation share one form. */
+export function AuditCTA() {
+  const { business, chosen } = useBusiness();
   const inputId = useId();
   const errorId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const mountedAt = useRef(0);
+  const [intent, setIntent] = useState<Intent>("audit");
   const [phone, setPhone] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -82,7 +101,15 @@ export function AuditForm() {
 
   useEffect(() => {
     mountedAt.current = performance.now();
+    const onIntent = (e: Event) => {
+      const detail = (e as CustomEvent<Intent>).detail;
+      if (detail === "audit" || detail === "sales") setIntent(detail);
+    };
+    window.addEventListener(INTENT_EVENT, onIntent);
+    return () => window.removeEventListener(INTENT_EVENT, onIntent);
   }, []);
+
+  const c = copy[intent];
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -92,7 +119,7 @@ export function AuditForm() {
     const result = normalizeMalaysianMobile(phone);
     if (!result.ok) {
       setFieldError(PHONE_ERRORS[result.reason]);
-      track("audit_form_error", { reason: `phone_${result.reason}` });
+      track("audit_error", { reason: `phone_${result.reason}`, intent });
       inputRef.current?.focus();
       return;
     }
@@ -102,75 +129,91 @@ export function AuditForm() {
     try {
       await submitLead({
         whatsapp: result.e164,
-        vertical: chosen ? vertical : undefined,
-        source: "audit_form",
+        businessType: chosen ? business : undefined,
+        source: c.source,
         company_website: honeypot,
         elapsedMs: Math.round(performance.now() - mountedAt.current),
         ...attribution(),
       });
       setNormalized(result.e164);
       setStatus("success");
-      track("audit_form_submitted", { vertical: chosen ? vertical : "unknown" });
+      track("audit_submitted", { intent, vertical: chosen ? business : "unknown" });
     } catch (err) {
       const e2 = err as { code?: string; userMessage?: string };
-      setStatus("error");
       if (e2.code === "invalid_phone") {
         setFieldError(PHONE_ERRORS.format);
         setStatus("idle");
         inputRef.current?.focus();
       } else {
+        setStatus("error");
         setFormError(e2.code === "rate_limited" && e2.userMessage ? e2.userMessage : "Something went wrong. Please try again.");
       }
-      track("audit_form_error", { reason: e2.code ?? "network" });
+      track("audit_error", { reason: e2.code ?? "network", intent });
     }
   };
 
   return (
     <section
       id={sectionIds.audit}
+      data-chapter
       aria-labelledby="audit-title"
-      className="relative isolate overflow-hidden border-y border-border bg-surface/60 py-28 md:py-40"
+      className="relative isolate overflow-hidden border-t border-border py-24 md:py-36"
     >
-      <div className="container-x grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
-        <Reveal>
-          <p className="eyebrow mb-5">Free Lead Leakage Audit</p>
-          <h2 id="audit-title" data-focus-target className="text-display text-balance focus:outline-none">
-            Find out where your leads are leaking. Free.
-          </h2>
-          <p className="text-lead mt-5 max-w-xl text-secondary">
-            We&apos;ll review how enquiries move through your business and identify where response, follow-up, booking
-            or handoff breaks down.
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 size-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.045),transparent_75%)]"
+      />
+      <div className="container-x">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <p className="mb-5 flex items-center justify-center gap-3">
+            <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
+              07
+            </span>
+            <span className="eyebrow">Book a conversation</span>
           </p>
-          <ul className="mt-8 space-y-3 text-[16px] text-secondary">
-            {[
-              "A 15-minute review of how enquiries reach your team",
-              "Where leads leak: response, follow-up, booking, handoff",
-              "No obligation to buy anything",
-            ].map((t) => (
-              <li key={t} className="flex items-start gap-3">
-                <Check className="mt-1 size-4 shrink-0 text-accent-text" aria-hidden />
-                {t}
-              </li>
-            ))}
-          </ul>
+          <h2 id="audit-title" data-focus-target className="text-hero text-balance focus:outline-none">
+            Stop losing leads.
+          </h2>
+          <p className="text-lead mx-auto mt-5 max-w-xl text-secondary">
+            See how 10X can fit the way your business actually works.
+          </p>
         </Reveal>
 
-        <Reveal delay={80}>
-          <div className="rounded-2xl border border-border bg-bg p-6 shadow-window sm:p-8">
+        <Reveal delay={80} className="mx-auto mt-12 max-w-xl">
+          <div className="halo rounded-2xl border border-accent/40 bg-surface p-6 shadow-window sm:p-8">
             <AnimatePresence mode="wait" initial={false}>
               {status !== "success" ? (
-                <m.form
-                  key="form"
-                  noValidate
-                  onSubmit={onSubmit}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  aria-describedby="audit-micro"
-                >
-                  <label htmlFor={inputId} className="block text-[15px] font-medium">
-                    WhatsApp number
-                  </label>
-                  <div className="mt-2 flex flex-col gap-3">
+                <m.div key="form" exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                  <div role="tablist" aria-label="What would you like?" className="mb-6 grid grid-cols-2 rounded-full border border-border bg-bg p-1">
+                    {(["audit", "sales"] as const).map((k) => (
+                      <button
+                        key={k}
+                        type="button"
+                        role="tab"
+                        aria-selected={intent === k}
+                        aria-controls="contact-form"
+                        onClick={() => {
+                          setIntent(k);
+                          if (k === "sales") track("talk_to_sales_clicked", { location: "form_tab" });
+                        }}
+                        className={cn(
+                          "rounded-full px-3 py-2 text-[14px] transition-colors",
+                          intent === k ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
+                        )}
+                      >
+                        {copy[k].tab}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div id="contact-form" role="tabpanel">
+                  <form noValidate onSubmit={onSubmit} aria-describedby="audit-micro">
+                    <h3 className="text-title text-balance">{c.title}</h3>
+                    <p className="mt-2 text-[15px] text-secondary">{c.body}</p>
+
+                    <label htmlFor={inputId} className="mt-6 block text-[15px] font-medium">
+                      WhatsApp number
+                    </label>
                     <input
                       ref={inputRef}
                       id={inputId}
@@ -184,17 +227,17 @@ export function AuditForm() {
                         setPhone(e.target.value);
                         if (fieldError) setFieldError(null);
                       }}
-                      onFocus={() => trackOnce("audit_form_started")}
+                      onFocus={() => trackOnce("audit_started", { intent })}
                       aria-invalid={fieldError ? true : undefined}
                       aria-describedby={fieldError ? errorId : undefined}
                       maxLength={20}
                       className={cn(
-                        "h-13 w-full rounded-xl border bg-elevated px-4 text-[17px] text-fg placeholder:text-subtle transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+                        "mt-2 h-13 w-full rounded-xl border bg-elevated px-4 text-[17px] text-fg placeholder:text-subtle transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
                         fieldError ? "border-warning" : "border-border focus:border-accent",
                       )}
                     />
                     {fieldError ? (
-                      <p id={errorId} role="alert" className="text-[14px] text-warning-text">
+                      <p id={errorId} role="alert" className="mt-2 text-[14px] text-warning-text">
                         {fieldError}
                       </p>
                     ) : null}
@@ -216,8 +259,7 @@ export function AuditForm() {
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      aria-disabled={status === "sending"}
-                      className={ctaClasses("primary", "lg", "w-full disabled:cursor-wait disabled:opacity-80")}
+                      className={ctaClasses("primary", "lg", "mt-4 w-full disabled:cursor-wait disabled:opacity-80")}
                     >
                       {status === "sending" ? (
                         <>
@@ -226,70 +268,52 @@ export function AuditForm() {
                         </>
                       ) : (
                         <>
-                          {siteConfig.cta.formSubmit}
+                          {c.submit}
                           <ArrowRight className="size-4" aria-hidden />
                         </>
                       )}
                     </button>
-                  </div>
-                  <p id="audit-micro" className="mt-3 text-[14px] text-secondary">
-                    30 seconds. We reply within 1 business day.
-                  </p>
-                  <div role="status" aria-live="polite">
-                    {formError ? (
-                      <p className="mt-4 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-[14px] text-fg">
-                        {formError}{" "}
-                        <span className="text-secondary">
-                          You can also{" "}
-                          <TrackedAnchor
-                            href={siteConfig.contact.whatsappUrl}
-                            event="whatsapp_clicked"
-                            eventProps={{ location: "form_error" }}
-                            external
-                            className="text-accent-text underline underline-offset-4"
-                          >
-                            WhatsApp us
-                          </TrackedAnchor>
-                          .
-                        </span>
-                      </p>
-                    ) : null}
-                  </div>
-                  <noscript>
-                    <p className="mt-4 text-[14px] text-secondary">
-                      This form needs JavaScript. You can WhatsApp or call us at {siteConfig.contact.phoneDisplay}.
+                    <p id="audit-micro" className="mt-3 text-center text-[14px] text-secondary">
+                      {intent === "audit" ? siteConfig.cta.microcopy : "Our sales team replies within 1 business day."}
                     </p>
-                  </noscript>
-                </m.form>
+                    <div role="status" aria-live="polite">
+                      {formError ? (
+                        <p className="mt-4 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-[14px] text-fg">
+                          {formError} <span className="text-secondary">You can also email the {siteConfig.contact.label} at </span>
+                          <a href={salesMailto} className="text-accent-text underline underline-offset-4">
+                            {siteConfig.contact.email}
+                          </a>
+                          .
+                        </p>
+                      ) : null}
+                    </div>
+                    <noscript>
+                      <p className="mt-4 text-[14px] text-secondary">
+                        This form needs JavaScript. You can email the {siteConfig.contact.label} at {siteConfig.contact.email}.
+                      </p>
+                    </noscript>
+                  </form>
+                  </div>
+                </m.div>
               ) : (
                 <SuccessStep
                   key="success"
                   whatsapp={normalized ?? ""}
-                  initialVertical={chosen ? vertical : undefined}
+                  initialBusiness={chosen ? business : undefined}
                   formMountedAt={mountedAt.current}
                 />
               )}
             </AnimatePresence>
           </div>
-          <p className="mt-4 text-center text-[14px] text-secondary">
-            Prefer to talk now?{" "}
+          <p className="mt-5 text-center text-[14px] text-secondary">
+            Prefer email? {siteConfig.contact.label} ·{" "}
             <TrackedAnchor
-              href={siteConfig.contact.whatsappUrl}
-              event="whatsapp_clicked"
-              eventProps={{ location: "audit" }}
-              external
+              href={salesMailto}
+              event="email_clicked"
+              eventProps={{ location: "contact" }}
               className="text-fg underline decoration-white/30 underline-offset-4 hover:decoration-white"
             >
-              WhatsApp
-            </TrackedAnchor>{" "}
-            or call{" "}
-            <TrackedAnchor
-              href={`tel:${siteConfig.contact.phoneE164}`}
-              event="phone_clicked"
-              eventProps={{ location: "audit" }}
-              className="whitespace-nowrap text-fg underline decoration-white/30 underline-offset-4 hover:decoration-white"
-            >
-              {siteConfig.contact.phoneDisplay}
+              {siteConfig.contact.email}
             </TrackedAnchor>
           </p>
         </Reveal>
@@ -300,15 +324,15 @@ export function AuditForm() {
 
 function SuccessStep({
   whatsapp,
-  initialVertical,
+  initialBusiness,
   formMountedAt,
 }: {
   whatsapp: string;
-  initialVertical?: VerticalOption;
+  initialBusiness?: BusinessTypeOption;
   formMountedAt: number;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [business, setBusiness] = useState<VerticalOption | undefined>(initialVertical);
+  const [business, setBusiness] = useState<BusinessTypeOption | undefined>(initialBusiness);
   const [leads, setLeads] = useState<string | undefined>();
   const [state, setState] = useState<"ask" | "sending" | "done" | "skipped" | "error">("ask");
 
@@ -325,14 +349,14 @@ function SuccessStep({
     try {
       await submitLead({
         whatsapp,
-        vertical: business,
+        businessType: business,
         monthlyLeads: leads,
         source: "audit_form_qualification",
         elapsedMs: Math.round(performance.now() - formMountedAt),
         ...attribution(),
       });
       setState("done");
-      track("audit_form_qualified", { vertical: business ?? "unknown", monthlyLeads: leads ?? "unknown" });
+      track("audit_qualified", { vertical: business ?? "unknown", monthlyLeads: leads ?? "unknown" });
     } catch {
       setState("error");
     }
@@ -341,26 +365,26 @@ function SuccessStep({
   return (
     <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
       <div className="flex items-center gap-3">
-        <span className="flex size-9 items-center justify-center rounded-full bg-success/15 text-success-text">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-success/15 text-success-text">
           <Check className="size-4" aria-hidden />
         </span>
         <h3 ref={headingRef} tabIndex={-1} className="text-[20px] font-semibold tracking-[-0.02em] focus:outline-none">
-          Got it. We&apos;ll contact you shortly.
+          Got it. Our sales team will contact you shortly.
         </h3>
       </div>
 
       {state === "done" || state === "skipped" ? (
         <p className="mt-5 text-[16px] text-secondary" role="status">
-          {state === "done" ? "Thanks. That helps us prepare your audit." : "No problem. We'll ask on WhatsApp."}
+          {state === "done" ? "Thanks. That helps us prepare." : "No problem. We'll ask when we speak."}
         </p>
       ) : (
         <div className="mt-6 space-y-6">
           <p className="text-[15px] text-secondary">Optional: two quick questions help us prepare.</p>
           <PillGroup
             legend="What type of business are you?"
-            options={verticalOptions}
+            options={businessTypeOptions}
             value={business}
-            onChange={(v) => setBusiness(v as VerticalOption)}
+            onChange={(v) => setBusiness(v as BusinessTypeOption)}
           />
           <PillGroup
             legend="Roughly how many enquiries do you receive each month?"
@@ -370,7 +394,7 @@ function SuccessStep({
           />
           {state === "error" ? (
             <p role="alert" className="text-[14px] text-warning-text">
-              Something went wrong. Please try again. Your audit request is already saved.
+              Something went wrong. Please try again. Your request is already saved.
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-3">
