@@ -1,0 +1,286 @@
+"use client";
+
+import { useEffect, useId, useState } from "react";
+import { animate, m, useMotionValue, useTransform } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { trackOnce } from "@/lib/analytics";
+import { verticals } from "@/lib/verticals";
+import { useReducedMotionPref } from "@/lib/hooks/useMediaQuery";
+import { cn, formatRM } from "@/lib/utils";
+import { Reveal } from "@/components/ui/Reveal";
+
+const LIMITS = {
+  leads: { min: 10, max: 1000, step: 10 },
+  missed: { min: 5, max: 60, step: 1 },
+  conversion: { min: 1, max: 50, step: 1 },
+  value: { min: 100, max: 50000, step: 100 },
+};
+
+const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+
+export function calculateOpportunity(leads: number, missedPct: number, conversionPct: number, value: number) {
+  const missedLeads = leads * (missedPct / 100);
+  const lostCustomers = missedLeads * (conversionPct / 100);
+  const monthly = lostCustomers * value;
+  return { missedLeads, lostCustomers, monthly, annual: monthly * 12 };
+}
+
+export function LossCalculator() {
+  const [leads, setLeads] = useState(100);
+  const [missed, setMissed] = useState(20);
+  const [conversion, setConversion] = useState(10);
+  const [value, setValue] = useState(10000);
+  const [preset, setPreset] = useState<string | null>("property");
+
+  const result = calculateOpportunity(leads, missed, conversion, value);
+  const used = () => trackOnce("calculator_used");
+
+  return (
+    <section id="calculator" aria-labelledby="calculator-title" className="border-y border-border bg-surface/40 py-24 md:py-32">
+      <div className="container-x">
+        <Reveal className="max-w-3xl">
+          <p className="eyebrow mb-5">The cost of a leak</p>
+          <h2 id="calculator-title" className="text-display text-balance">
+            How much opportunity is leaking from your business?
+          </h2>
+          <p className="text-lead mt-5 text-secondary">Change the assumptions to match your business.</p>
+        </Reveal>
+
+        <Reveal className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+          <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+            <fieldset>
+              <legend className="mb-3 text-[14px] text-secondary">Start from a typical customer value</legend>
+              <div className="flex flex-wrap gap-2">
+                {verticals.map((v) => (
+                  <button
+                    key={v.slug}
+                    type="button"
+                    aria-pressed={preset === v.slug}
+                    onClick={() => {
+                      setPreset(v.slug);
+                      setValue(v.calculatorValue);
+                      used();
+                    }}
+                    className={cn(
+                      "rounded-full px-3.5 py-1.5 text-[14px] ring-1 ring-inset transition-colors",
+                      preset === v.slug
+                        ? "bg-accent/15 text-fg ring-accent/50"
+                        : "text-secondary ring-white/10 hover:text-fg hover:ring-white/20",
+                    )}
+                  >
+                    {v.name}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="mt-8 space-y-7">
+              <Slider
+                label="Monthly enquiries"
+                value={leads}
+                display={leads.toLocaleString("en-MY")}
+                valueText={`${leads} enquiries per month`}
+                {...LIMITS.leads}
+                onChange={(n) => {
+                  setLeads(n);
+                  used();
+                }}
+              />
+              <Slider
+                label="Enquiries missed or not followed up"
+                value={missed}
+                display={`${missed}%`}
+                valueText={`${missed} percent`}
+                {...LIMITS.missed}
+                onChange={(n) => {
+                  setMissed(n);
+                  used();
+                }}
+              />
+              <Slider
+                label="Estimated conversion rate"
+                value={conversion}
+                display={`${conversion}%`}
+                valueText={`${conversion} percent`}
+                {...LIMITS.conversion}
+                onChange={(n) => {
+                  setConversion(n);
+                  used();
+                }}
+              />
+              <ValueInput
+                value={value}
+                onChange={(n) => {
+                  setValue(n);
+                  setPreset(null);
+                  used();
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col rounded-2xl border border-border bg-[#0d0d0e] p-6 sm:p-8">
+            <p className="text-[14px] text-secondary">Estimated annual opportunity</p>
+            <AnimatedRM value={result.annual} className="mt-3 text-[clamp(2.5rem,1.6rem+3.6vw,4.25rem)] font-semibold leading-none tracking-[-0.04em]" />
+            <p className="mt-3 text-[15px] text-secondary">
+              About <span className="text-fg">{formatRM(result.monthly)}</span> a month
+            </p>
+
+            <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-border pt-6">
+              <div>
+                <dt className="text-[13px] text-secondary">Leaking enquiries / month</dt>
+                <dd className="mt-1 font-mono text-[20px] text-warning-text">{fmt(result.missedLeads)}</dd>
+              </div>
+              <div>
+                <dt className="text-[13px] text-secondary">Possible customers / month</dt>
+                <dd className="mt-1 font-mono text-[20px]">{fmt(result.lostCustomers)}</dd>
+              </div>
+            </dl>
+
+            <details className="group mt-6 rounded-xl border border-border bg-white/[0.02]">
+              <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[14px] text-secondary transition-colors hover:text-fg [&::-webkit-details-marker]:hidden">
+                Show the math
+                <ChevronDown aria-hidden className="size-4 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="space-y-1 px-4 pb-4 font-mono text-[13px] leading-relaxed text-secondary">
+                <p>{leads.toLocaleString("en-MY")} monthly enquiries</p>
+                <p>× {missed}% missed</p>
+                <p>× {conversion}% estimated conversion</p>
+                <p>× {formatRM(value)} average value</p>
+                <p className="text-fg">= {formatRM(result.monthly)} estimated monthly opportunity</p>
+                <p>× 12 months = {formatRM(result.annual)}</p>
+              </div>
+            </details>
+
+            <p className="mt-auto pt-6 text-[14px] text-secondary">
+              Estimate only. Actual results vary. This is an illustration, not a promise.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function fmt(n: number) {
+  return n >= 10 ? Math.round(n).toLocaleString("en-MY") : n.toFixed(1).replace(/\.0$/, "");
+}
+
+function Slider({
+  label,
+  value,
+  display,
+  valueText,
+  min,
+  max,
+  step,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  display: string;
+  valueText: string;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (n: number) => void;
+}) {
+  const id = useId();
+  const fill = ((value - min) / (max - min)) * 100;
+  return (
+    <div>
+      <div className="mb-2 flex items-baseline justify-between gap-4">
+        <label htmlFor={id} className="text-[15px] text-fg">
+          {label}
+        </label>
+        <span className="shrink-0 font-mono text-[15px] text-accent-text" aria-hidden>
+          {display}
+        </span>
+      </div>
+      <input
+        id={id}
+        type="range"
+        className="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        aria-valuetext={valueText}
+        style={{ ["--fill" as string]: `${fill}%` }}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </div>
+  );
+}
+
+function ValueInput({ value, onChange }: { value: number; onChange: (n: number) => void }) {
+  const id = useId();
+  const { min, max, step } = LIMITS.value;
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+  const fill = ((value - min) / (max - min)) * 100;
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between gap-4">
+        <label htmlFor={`${id}-num`} className="text-[15px] text-fg">
+          Average customer value
+        </label>
+        <div className="flex items-center rounded-lg border border-border bg-elevated pl-2.5 focus-within:border-accent">
+          <span className="font-mono text-[14px] text-secondary">RM</span>
+          <input
+            id={`${id}-num`}
+            inputMode="numeric"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value.replace(/[^\d]/g, "").slice(0, 6))}
+            onBlur={() => {
+              const n = clamp(Number(draft) || min, min, max);
+              onChange(n);
+              setDraft(String(n));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+            }}
+            className="w-24 bg-transparent px-1.5 py-1.5 text-right font-mono text-[15px] text-accent-text focus:outline-none"
+          />
+        </div>
+      </div>
+      <input
+        type="range"
+        className="range"
+        aria-label="Average customer value slider"
+        aria-valuetext={formatRM(value)}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        style={{ ["--fill" as string]: `${fill}%` }}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </div>
+  );
+}
+
+function AnimatedRM({ value, className }: { value: number; className?: string }) {
+  const mv = useMotionValue(value);
+  const text = useTransform(mv, (v) => formatRM(v));
+  const reduced = useReducedMotionPref();
+
+  useEffect(() => {
+    if (reduced) {
+      mv.set(value);
+      return;
+    }
+    const controls = animate(mv, value, { duration: 0.6, ease: [0.22, 1, 0.36, 1] });
+    return () => controls.stop();
+  }, [value, reduced, mv]);
+
+  return (
+    <>
+      <m.p aria-hidden className={className}>
+        {text}
+      </m.p>
+      <p className="sr-only">{formatRM(value)} per year</p>
+    </>
+  );
+}

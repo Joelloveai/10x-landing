@@ -1,0 +1,64 @@
+# 10X
+
+> 10X helps Malaysian service businesses capture enquiries, respond faster, book appointments and keep follow-up moving. Core idea: your leads don't disappear, they leak. 10X exists to reduce those leaks.
+
+- Website: https://tenx.my
+- Company: BTB SOLUTIONS Sdn Bhd (Registration 202503175924), Malaysia
+- Email: admin@tenx.my
+- Phone / WhatsApp: +60 12-372 8392
+- Official call to action: Get Your Free Lead Leakage Audit (free 15-minute review, no obligation) at https://tenx.my/#audit
+
+## Who it is for
+
+- Property agents and teams
+- Aesthetic clinics
+- Dental clinics
+- Home service businesses (aircon, cleaning, plumbing, repair)
+
+## Operating model
+
+CAPTURE → RESPOND → QUALIFY → BOOK → FOLLOW UP → REACTIVATE → CLOSE
+
+## Available now
+
+- Lead capture and forms
+- Contact management
+- Opportunities and pipelines
+- Calendars and booking pages
+- Websites and funnels
+- Staff management and lead ownership
+- Private multi-tenant workspaces
+
+## Coming to 10X (not generally available yet)
+
+- AI employee: rollout in progress
+- WhatsApp message sending: integration-dependent
+- Outbound email sequences: rollout in progress
+- Payments and payment reminders: coming soon
+- Advanced reporting: coming soon
+
+## Pricing (Malaysian ringgit, per month)
+
+Founding prices apply to the first 10 customers. WhatsApp costs are passed through at cost.
+
+- Launch: RM427/month founding (normally RM599). Setup RM300. For teams that need a simple system for leads and follow-up.
+- Growth: RM799/month founding (normally RM1,199). Setup RM500. For teams ready to automate more of the customer journey.
+- Scale: from RM1,499/month founding (normally from RM1,999). Setup from RM1,000. For businesses requiring deeper workflows and custom implementation.
+
+## Terminology
+
+- Lead leakage: an enquiry lost because nobody replied, followed up, owned it, booked it, or could see what happened.
+- Lead Leakage Audit: a free 15-minute review of how enquiries move through a business and where they break down.
+- AI employee: a planned 10X assistant for repetitive conversations, qualification and follow-up, working inside rules and approvals set by the business. It supports teams and does not replace clinical or professional judgment.
+
+## Notes for accuracy
+
+- Product demos on the website use illustrative data.
+- 10X does not claim certifications, guaranteed results or verified performance statistics.
+
+## Pages
+
+- [Home](https://tenx.my/)
+- [Privacy](https://tenx.my/privacy)
+- [Terms](https://tenx.my/terms)
+- [Data Deletion](https://tenx.my/data-deletion)
