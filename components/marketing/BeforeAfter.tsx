@@ -75,7 +75,7 @@ export function BeforeAfter() {
                 onClick={() => setWithTenx(opt.v)}
                 className={cn(
                   "rounded-full px-5 py-2 text-[15px] transition-colors",
-                  withTenx === opt.v ? (opt.v ? "bg-accent text-white" : "bg-white/[0.08] text-fg") : "text-secondary hover:text-fg",
+                  withTenx === opt.v ? (opt.v ? "bg-accent text-accent-fg" : "bg-white/[0.08] text-fg") : "text-secondary hover:text-fg",
                 )}
               >
                 {opt.label}
@@ -129,7 +129,7 @@ export function BeforeAfter() {
                       <span
                         className={cn(
                           "relative z-10 flex size-[26px] shrink-0 items-center justify-center rounded-full transition-colors duration-500",
-                          withTenx ? "bg-accent text-white" : "bg-white/[0.06] text-secondary",
+                          withTenx ? "bg-accent text-accent-fg" : "bg-white/[0.06] text-secondary",
                         )}
                       >
                         <Icon className="size-3.5" aria-hidden />

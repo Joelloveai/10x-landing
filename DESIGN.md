@@ -8,7 +8,7 @@ If a change conflicts with this file, update this file first.
 1. **The product is the hero.** Product UI is the main visual. No stock photos, no fake people, no abstract 3D blobs.
 2. **Honesty over hype.** Never present an unreleased capability as live. Demo UI is labelled as demo. No invented numbers, logos, ratings or activity.
 3. **One idea per section.** Short sentences. Every sentence answers: what problem, how 10X solves it, can I trust them, what does it cost, what next.
-4. **Restraint.** Deep black surfaces, one controlled blue, generous space. Motion explains, it does not decorate.
+4. **Restraint.** Deep black surfaces, one controlled green accent, generous space. Motion explains, it does not decorate.
 5. **Every CTA leads to the audit** (`#audit`). "See How It Works" leads to `#how-it-works`.
 
 ## 2. Color tokens
@@ -25,13 +25,16 @@ Defined in `app/globals.css` under `@theme` and used as Tailwind utilities.
 | secondary | `#A1A1AA` | `text-secondary` | Body copy (7.8:1 on bg) |
 | muted | `#71717A` | `bg-muted`, `border-muted` | Decorative dots, dividers, non-text UI. Below AA for small text, so not used for text |
 | subtle | `#8B8B94` | `text-subtle` | Small UI text inside product simulations, timestamps, placeholders (AA on all surfaces) |
-| accent | `#2563EB` | `bg-accent` | Buttons, active states, progress, focus rings |
-| accent-text | `#60A5FA` | `text-accent-text` | Blue text on dark (links, active labels). Plain `#2563EB` text fails contrast on black |
+| accent | `#16A34A` | `bg-accent` | Buttons, active states, progress, focus rings |
+| accent-fg | `#0A0A0A` | `text-accent-fg` | Text on accent fills. White on `#16A34A` is only 3.3:1 |
+| accent-text | `#4ADE80` | `text-accent-text` | Green text on dark (links, active labels) |
 | success | `#16A34A` | `text-success` | Completed workflow states |
 | warning | `#EA580C` | `text-warning` | Leaks, missed items, "before" states |
 
 Rules:
-- Blue is for action and progress only. Never make a whole section blue.
+- Green is for action and progress only. Never make a whole section green.
+- Accent and success share `#16A34A`. Status badges keep "Available now" (solid dot) distinct from "Rollout in progress" (hollow dot, neutral text).
+- Logo: the mark lives in `lib/brand.ts` (traced from the official artwork). Render it through `Logo` / `LogoMark` in `components/ui/Logo.tsx`, white on dark. Never recolor or redraw it.
 - No decorative gradients. The only allowed gradient is the hero spotlight: a white radial light at max opacity `0.08`.
 - Success/warning appear inside product UI and status labels, not as section backgrounds.
 

@@ -10,7 +10,7 @@ export type Status =
 
 const tone: Record<Status, string> = {
   "Available now": "text-success-text ring-success/30 bg-success/10",
-  "Rollout in progress": "text-accent-text ring-accent/35 bg-accent/10",
+  "Rollout in progress": "text-fg ring-white/20 bg-white/[0.05]",
   "Integration-dependent": "text-secondary ring-white/15 bg-white/[0.04]",
   "Coming soon": "text-secondary ring-white/15 bg-white/[0.04]",
   Concept: "text-secondary ring-white/15 bg-white/[0.04]",
@@ -31,7 +31,12 @@ export function StatusBadge({ status, className }: { status: Status | string; cl
         aria-hidden
         className={cn(
           "size-1.5 rounded-full",
-          status === "Available now" ? "bg-success" : status === "Rollout in progress" ? "bg-accent" : "bg-muted",
+          // Solid green = live. Hollow green = rolling out. Grey = not yet.
+          status === "Available now"
+            ? "bg-success"
+            : status === "Rollout in progress"
+              ? "ring-1 ring-inset ring-accent-text"
+              : "bg-muted",
         )}
       />
       {status}

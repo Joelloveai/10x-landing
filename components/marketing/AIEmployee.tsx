@@ -142,7 +142,7 @@ function ChatPreview() {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
                   "max-w-[85%] rounded-2xl px-4 py-2.5 text-[14px] leading-relaxed",
-                  msg.from === "lead" ? "self-start rounded-bl-md bg-white/[0.07]" : "self-end rounded-br-md bg-accent/90 text-white",
+                  msg.from === "lead" ? "self-start rounded-bl-md bg-white/[0.07]" : "self-end rounded-br-md bg-accent text-accent-fg",
                 )}
               >
                 {msg.text}

@@ -2,7 +2,7 @@
 
 import { m, useScroll, useSpring } from "framer-motion";
 
-/** 2px blue reading-progress line at the very top. */
+/** 2px accent reading-progress line at the very top. */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 });

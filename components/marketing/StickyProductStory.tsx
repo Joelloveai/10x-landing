@@ -239,7 +239,7 @@ function Conversation() {
         <m.div {...rise(0)} className="max-w-[80%] self-start rounded-2xl rounded-bl-md bg-white/[0.07] px-4 py-2.5 text-[14px]">
           Hi, is this unit still available?
         </m.div>
-        <m.div {...rise(1)} className="max-w-[80%] self-end rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-[14px] text-white">
+        <m.div {...rise(1)} className="max-w-[80%] self-end rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-[14px] text-accent-fg">
           Hi Sarah, yes. I can help check availability.
         </m.div>
         <m.div {...rise(2)} className="max-w-[80%] self-start rounded-2xl rounded-bl-md bg-white/[0.07] px-4 py-2.5 text-[14px]">
@@ -306,7 +306,7 @@ function Booking() {
                   {...rise(di * 0.5 + si * 0.3)}
                   className={cn(
                     "flex flex-1 items-center justify-center rounded-md text-[11px]",
-                    booked ? "bg-success text-white" : busy ? "bg-white/[0.06] text-subtle" : "border border-dashed border-white/[0.08] text-subtle",
+                    booked ? "bg-success text-accent-fg" : busy ? "bg-white/[0.06] text-subtle" : "border border-dashed border-white/[0.08] text-subtle",
                   )}
                 >
                   {booked ? "2:00 PM" : busy ? "Busy" : s}

@@ -72,7 +72,7 @@ export function VerticalSelector() {
                   onKeyDown={(e) => onKeyDown(e, i)}
                   className={cn(
                     "shrink-0 rounded-full px-4 py-2.5 text-[15px] transition-colors sm:px-5 sm:py-2",
-                    selected ? "bg-accent text-white" : "text-secondary hover:text-fg",
+                    selected ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
                   )}
                 >
                   {item.name}

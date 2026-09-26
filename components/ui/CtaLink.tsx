@@ -10,7 +10,7 @@ type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent text-white hover:bg-accent-hover shadow-[0_0_0_1px_rgb(255_255_255/0.12)_inset,0_8px_24px_-8px_rgb(37_99_235/0.6)]",
+    "bg-accent text-accent-fg hover:bg-accent-hover shadow-[0_0_0_1px_rgb(255_255_255/0.12)_inset,0_8px_24px_-8px_rgb(22_163_74/0.6)]",
   secondary: "bg-white/[0.04] text-fg ring-1 ring-inset ring-white/12 hover:bg-white/[0.08] hover:ring-white/20",
   ghost: "text-secondary hover:text-fg",
 };

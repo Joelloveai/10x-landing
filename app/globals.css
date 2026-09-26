@@ -11,9 +11,11 @@
   --color-secondary: #a1a1aa;
   --color-muted: #71717a;
   --color-subtle: #8b8b94;
-  --color-accent: #2563eb;
-  --color-accent-hover: #3b73f0;
-  --color-accent-text: #60a5fa;
+  --color-accent: #16a34a;
+  --color-accent-hover: #1bb352;
+  --color-accent-text: #4ade80;
+  /* Text on accent fills. White on #16a34a is 3.3:1, near-black is 6:1. */
+  --color-accent-fg: #0a0a0a;
   --color-success: #16a34a;
   --color-success-text: #4ade80;
   --color-warning: #ea580c;
@@ -64,7 +66,7 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
   }
-  ::selection { background: rgb(37 99 235 / 0.45); color: #fff; }
+  ::selection { background: rgb(22 163 74 / 0.45); color: #fff; }
 
   :focus-visible {
     outline: 2px solid var(--color-accent-text);
@@ -204,7 +206,7 @@
     border-radius: 999px;
     background: #fff;
     border: 0;
-    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
+    box-shadow: 0 0 0 4px rgb(22 163 74 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
     transition: box-shadow 0.15s;
   }
   .range::-moz-range-thumb {
@@ -213,11 +215,11 @@
     border-radius: 999px;
     background: #fff;
     border: 0;
-    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
+    box-shadow: 0 0 0 4px rgb(22 163 74 / 0.35), 0 2px 8px rgb(0 0 0 / 0.6);
   }
   .range:focus-visible { outline: none; }
-  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgb(96 165 250 / 0.7); }
-  .range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 6px rgb(96 165 250 / 0.7); }
+  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgb(74 222 128 / 0.7); }
+  .range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 6px rgb(74 222 128 / 0.7); }
 
   .scrollbar-none { scrollbar-width: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }

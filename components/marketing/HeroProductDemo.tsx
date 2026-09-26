@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useReducedMotionPref, useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/ui/Logo";
 
 const STEPS = [
   { key: "lead", label: "New lead" },
@@ -260,8 +261,8 @@ function Sidebar() {
   const items = [Inbox, Users, CalendarDays, SquareKanban, Bell];
   return (
     <div className="hidden flex-col items-center gap-2 border-r border-white/[0.06] bg-[#0f0f10] py-3 md:flex">
-      <div className="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/[0.06] text-[12px] font-semibold tracking-tight">
-        10<span className="text-accent-text">X</span>
+      <div className="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/[0.06] text-[15px] text-fg">
+        <LogoMark />
       </div>
       {items.map((Icon, i) => (
         <div
@@ -374,7 +375,7 @@ function Thread({ step }: { step: number }) {
             >
               {step >= 1 ? (
                 <>
-                  <span className="flex size-4 items-center justify-center rounded-full bg-accent text-[9px] font-semibold text-white">
+                  <span className="flex size-4 items-center justify-center rounded-full bg-accent text-[9px] font-semibold text-accent-fg">
                     J
                   </span>
                   Jason
@@ -398,7 +399,7 @@ function Thread({ step }: { step: number }) {
           {step >= 1 ? (
             <m.div key="assign" {...itemMotion} className="flex items-center justify-center gap-2 text-[11px] text-secondary">
               <span className="h-px w-8 bg-white/10" />
-              <span className="flex size-4 items-center justify-center rounded-full bg-accent text-[9px] font-semibold text-white">J</span>
+              <span className="flex size-4 items-center justify-center rounded-full bg-accent text-[9px] font-semibold text-accent-fg">J</span>
               Assigned to Jason
               <span className="font-mono text-subtle">11:43 PM</span>
               <span className="h-px w-8 bg-white/10" />
@@ -406,7 +407,7 @@ function Thread({ step }: { step: number }) {
           ) : null}
           {step >= 2 ? (
             <m.div key="out" {...itemMotion} className="max-w-[82%] self-end">
-              <div className="rounded-2xl rounded-br-md bg-accent px-3.5 py-2.5 text-[13px] text-white">
+              <div className="rounded-2xl rounded-br-md bg-accent px-3.5 py-2.5 text-[13px] text-accent-fg">
                 Hi Sarah, yes. I can help check availability.
               </div>
               <p className="mt-1 text-right font-mono text-[10px] text-subtle">Jason · 11:46 PM</p>
@@ -450,7 +451,7 @@ function Thread({ step }: { step: number }) {
                     key={d}
                     className={cn(
                       "rounded-md py-1.5 text-center text-[11px]",
-                      d === "Sat" ? "bg-success text-white" : "bg-white/[0.04] text-subtle",
+                      d === "Sat" ? "bg-success text-accent-fg" : "bg-white/[0.04] text-subtle",
                     )}
                   >
                     {d}

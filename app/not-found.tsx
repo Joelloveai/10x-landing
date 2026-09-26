@@ -7,7 +7,7 @@ export default function NotFound() {
       <Logo className="text-[28px]" />
       <h1 className="text-display mt-8">This page leaked.</h1>
       <p className="text-lead mt-4 text-secondary">The page you&apos;re looking for doesn&apos;t exist.</p>
-      <Link href="/" className="mt-8 rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-white hover:bg-accent-hover">
+      <Link href="/" className="mt-8 rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-accent-fg hover:bg-accent-hover">
         Back to home
       </Link>
     </main>

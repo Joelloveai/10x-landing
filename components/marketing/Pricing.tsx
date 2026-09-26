@@ -28,7 +28,7 @@ export function Pricing() {
               className={cn(
                 "relative flex min-w-0 flex-col rounded-2xl border p-6 sm:p-8",
                 plan.highlighted
-                  ? "border-accent/60 bg-elevated shadow-[0_0_0_1px_rgb(37_99_235/0.25),0_30px_80px_-30px_rgb(37_99_235/0.35)] lg:-my-3 lg:py-11"
+                  ? "border-accent/60 bg-elevated shadow-[0_0_0_1px_rgb(22_163_74/0.25),0_30px_80px_-30px_rgb(22_163_74/0.35)] lg:-my-3 lg:py-11"
                   : "border-border bg-surface",
               )}
             >
@@ -37,7 +37,7 @@ export function Pricing() {
                   {plan.name}
                 </h3>
                 {plan.highlighted ? (
-                  <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.08em] text-white">
+                  <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.08em] text-accent-fg">
                     Our recommendation
                   </span>
                 ) : null}

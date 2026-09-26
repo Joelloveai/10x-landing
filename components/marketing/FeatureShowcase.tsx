@@ -154,7 +154,7 @@ function BookingUI() {
             key={t}
             className={cn(
               "rounded-md py-1.5 text-center font-mono text-[11px]",
-              t === "2:00" ? "bg-accent text-white" : "bg-white/[0.04] text-secondary",
+              t === "2:00" ? "bg-accent text-accent-fg" : "bg-white/[0.04] text-secondary",
             )}
           >
             {t}
