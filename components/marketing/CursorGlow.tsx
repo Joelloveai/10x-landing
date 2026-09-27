@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import { m, useMotionValue, useSpring } from "framer-motion";
 import { useRichPointer } from "@/lib/hooks/useMediaQuery";
 
-const SIZE = 600;
+const SIZE = 800;
 
-/** A faint 600px blue light that trails the cursor. Desktop fine pointers only, off for reduced motion. */
+/** A faint 800px blue light that trails the cursor. Desktop fine pointers only, off for reduced motion. */
 export function CursorGlow() {
   const enabled = useRichPointer();
   const x = useMotionValue(-SIZE);
@@ -37,7 +37,7 @@ export function CursorGlow() {
     <m.div
       aria-hidden
       style={{ x: sx, y: sy, opacity, width: SIZE, height: SIZE }}
-      className="pointer-events-none fixed left-0 top-0 z-[5] rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.06),transparent)] transition-opacity duration-500"
+      className="pointer-events-none fixed left-0 top-0 z-[5] rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent)] transition-opacity duration-500"
     />
   );
 }

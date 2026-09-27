@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { m, type Variants } from "framer-motion";
 import { Check } from "lucide-react";
 import { pricingCopy, pricingPlans, yearOne } from "@/lib/pricing";
@@ -16,6 +17,17 @@ import { PricingViewTracker } from "./PricingViewTracker";
 const EASE = [0.16, 1, 0.3, 1] as const;
 const launch = pricingPlans.find((p) => p.slug === "launch") ?? pricingPlans[0];
 
+type Currency = "RM" | "USD";
+
+/** USD prices, set separately from RM (not converted). */
+const usd: Record<string, { monthly: number; setup: number }> = {
+  launch: { monthly: 99, setup: 75 },
+  growth: { monthly: 189, setup: 149 },
+  scale: { monthly: 349, setup: 249 },
+};
+
+const formatUSD = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
+
 const grid: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const card: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -24,9 +36,38 @@ const card: Variants = {
 
 /** Chapter 06 header and plans. Growth is the one featured card. */
 export function Pricing() {
+  const [currency, setCurrency] = useState<Currency>("RM");
+  const format = currency === "RM" ? formatRM : formatUSD;
+  const price = (plan: (typeof pricingPlans)[number]) =>
+    currency === "RM" ? { monthly: plan.monthly, setup: plan.setup } : (usd[plan.slug] ?? { monthly: plan.monthly, setup: plan.setup });
+
   return (
     <>
-      <ChapterHeader num="06" label="Pricing & trust" id="pricing-title" title={pricingCopy.title} lead={pricingCopy.lead} />
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <ChapterHeader
+          num="06"
+          label="Pricing & trust"
+          id="pricing-title"
+          title={pricingCopy.title}
+          lead={`${format(price(launch).monthly)} per month. ${format(price(launch).monthly / 30)} per day. If 10X helps you close one extra deal this year, it pays for itself.`}
+        />
+        <div role="group" aria-label="Currency" className="inline-flex shrink-0 self-start rounded-full border border-border bg-bg p-1">
+          {(["RM", "USD"] as const).map((c) => (
+            <button
+              key={c}
+              type="button"
+              aria-pressed={currency === c}
+              onClick={() => setCurrency(c)}
+              className={cn(
+                "min-w-14 rounded-full px-3.5 py-1.5 font-mono text-[13px] transition-colors",
+                currency === c ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
+              )}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="relative mt-12">
         <PricingViewTracker />
@@ -39,6 +80,7 @@ export function Pricing() {
         >
         {pricingPlans.map((plan) => {
           const isSales = plan.cta === siteConfig.cta.sales;
+          const p = price(plan);
           return (
             <m.li key={plan.slug} variants={card} className={cn("min-w-0", plan.highlighted && "lg:-my-3")}>
               <Tilt max={3}>
@@ -71,15 +113,16 @@ export function Pricing() {
                   <div className="mt-8">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
                       <CountUp
-                        to={plan.monthly}
-                        format={formatRM}
+                        key={currency}
+                        to={p.monthly}
+                        format={format}
                         className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums"
                       />
                       <span className="text-[15px] text-secondary">/mo</span>
                     </p>
-                    <p className="mt-2 text-[14px] text-secondary">+ {formatRM(plan.setup)} setup</p>
+                    <p className="mt-2 text-[14px] text-secondary">+ {format(p.setup)} setup</p>
                     <p className="mt-1 text-[14px] text-secondary">
-                      Year 1: <span className="text-fg">{formatRM(yearOne(plan))}</span>
+                      Year 1: <span className="text-fg">{format(p.monthly * 12 + p.setup)}</span>
                     </p>
                   </div>
 
