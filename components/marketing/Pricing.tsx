@@ -46,6 +46,9 @@ const currencies = [
 
 type CurrencyCode = (typeof currencies)[number]["code"];
 
+/** Junior hire range for the compare line. RM keeps the Malaysian figure; other currencies swap the symbol. */
+const juniorHire = (symbol: string) => (symbol === "RM" ? "RM2,500-3,500/month" : `${symbol}500-900/month`);
+
 const grid: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const card: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -66,7 +69,7 @@ export function Pricing() {
 
   return (
     <>
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <div>
         <ChapterHeader
           num="06"
           label="Pricing & trust"
@@ -74,33 +77,35 @@ export function Pricing() {
           title={pricingCopy.title}
           lead={`${format(price(launch).monthly)} per month. ${format(price(launch).monthly / 30)} per day. If 10X helps you close one extra deal this year, it pays for itself.`}
         />
-        <div className="flex shrink-0 flex-col gap-3 lg:items-end">
-          <div role="group" aria-label="Currency" className="flex flex-wrap gap-1.5 sm:gap-2">
-            {currencies.map(({ code }) => (
-              <button
-                key={code}
-                type="button"
-                aria-pressed={currency === code}
-                onClick={() => {
-                  setCurrency(code);
-                  setSwitched(true);
-                }}
-                className={cn(
-                  "min-w-12 rounded-full border px-2.5 py-1.5 font-mono text-[13px] transition-colors sm:min-w-[52px] sm:px-3",
-                  currency === code
-                    ? "border-accent bg-accent text-accent-fg"
-                    : "border-border text-secondary hover:border-white/25 hover:text-fg",
-                )}
-              >
-                {code}
-              </button>
-            ))}
-          </div>
-          <p className="text-[13px] text-secondary">Flat monthly subscription. No surprises.</p>
-        </div>
       </div>
 
-      <div className="relative mt-12">
+      {/* Currency pills, centred over the cards, so above Growth on desktop. */}
+      <div className="mt-10 flex flex-col items-center gap-3">
+        <div role="group" aria-label="Currency" className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
+          {currencies.map(({ code }) => (
+            <button
+              key={code}
+              type="button"
+              aria-pressed={currency === code}
+              onClick={() => {
+                setCurrency(code);
+                setSwitched(true);
+              }}
+              className={cn(
+                "min-w-12 rounded-full border px-2.5 py-1.5 font-mono text-[13px] transition-colors sm:min-w-[52px] sm:px-3",
+                currency === code
+                  ? "border-accent bg-accent text-accent-fg"
+                  : "border-border text-secondary hover:border-white/25 hover:text-fg",
+              )}
+            >
+              {code}
+            </button>
+          ))}
+        </div>
+        <p className="text-[13px] text-secondary">Flat monthly subscription. No surprises.</p>
+      </div>
+
+      <div className="relative mt-8">
         <PricingViewTracker />
         <m.ul
           variants={grid}
@@ -190,9 +195,8 @@ export function Pricing() {
 
       <Reveal className="mx-auto mt-10 max-w-2xl text-center">
         <p className="text-balance text-[16px] text-secondary">
-          Compare: one junior hire costs RM2,500-3,500/month. 10X {launch.name} costs{" "}
-          <span className="text-fg">{formatRM(launch.monthly)}/month</span>. Year 1:{" "}
-          <span className="text-fg">{formatRM(yearOne(launch))}</span>.
+          Compare: one junior hire costs {juniorHire(cur.symbol)} in most markets. 10X {launch.name} starts at{" "}
+          <span className="text-fg">{format(price(launch).monthly)}/month</span>.
         </p>
       </Reveal>
     </>

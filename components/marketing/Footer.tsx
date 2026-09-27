@@ -9,10 +9,26 @@ const PHONE = "+60 12-372 8392";
 export function Footer() {
   const { company, contact } = siteConfig;
   return (
-    <footer className="border-t border-border pb-28 pt-14 md:pb-14">
-      <div className="container-x flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-        <Logo className="text-[22px]" />
-        <nav aria-label="Legal" className="flex flex-col gap-2 text-[14px] text-secondary md:items-end">
+    <footer className="border-t border-border pb-28 pt-12 md:pb-12">
+      <div className="container-x flex flex-col items-center gap-1.5 text-center text-[13px] text-secondary">
+        <Logo className="mb-3 text-[22px]" />
+        <p>
+          © {siteConfig.copyrightYear} {company.name}
+        </p>
+        <p>Reg {company.registration}</p>
+        <p>
+          <TrackedAnchor href={salesMailto} event="email_clicked" eventProps={{ location: "footer" }} className="hover:text-fg">
+            {contact.email}
+          </TrackedAnchor>
+          <span aria-hidden className="px-1.5">
+            ·
+          </span>
+          <a href={`tel:${PHONE.replace(/[^+\d]/g, "")}`} className="hover:text-fg">
+            {PHONE}
+          </a>
+        </p>
+        {/* Legal pages are only reachable from here, so they stay as one quiet line. */}
+        <nav aria-label="Legal" className="mt-3 flex gap-4 text-[12px] text-subtle">
           <Link href="/privacy" className="hover:text-fg">
             Privacy
           </Link>
@@ -23,25 +39,6 @@ export function Footer() {
             Data Deletion
           </Link>
         </nav>
-      </div>
-      <div className="container-x mt-12 space-y-2 text-[13px] text-secondary">
-        <p>
-          © {siteConfig.copyrightYear} {company.name}
-        </p>
-        {/* Company block: always the last line of the page. */}
-        <p className="flex flex-wrap gap-x-2 gap-y-1">
-          <span>10X is a product of {company.name}</span>
-          <span aria-hidden>/</span>
-          <span>Reg {company.registration}</span>
-          <span aria-hidden>/</span>
-          <TrackedAnchor href={salesMailto} event="email_clicked" eventProps={{ location: "footer" }} className="hover:text-fg">
-            {contact.email}
-          </TrackedAnchor>
-          <span aria-hidden>/</span>
-          <a href={`tel:${PHONE.replace(/[^+\d]/g, "")}`} className="hover:text-fg">
-            {PHONE}
-          </a>
-        </p>
       </div>
     </footer>
   );

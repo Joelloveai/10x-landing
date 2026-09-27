@@ -2,18 +2,16 @@
 
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
-import { salesMailto, siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/lib/site-config";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { TrackedAnchor } from "@/components/ui/TrackedAnchor";
 import { SectionItem, SectionWrapper } from "./SectionWrapper";
 
 /** The audit form card inside chapter 07. The final CTA scrolls here. */
 export const AUDIT_FORM_ID = "audit-form";
 
-/** Chapter 07 opener, CTA and trust strip. The contact form is passed in as children. */
+/** Chapter 07 opener and CTA. The contact form is passed in as children. */
 export function FinalCTA({ children }: { children: ReactNode }) {
-  const { company, contact } = siteConfig;
   return (
     <>
       <SectionWrapper className="mx-auto max-w-3xl text-center">
@@ -55,25 +53,6 @@ export function FinalCTA({ children }: { children: ReactNode }) {
       </SectionWrapper>
 
       {children}
-
-      <p className="mx-auto mt-12 max-w-3xl text-balance text-center text-[13px] leading-[1.8] text-secondary">
-        10X is a product of {company.name}
-        <span aria-hidden className="px-2 text-subtle">
-          /
-        </span>
-        Reg {company.registration}
-        <span aria-hidden className="px-2 text-subtle">
-          /
-        </span>
-        <TrackedAnchor
-          href={salesMailto}
-          event="email_clicked"
-          eventProps={{ location: "trust_strip" }}
-          className="hover:text-fg"
-        >
-          {contact.email}
-        </TrackedAnchor>
-      </p>
     </>
   );
 }
