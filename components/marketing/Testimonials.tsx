@@ -203,7 +203,7 @@ function Card({ t, index, duplicate, tilt }: { t: Testimonial; index: number; du
         }}
         tabIndex={duplicate ? -1 : 0}
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-7",
+          "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-7",
           "transition-[border-color,box-shadow,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "hover:border-[rgba(37,99,235,0.4)] hover:shadow-[0_12px_40px_-12px_rgba(37,99,235,0.3)]",
           "focus-visible:border-[rgba(37,99,235,0.4)] focus-visible:outline-none",
@@ -226,6 +226,11 @@ function Card({ t, index, duplicate, tilt }: { t: Testimonial; index: number; du
           <p>{t.text}</p>
         </blockquote>
         <p className="mt-3 text-[13px] leading-snug text-subtle">{t.context}</p>
+        {/* Hover progress: fills over 3s while the marquee is paused on this card. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-accent transition-transform duration-300 ease-linear group-hover:scale-x-100 group-hover:duration-[3000ms] group-focus-visible:scale-x-100 group-focus-visible:duration-[3000ms] motion-reduce:hidden"
+        />
       </m.figure>
     </li>
   );

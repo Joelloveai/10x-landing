@@ -12,16 +12,15 @@ import { INTENT_EVENT } from "@/components/ui/CtaLink";
 export const OPEN_PALETTE_EVENT = "tenx:open-palette";
 
 const commands = [
-  { label: "Go to Solutions", target: sectionIds.leak },
-  { label: "Go to How It Works", target: sectionIds.howItWorks },
-  { label: "Go to AI Employee", target: sectionIds.ai },
+  { label: "Go to Hero", target: sectionIds.hero },
+  { label: "Go to Problem", target: sectionIds.leak },
+  { label: "Go to Calculator", target: sectionIds.calculator },
   { label: "Go to Pricing", target: sectionIds.pricing },
-  { label: "Go to Security", target: sectionIds.security },
+  { label: "Go to Audit Form", target: sectionIds.audit },
   { label: "Get Free Audit", target: sectionIds.audit, primary: true, intent: "audit" },
-  { label: "Talk to Sales", target: sectionIds.audit, primary: true, intent: "sales" },
 ] as const;
 
-/** Optional Cmd/Ctrl+K quick navigation. A convenience, never the main path. */
+/** Cmd/Ctrl+K quick navigation: five sections and one action. A convenience, never the main path. */
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -65,7 +64,7 @@ export function CommandPalette() {
     if (!cmd) return;
     setOpen(false);
     if ("intent" in cmd) {
-      track(cmd.intent === "sales" ? "talk_to_sales_clicked" : "cta_clicked", { location: "command_palette" });
+      track("cta_clicked", { location: "command_palette" });
       window.dispatchEvent(new CustomEvent(INTENT_EVENT, { detail: cmd.intent }));
     }
     requestAnimationFrame(() => scrollToId(cmd.target));

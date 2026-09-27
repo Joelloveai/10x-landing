@@ -1,10 +1,10 @@
 import { sectionIds } from "@/lib/site-config";
-import { ChapterHeader } from "@/components/ui/ChapterHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { BusinessSelector } from "./BusinessSelector";
 import { LossCalculator } from "./LossCalculator";
+import { ProblemSection } from "./ProblemSection";
 
-/** Chapter 02. One selector for five business types, then a compact estimate. */
+/** Chapter 02. The after-hours problem, then one selector for five business types and a compact estimate. */
 export function LeakSection() {
   return (
     <section
@@ -14,23 +14,14 @@ export function LeakSection() {
       className="border-t border-border py-24 md:py-32"
     >
       <div className="container-x">
-        <ChapterHeader
-          num="02"
-          label="The leak"
-          id="leak-title"
-          title={
-            <>
-              Your leads don&apos;t disappear. <span className="text-secondary">They leak.</span>
-            </>
-          }
-          lead="The enquiry arrives. Someone gets distracted. The customer moves on."
-          className="max-w-4xl"
-        />
-        <Reveal className="mt-12">
+        <ProblemSection />
+        <Reveal className="mt-16 md:mt-20">
           <BusinessSelector />
         </Reveal>
         <Reveal className="mt-4" delay={80}>
-          <LossCalculator />
+          <div id={sectionIds.calculator}>
+            <LossCalculator />
+          </div>
         </Reveal>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { BusinessProvider } from "@/components/providers/BusinessProvider";
 import { AITeam } from "@/components/marketing/AITeam";
 import { AuditCTA } from "@/components/marketing/AuditCTA";
 import { CommandPalette } from "@/components/marketing/CommandPalette";
+import { CursorGlow } from "@/components/marketing/CursorGlow";
 import { DepthBackground } from "@/components/marketing/DepthBackground";
 import { FocusSystem } from "@/components/marketing/FocusSystem";
 import { Footer } from "@/components/marketing/Footer";
@@ -21,8 +22,8 @@ import { Workflow } from "@/components/marketing/Workflow";
 import { homepageJsonLd, jsonLdScript } from "@/lib/structured-data";
 
 /**
- * Order: hero, problem, how it works, one person company, AI team, features,
- * testimonials, pricing, final CTA. A fixed depth background sits behind at z-0.
+ * Order: hero, problem + calculator, how it works, one person company, AI team, features,
+ * testimonials, pricing, final CTA. A fixed depth background sits behind at z-0, the cursor glow above it.
  * Suspense boundaries let React hydrate chapters in separate, interruptible chunks.
  */
 export default function HomePage() {
@@ -30,14 +31,16 @@ export default function HomePage() {
     <MotionProvider>
       <BusinessProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(homepageJsonLd()) }} />
+        <CursorGlow />
         <ScrollProgress />
+        <CommandPalette />
         <Navbar />
         <FocusSystem />
         <DepthBackground />
         <main id="main" tabIndex={-1} className="relative z-10 focus:outline-none">
           {/* Hero */}
           <Hero />
-          {/* Problem + calculator (one section: LeakSection holds both) */}
+          {/* Problem + calculator (one chapter: LeakSection renders ProblemSection and LossCalculator) */}
           <Suspense fallback={null}>
             <LeakSection />
           </Suspense>
@@ -61,11 +64,11 @@ export default function HomePage() {
           <Suspense fallback={null}>
             <Testimonials />
           </Suspense>
-          {/* Pricing + FAQ (one section: PricingFAQ holds both) */}
+          {/* Pricing + FAQ (one chapter: PricingFAQ renders Pricing, Security and FAQ) */}
           <Suspense fallback={null}>
             <PricingFAQ />
           </Suspense>
-          {/* Final CTA */}
+          {/* Final CTA (AuditCTA renders FinalCTA around the form) */}
           <Suspense fallback={null}>
             <AuditCTA />
           </Suspense>
@@ -74,7 +77,6 @@ export default function HomePage() {
           <Footer />
         </div>
         <MobileStickyCTA />
-        <CommandPalette />
         <ScrollDepthTracker />
       </BusinessProvider>
     </MotionProvider>

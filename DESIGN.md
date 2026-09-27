@@ -31,7 +31,7 @@ If a change conflicts with this file, update this file first.
 | success-fg | `#0A0A0A` | Text on success fills (white fails contrast) |
 | warning | `#EA580C` | Leaks, missed items, escalations |
 
-No decorative gradients. Only exception: the barely visible white radial spotlight behind the hero (max opacity 0.08).
+No decorative gradients. Exceptions: the barely visible white radial spotlight behind the hero (max opacity 0.08), the 600px blue cursor glow (0.06, desktop only), card glare (white 0.04) and the section entry glow (0 0 80px, 0.06).
 
 ## 3. Typography
 
@@ -54,11 +54,13 @@ Inter (variable) for everything; JetBrains Mono for timestamps, stage numbers an
 
 | Level | Allowed |
 | --- | --- |
-| 1 Core | Hero word reveal (CSS), section fade-up, product state changes |
-| 2 Premium | Hero parallax/perspective, focus glow, the single sticky workflow story, testimonial marquee |
-| 3 Optional | Magnetic hero CTA (4px), Cmd/Ctrl+K palette. No text scramble. |
+| 1 Core | Hero word reveal (CSS, 0.06s stagger), section fade-up (SectionWrapper: once, -100px, 0.08s stagger), product state changes |
+| 2 Premium | Hero demo (3D window, 12s CSS loop, ±2deg mouse-follow), focus glow, the single sticky workflow story, testimonial marquee (45s, pauses on hover, 3s hover progress bar), count-ups (40%, 78%, prices), calculator result spring |
+| 3 Optional | Magnetic CTAs (within 80px, max 6px): hero, pricing, final CTA. Card tilt (±3deg pricing, ±4deg AI team, glare, 4px lift). Cursor glow. Cmd/Ctrl+K palette. No text scramble. |
 
-Calm only: no flashes, zooms, shakes, neon pulses or moving backgrounds. `prefers-reduced-motion` disables spotlight, parallax, marquee and scroll-linking; the workflow becomes tap-driven and everything stays readable.
+Calm only: no flashes, zooms, shakes or moving backgrounds. The one pulse is the Growth badge (opacity 0.8 to 1, 3s). Animate transform and opacity only.
+
+`prefers-reduced-motion` disables spotlight, parallax, tilt, magnetic pull, cursor glow, count-ups and pulses, and shows the hero demo in its finished state. The workflow becomes tap-driven and everything stays readable. The testimonial marquee stays on by request. Touch devices get no cursor-follow, magnetic pull or tilt.
 
 ## 6. Layout
 

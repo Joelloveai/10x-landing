@@ -12,6 +12,7 @@ import { useBusiness } from "@/components/providers/BusinessProvider";
 import { ctaClasses, INTENT_EVENT, type Intent } from "@/components/ui/CtaLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { TrackedAnchor } from "@/components/ui/TrackedAnchor";
+import { AUDIT_FORM_ID, FinalCTA } from "./FinalCTA";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -164,169 +165,146 @@ export function AuditCTA() {
         className="pointer-events-none absolute left-1/2 top-0 -z-10 size-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.045),transparent_75%)]"
       />
       <div className="container-x">
-        <Reveal className="mx-auto max-w-3xl text-center">
-          <p className="mb-5 flex items-center justify-center gap-3">
-            <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
-              07
-            </span>
-            <span className="eyebrow">Book a conversation</span>
-          </p>
-          <h2 id="audit-title" data-focus-target className="text-hero text-balance focus:outline-none">
-            Stop losing leads.
-          </h2>
-          <p className="text-lead mx-auto mt-5 max-w-xl text-secondary">
-            See how 10X can fit the way your business actually works.
-          </p>
-        </Reveal>
-
-        <Reveal delay={80} className="mx-auto mt-12 max-w-xl">
-          <div className="halo rounded-2xl border border-accent/40 bg-surface p-6 shadow-window sm:p-8">
-            <AnimatePresence mode="wait" initial={false}>
-              {status !== "success" ? (
-                <m.div key="form" exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-                  <div role="tablist" aria-label="What would you like?" className="mb-6 grid grid-cols-2 rounded-full border border-border bg-bg p-1">
-                    {(["audit", "sales"] as const).map((k) => (
-                      <button
-                        key={k}
-                        type="button"
-                        role="tab"
-                        aria-selected={intent === k}
-                        aria-controls="contact-form"
-                        onClick={() => {
-                          setIntent(k);
-                          if (k === "sales") track("talk_to_sales_clicked", { location: "form_tab" });
-                        }}
-                        className={cn(
-                          "rounded-full px-3 py-2 text-[14px] transition-colors",
-                          intent === k ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
-                        )}
-                      >
-                        {copy[k].tab}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div id="contact-form" role="tabpanel">
-                  <form noValidate onSubmit={onSubmit} aria-describedby="audit-micro">
-                    <h3 className="text-title text-balance">{c.title}</h3>
-                    <p className="mt-2 text-[15px] text-secondary">{c.body}</p>
-
-                    <label htmlFor={inputId} className="mt-6 block text-[15px] font-medium">
-                      WhatsApp number
-                    </label>
-                    <input
-                      ref={inputRef}
-                      id={inputId}
-                      name="whatsapp"
-                      type="tel"
-                      inputMode="tel"
-                      autoComplete="tel"
-                      placeholder="012-345 6789"
-                      value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        if (fieldError) setFieldError(null);
-                      }}
-                      onFocus={() => trackOnce("audit_started", { intent })}
-                      aria-invalid={fieldError ? true : undefined}
-                      aria-describedby={fieldError ? errorId : undefined}
-                      maxLength={20}
-                      className={cn(
-                        "mt-2 h-13 w-full rounded-xl border bg-elevated px-4 text-[17px] text-fg placeholder:text-subtle transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
-                        fieldError ? "border-warning" : "border-border focus:border-accent",
-                      )}
-                    />
-                    {fieldError ? (
-                      <p id={errorId} role="alert" className="mt-2 text-[14px] text-warning-text">
-                        {fieldError}
-                      </p>
-                    ) : null}
-
-                    {/* Honeypot: hidden from people and assistive tech. */}
-                    <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
-                      <label>
-                        Company website
-                        <input
-                          tabIndex={-1}
-                          autoComplete="off"
-                          name="company_website"
-                          value={honeypot}
-                          onChange={(e) => setHoneypot(e.target.value)}
-                        />
-                      </label>
+        <FinalCTA>
+          <Reveal delay={80} className="mx-auto mt-12 max-w-xl">
+            <div id={AUDIT_FORM_ID} className="halo rounded-2xl border border-accent/40 bg-surface p-6 shadow-window sm:p-8">
+              <AnimatePresence mode="wait" initial={false}>
+                {status !== "success" ? (
+                  <m.div key="form" exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                    <div role="tablist" aria-label="What would you like?" className="mb-6 grid grid-cols-2 rounded-full border border-border bg-bg p-1">
+                      {(["audit", "sales"] as const).map((k) => (
+                        <button
+                          key={k}
+                          type="button"
+                          role="tab"
+                          aria-selected={intent === k}
+                          aria-controls="contact-form"
+                          onClick={() => {
+                            setIntent(k);
+                            if (k === "sales") track("talk_to_sales_clicked", { location: "form_tab" });
+                          }}
+                          className={cn(
+                            "rounded-full px-3 py-2 text-[14px] transition-colors",
+                            intent === k ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
+                          )}
+                        >
+                          {copy[k].tab}
+                        </button>
+                      ))}
                     </div>
 
-                    <p className="mt-6 text-center text-[12px] leading-[1.8] text-subtle">
-                      10X is a product of BTB SOLUTIONS
-                      <br />
-                      Registered in Malaysia · Reg 202503175924
-                      <br />
-                      Seremban · Kuala Lumpur
-                      <br />
-                      {siteConfig.contact.email}
-                    </p>
+                    <div id="contact-form" role="tabpanel">
+                    <form noValidate onSubmit={onSubmit} aria-describedby="audit-micro">
+                      <h3 className="text-title text-balance">{c.title}</h3>
+                      <p className="mt-2 text-[15px] text-secondary">{c.body}</p>
 
-                    <button
-                      type="submit"
-                      disabled={status === "sending"}
-                      className={ctaClasses("primary", "lg", "mt-6 w-full disabled:cursor-wait disabled:opacity-80")}
-                    >
-                      {status === "sending" ? (
-                        <>
-                          <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                          Sending…
-                        </>
-                      ) : (
-                        <>
-                          {c.submit}
-                          <ArrowRight className="size-4" aria-hidden />
-                        </>
-                      )}
-                    </button>
-                    <p id="audit-micro" className="mt-3 text-center text-[14px] text-secondary">
-                      {intent === "audit" ? siteConfig.cta.microcopy : "Our sales team replies within 1 business day."}
-                    </p>
-                    <div role="status" aria-live="polite">
-                      {formError ? (
-                        <p className="mt-4 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-[14px] text-fg">
-                          {formError} <span className="text-secondary">You can also email the {siteConfig.contact.label} at </span>
-                          <a href={salesMailto} className="text-accent-text underline underline-offset-4">
-                            {siteConfig.contact.email}
-                          </a>
-                          .
+                      <label htmlFor={inputId} className="mt-6 block text-[15px] font-medium">
+                        WhatsApp number
+                      </label>
+                      <input
+                        ref={inputRef}
+                        id={inputId}
+                        name="whatsapp"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        placeholder="012-345 6789"
+                        value={phone}
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                          if (fieldError) setFieldError(null);
+                        }}
+                        onFocus={() => trackOnce("audit_started", { intent })}
+                        aria-invalid={fieldError ? true : undefined}
+                        aria-describedby={fieldError ? errorId : undefined}
+                        maxLength={20}
+                        className={cn(
+                          "mt-2 h-13 w-full rounded-xl border bg-elevated px-4 text-[17px] text-fg placeholder:text-subtle transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+                          fieldError ? "border-warning" : "border-border focus:border-accent",
+                        )}
+                      />
+                      {fieldError ? (
+                        <p id={errorId} role="alert" className="mt-2 text-[14px] text-warning-text">
+                          {fieldError}
                         </p>
                       ) : null}
-                    </div>
-                    <noscript>
-                      <p className="mt-4 text-[14px] text-secondary">
-                        This form needs JavaScript. You can email the {siteConfig.contact.label} at {siteConfig.contact.email}.
+
+                      {/* Honeypot: hidden from people and assistive tech. */}
+                      <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                        <label>
+                          Company website
+                          <input
+                            tabIndex={-1}
+                            autoComplete="off"
+                            name="company_website"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                          />
+                        </label>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={status === "sending"}
+                        className={ctaClasses("primary", "lg", "mt-6 w-full disabled:cursor-wait disabled:opacity-80")}
+                      >
+                        {status === "sending" ? (
+                          <>
+                            <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                            Sending…
+                          </>
+                        ) : (
+                          <>
+                            {c.submit}
+                            <ArrowRight className="size-4" aria-hidden />
+                          </>
+                        )}
+                      </button>
+                      <p id="audit-micro" className="mt-3 text-center text-[14px] text-secondary">
+                        {intent === "audit" ? siteConfig.cta.microcopy : "Our sales team replies within 1 business day."}
                       </p>
-                    </noscript>
-                  </form>
-                  </div>
-                </m.div>
-              ) : (
-                <SuccessStep
-                  key="success"
-                  whatsapp={normalized ?? ""}
-                  initialBusiness={chosen ? business : undefined}
-                  formMountedAt={mountedAt.current}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-          <p className="mt-5 text-center text-[14px] text-secondary">
-            Prefer email? {siteConfig.contact.label} ·{" "}
-            <TrackedAnchor
-              href={salesMailto}
-              event="email_clicked"
-              eventProps={{ location: "contact" }}
-              className="text-fg underline decoration-white/30 underline-offset-4 hover:decoration-white"
-            >
-              {siteConfig.contact.email}
-            </TrackedAnchor>
-          </p>
-        </Reveal>
+                      <div role="status" aria-live="polite">
+                        {formError ? (
+                          <p className="mt-4 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-[14px] text-fg">
+                            {formError} <span className="text-secondary">You can also email the {siteConfig.contact.label} at </span>
+                            <a href={salesMailto} className="text-accent-text underline underline-offset-4">
+                              {siteConfig.contact.email}
+                            </a>
+                            .
+                          </p>
+                        ) : null}
+                      </div>
+                      <noscript>
+                        <p className="mt-4 text-[14px] text-secondary">
+                          This form needs JavaScript. You can email the {siteConfig.contact.label} at {siteConfig.contact.email}.
+                        </p>
+                      </noscript>
+                    </form>
+                    </div>
+                  </m.div>
+                ) : (
+                  <SuccessStep
+                    key="success"
+                    whatsapp={normalized ?? ""}
+                    initialBusiness={chosen ? business : undefined}
+                    formMountedAt={mountedAt.current}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+            <p className="mt-5 text-center text-[14px] text-secondary">
+              Prefer email? {siteConfig.contact.label} ·{" "}
+              <TrackedAnchor
+                href={salesMailto}
+                event="email_clicked"
+                eventProps={{ location: "contact" }}
+                className="text-fg underline decoration-white/30 underline-offset-4 hover:decoration-white"
+              >
+                {siteConfig.contact.email}
+              </TrackedAnchor>
+            </p>
+          </Reveal>
+        </FinalCTA>
       </div>
     </section>
   );

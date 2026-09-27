@@ -1,10 +1,12 @@
 export type PricingPlan = {
   slug: string;
   name: string;
-  foundingPrice: string;
-  regularPrice: string;
-  setupPrice: string;
+  /** Monthly price in RM. */
+  monthly: number;
+  /** One-time setup fee in RM. */
+  setup: number;
   description: string;
+  features: string[];
   highlighted?: boolean;
   cta: string;
 };
@@ -13,29 +15,51 @@ export const pricingPlans: PricingPlan[] = [
   {
     slug: "launch",
     name: "Launch",
-    foundingPrice: "RM427",
-    regularPrice: "RM599",
-    setupPrice: "RM300",
-    description: "For teams that need a simple system for leads and follow-up.",
+    monthly: 427,
+    setup: 300,
+    description: "Small teams that need a clear system.",
+    // "CRM" is a forbidden word (DESIGN.md §8).
+    features: ["Lead capture and pipeline", "Booking page", "Basic automation", "Daily brief"],
     cta: "Get Free Audit",
   },
   {
     slug: "growth",
     name: "Growth",
-    foundingPrice: "RM799",
-    regularPrice: "RM1,199",
-    setupPrice: "RM500",
-    description: "For teams ready to automate more of the customer journey.",
+    monthly: 797,
+    setup: 600,
+    description: "Teams ready to automate.",
+    features: [
+      "Everything in Launch",
+      "AI Sales Director",
+      "AI Follow-up Specialist",
+      "WhatsApp, Instagram, Facebook, Email",
+      "Team reporting",
+    ],
     highlighted: true,
     cta: "Get Free Audit",
   },
   {
     slug: "scale",
     name: "Scale",
-    foundingPrice: "RM1,499+",
-    regularPrice: "RM1,999+",
-    setupPrice: "RM1,000+",
-    description: "For businesses requiring deeper workflows and custom implementation.",
+    monthly: 1497,
+    setup: 1000,
+    description: "10+ staff or multiple outlets.",
+    features: [
+      "Everything in Growth",
+      "AI Operations Manager",
+      "AI Admin Assistant",
+      "Multiple pipelines",
+      "Priority support",
+    ],
     cta: "Talk to Sales",
   },
 ];
+
+/** First-year cost: twelve months plus setup. */
+export const yearOne = (plan: PricingPlan) => plan.monthly * 12 + plan.setup;
+
+export const pricingCopy = {
+  title: "One system. One price. No surprises.",
+  lead: "RM427 per month. RM14 per day. If 10X helps you close one extra deal this year, it pays for itself.",
+  compare: "Compare: one junior hire costs RM2,500-3,500/month. 10X does the same work for a fraction.",
+} as const;

@@ -1,13 +1,13 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { m, useMotionValue, useSpring, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import { FileText, Moon, Repeat, Target, type LucideIcon } from "lucide-react";
 import { sectionIds } from "@/lib/site-config";
-import { useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { ChapterHeader } from "@/components/ui/ChapterHeader";
 import { Reveal } from "@/components/ui/Reveal";
+import { Tilt } from "@/components/ui/Tilt";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -44,40 +44,43 @@ const cardIn: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
-/**
- * Card with a ±3deg pointer tilt and a blue border glow on hover.
- * Tilt runs on desktop fine pointers only; MotionConfig handles reduced motion.
- */
-export function TiltCard({ children, className }: { children: ReactNode; className?: string }) {
-  const tilt = useRichPointer();
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 220, damping: 22 });
-  const sry = useSpring(ry, { stiffness: 220, damping: 22 });
+const titleIn: Variants = {
+  hidden: { opacity: 0, x: -16 },
+  show: { opacity: 1, x: 0, transition: { delay: 0.15, duration: 0.6, ease: EASE } },
+};
 
+/**
+ * Card with a pointer tilt, cursor glare and hover lift, plus a blue border on hover.
+ * Tilt, glare and lift run on desktop fine pointers only.
+ */
+export function TiltCard({
+  children,
+  className,
+  max = 3,
+  glare = false,
+  lift = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  max?: number;
+  glare?: boolean;
+  lift?: number;
+}) {
   return (
-    <m.div variants={cardIn} className="h-full [perspective:1000px]">
-      <m.div
-        style={tilt ? { rotateX: srx, rotateY: sry } : undefined}
-        onPointerMove={(e) => {
-          if (!tilt) return;
-          const r = e.currentTarget.getBoundingClientRect();
-          ry.set(((e.clientX - r.left) / r.width - 0.5) * 6);
-          rx.set(-((e.clientY - r.top) / r.height - 0.5) * 6);
-        }}
-        onPointerLeave={() => {
-          rx.set(0);
-          ry.set(0);
-        }}
+    <m.div variants={cardIn} className="h-full">
+      <Tilt
+        max={max}
+        glare={glare}
+        lift={lift}
         className={cn(
-          "h-full rounded-2xl border border-border bg-surface p-6 sm:p-7",
+          "group rounded-2xl border border-border bg-surface p-6 sm:p-7",
           "transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_16px_48px_-16px_rgba(37,99,235,0.35)]",
           className,
         )}
       >
         {children}
-      </m.div>
+      </Tilt>
     </m.div>
   );
 }
@@ -103,11 +106,13 @@ export function AITeam() {
         >
           {team.map(({ icon: Icon, title, body }) => (
             <li key={title}>
-              <TiltCard>
-                <span className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent-text ring-1 ring-inset ring-accent/25">
+              <TiltCard max={4} glare lift={4}>
+                <span className="icon-pulse flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent-text ring-1 ring-inset ring-accent/25">
                   <Icon className="size-5" aria-hidden />
                 </span>
-                <h3 className="mt-5 text-[19px] font-semibold tracking-[-0.02em]">{title}</h3>
+                <m.h3 variants={titleIn} className="mt-5 text-[19px] font-semibold tracking-[-0.02em]">
+                  {title}
+                </m.h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-secondary">{body}</p>
               </TiltCard>
             </li>

@@ -7,6 +7,7 @@ export const siteConfig = {
   company: {
     /** Public company name. Always exactly this. */
     name: "BTB SOLUTIONS",
+    registration: "202503175924",
     country: "Malaysia",
     countryCode: "MY",
   },
@@ -24,11 +25,6 @@ export const siteConfig = {
     salesSubmit: "Request a Sales Call",
     microcopy: "Free 15-minute review. No obligation.",
   },
-  /** Founding offer. Only rendered while `enabled` is true. */
-  foundingOffer: {
-    enabled: true,
-    customerLimit: 10,
-  },
   copyrightYear: 2026,
 } as const;
 
@@ -37,6 +33,7 @@ export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeU
 export const sectionIds = {
   hero: "top",
   leak: "solutions",
+  calculator: "calculator",
   howItWorks: "how-it-works",
   ai: "ai-employee",
   product: "product",

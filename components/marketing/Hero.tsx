@@ -2,12 +2,12 @@ import { ArrowRight } from "lucide-react";
 import { sectionIds, siteConfig } from "@/lib/site-config";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { HeroProduct } from "./HeroProduct";
+import { HeroDemo } from "./HeroDemo";
 import { HeroSpotlight } from "./HeroSpotlight";
 
 const lines = [
-  { text: "Hire an AI operations team.", className: "text-fg" },
-  { text: "Not another tool.", className: "text-secondary" },
+  { text: "Stop Losing Leads", className: "text-fg" },
+  { text: "After 6 PM", className: "text-fg" },
 ];
 
 /** Chapter 01. Focus order: headline, CTA, then product. */
@@ -26,7 +26,7 @@ export function Hero() {
           The AI system that runs your business 24/7
         </p>
 
-        {/* Fixed line breaks (mobile: after "AI"), so the web-font swap never reflows the headline (no CLS). */}
+        {/* Fixed line breaks, so the web-font swap never reflows the headline (no CLS). Words reveal 0.06s apart. */}
         <h1
           id="hero-title"
           className="text-hero mx-auto mt-7 text-balance text-[clamp(2.25rem,1rem+4vw,4.5rem)] leading-[1.04] sm:mt-8 md:whitespace-nowrap"
@@ -41,7 +41,6 @@ export function Hero() {
                       {w}
                     </span>
                     {wi < arr.length - 1 ? " " : null}
-                    {li === 0 && wi === 2 ? <br className="md:hidden" /> : null}
                   </span>
                 );
               })}
@@ -50,8 +49,7 @@ export function Hero() {
         </h1>
 
         <p className="text-lead mx-auto mt-6 max-w-[40rem] text-pretty text-secondary sm:mt-7">
-          10X captures every lead, replies in seconds, qualifies them, and books the appointment. It runs 24/7, so your
-          team can focus on closing.
+          10X replies in seconds, books the appointment, and follows up. While your team sleeps.
         </p>
 
         <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
@@ -97,7 +95,7 @@ export function Hero() {
       </div>
 
       <div className="container-x relative mt-14 pb-8 sm:mt-16">
-        <HeroProduct />
+        <HeroDemo />
         <p className="mt-4 text-center text-[13px] text-secondary">Product demo. Names and data are illustrative.</p>
       </div>
     </section>

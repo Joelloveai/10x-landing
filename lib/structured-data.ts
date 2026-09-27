@@ -2,13 +2,11 @@ import { faqs } from "./faq";
 import { pricingPlans } from "./pricing";
 import { siteConfig } from "./site-config";
 
-const priceNumber = (p: string) => Number(p.replace(/[^\d.]/g, ""));
-
 /** JSON-LD for the homepage. Visible, factual content only. No ratings, reviews or counts. */
 export function homepageJsonLd() {
   const { url, company, contact } = siteConfig;
   const orgId = `${url}/#organization`;
-  const prices = pricingPlans.map((p) => priceNumber(p.foundingPrice));
+  const prices = pricingPlans.map((p) => p.monthly);
 
   return {
     "@context": "https://schema.org",
