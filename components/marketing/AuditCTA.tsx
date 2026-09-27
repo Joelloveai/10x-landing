@@ -256,10 +256,20 @@ export function AuditCTA() {
                       </label>
                     </div>
 
+                    <p className="mt-6 text-center text-[12px] leading-[1.8] text-subtle">
+                      10X is a product of BTB SOLUTIONS
+                      <br />
+                      Registered in Malaysia · Reg 202503175924
+                      <br />
+                      Seremban · Kuala Lumpur
+                      <br />
+                      {siteConfig.contact.email}
+                    </p>
+
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className={ctaClasses("primary", "lg", "mt-4 w-full disabled:cursor-wait disabled:opacity-80")}
+                      className={ctaClasses("primary", "lg", "mt-6 w-full disabled:cursor-wait disabled:opacity-80")}
                     >
                       {status === "sending" ? (
                         <>

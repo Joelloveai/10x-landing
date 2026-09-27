@@ -5,7 +5,10 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { HeroProduct } from "./HeroProduct";
 import { HeroSpotlight } from "./HeroSpotlight";
 
-const words = ["Stop", "Losing", "Leads", "After", "6 PM"];
+const lines = [
+  { text: "Your competitor replied in 30 seconds.", className: "text-fg" },
+  { text: "You replied in 4 hours.", className: "text-secondary" },
+];
 
 /** Chapter 01. Focus order: headline, CTA, then product. */
 export function Hero() {
@@ -23,22 +26,32 @@ export function Hero() {
           The AI system that runs your business 24/7
         </p>
 
-        {/* Explicit line breaks keep the layout identical before and after the web font loads (no CLS). */}
-        <h1 id="hero-title" className="text-hero mx-auto mt-7 whitespace-nowrap sm:mt-8">
-          {words.map((w, i) => (
-            <span key={w}>
-              <span className="hero-word" style={{ ["--i" as string]: i }}>
-                {w}
-              </span>
-              {i === 0 ? <br className="md:hidden" /> : null}
-              {i === 2 ? <br /> : null}
-              {i < words.length - 1 && i !== 2 ? " " : null}
+        {/* Fixed line breaks from md up, so the web-font swap never reflows the headline (no CLS). */}
+        <h1
+          id="hero-title"
+          className="text-hero mx-auto mt-7 text-balance text-[clamp(2.25rem,0.9rem+3.4vw,3.5rem)] leading-[1.06] sm:mt-8 md:whitespace-nowrap"
+        >
+          {lines.map((line, li) => (
+            <span key={line.text} className={`block ${line.className}`}>
+              {line.text.split(" ").map((w, wi, arr) => {
+                const i = lines.slice(0, li).reduce((n, l) => n + l.text.split(" ").length, 0) + wi;
+                return (
+                  <span key={`${w}-${wi}`}>
+                    <span className="hero-word" style={{ ["--i" as string]: i }}>
+                      {w}
+                    </span>
+                    {wi < arr.length - 1 ? " " : null}
+                    {li === 0 && wi === 2 ? <br className="hidden md:block xl:hidden" /> : null}
+                  </span>
+                );
+              })}
             </span>
           ))}
         </h1>
 
-        <p className="text-lead mx-auto mt-6 max-w-[36rem] text-pretty text-secondary sm:mt-7">
-          10X helps your team capture enquiries, respond faster, book appointments and keep follow-up moving.
+        <p className="text-lead mx-auto mt-6 max-w-[40rem] text-pretty text-secondary sm:mt-7">
+          Every lead you lose is money your competitor makes. 10X replies in seconds, books the appointment, follows up
+          while your team sleeps.
         </p>
 
         <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">

@@ -225,6 +225,7 @@ function Card({ t, index, duplicate, tilt }: { t: Testimonial; index: number; du
         <blockquote className="mt-4 text-[15px] leading-[1.65] text-secondary">
           <p>{t.text}</p>
         </blockquote>
+        <p className="mt-3 text-[13px] leading-snug text-subtle">{t.context}</p>
       </m.figure>
     </li>
   );

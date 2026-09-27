@@ -2,17 +2,7 @@
 
 import type { ReactNode } from "react";
 import { m, useMotionValue, useSpring, type Variants } from "framer-motion";
-import {
-  Calendar,
-  ClipboardList,
-  FileText,
-  Filter,
-  MessageSquare,
-  Moon,
-  Repeat,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
+import { FileText, Moon, Repeat, Zap, type LucideIcon } from "lucide-react";
 import { sectionIds } from "@/lib/site-config";
 import { useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -23,24 +13,9 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const capabilities: { icon: LucideIcon; title: string; body: string }[] = [
   {
-    icon: MessageSquare,
-    title: "Captures every enquiry, 24/7",
-    body: "WhatsApp, web forms, social channels, calls. Every lead in one place. Nothing slips through.",
-  },
-  {
     icon: Zap,
     title: "Responds in seconds, not hours",
     body: "Instant, natural replies day or night. Handles FAQs, pricing, availability. Speaks English, Bahasa Malaysia, Chinese.",
-  },
-  {
-    icon: Filter,
-    title: "Qualifies leads before they reach you",
-    body: "Asks the right questions. Scores HOT / WARM / COLD. Routes hot leads immediately.",
-  },
-  {
-    icon: Calendar,
-    title: "Books appointments without human touch",
-    body: "Inserts bookings into your calendar. Sends confirmations and reminders. Handles reschedules.",
   },
   {
     icon: Repeat,
@@ -48,19 +23,14 @@ const capabilities: { icon: LucideIcon; title: string; body: string }[] = [
     body: "Day 1, 3, 7, 30 sequences run automatically. Reactivates cold leads from your history.",
   },
   {
-    icon: FileText,
-    title: "Gives you a daily brief",
-    body: "Summarises what happened while you slept. Flags leads that need attention. Reports team performance.",
-  },
-  {
-    icon: ClipboardList,
-    title: "Handles administrative work",
-    body: "Drafts quotes, follow-ups, proposals. Manages reminders. Answers team questions from your data.",
-  },
-  {
     icon: Moon,
     title: "Works while everyone sleeps",
     body: "Your team goes home at 6 PM. The AI does not. You wake up to a fully worked pipeline.",
+  },
+  {
+    icon: FileText,
+    title: "Gives you a daily brief",
+    body: "Summarises what happened while you slept. Flags leads that need attention. Reports team performance.",
   },
 ];
 
