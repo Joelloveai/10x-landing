@@ -8,8 +8,8 @@ import { SectionItem, SectionWrapper } from "./SectionWrapper";
 
 const pct = (n: number) => `${Math.round(n)}%`;
 
-const stats = [
-  { value: 40, label: "of leads arrive after 6 PM" },
+const stats: { value?: number; label: string }[] = [
+  { label: "Most leads arrive when your team is offline." },
   { value: 78, label: "of customers buy from whoever replies first. Not the cheapest. Not the best. First." },
 ];
 
@@ -44,11 +44,19 @@ export function ProblemSection() {
           </SectionItem>
           <div className="mt-12 grid grid-cols-1 gap-4 text-left sm:grid-cols-2">
             {stats.map((s) => (
-              <SectionItem key={s.value} className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
-                <p className="text-[clamp(2.75rem,2rem+3vw,4rem)] font-semibold leading-none tracking-[-0.04em]">
-                  <CountUp to={s.value} format={pct} className="tabular-nums text-accent-text" />
-                </p>
-                <p className="mt-4 text-pretty text-[17px] leading-[1.45] text-secondary">{s.label}</p>
+              <SectionItem key={s.label} className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+                {s.value === undefined ? (
+                  <p className="text-balance text-[clamp(1.5rem,1.2rem+1.2vw,2rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-fg">
+                    {s.label}
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-[clamp(2.75rem,2rem+3vw,4rem)] font-semibold leading-none tracking-[-0.04em]">
+                      <CountUp to={s.value} format={pct} className="tabular-nums text-accent-text" />
+                    </p>
+                    <p className="mt-4 text-pretty text-[17px] leading-[1.45] text-secondary">{s.label}</p>
+                  </>
+                )}
               </SectionItem>
             ))}
           </div>

@@ -46,6 +46,16 @@ const currencies = [
 
 type CurrencyCode = (typeof currencies)[number]["code"];
 
+/** Prepaid terms. The discount applies to the monthly price; setup is unchanged. */
+const terms = [
+  { id: "monthly", label: "Monthly", months: 1, discount: 0 },
+  { id: "1y", label: "1 Year", months: 12, discount: 0.1 },
+  { id: "3y", label: "3 Years", months: 36, discount: 0.2 },
+  { id: "5y", label: "5 Years", months: 60, discount: 0.3 },
+] as const;
+
+type TermId = (typeof terms)[number]["id"];
+
 /** Junior hire range for the compare line. RM keeps the Malaysian figure; other currencies swap the symbol. */
 const juniorHire = (symbol: string) => (symbol === "RM" ? "RM2,500-3,500/month" : `${symbol}500-900/month`);
 
@@ -58,7 +68,9 @@ const card: Variants = {
 /** Chapter 06 header and plans. Growth is the one featured card. */
 export function Pricing() {
   const [currency, setCurrency] = useState<CurrencyCode>("RM");
-  // Prices count up once on first view; after a currency switch they change instantly.
+  const [termId, setTermId] = useState<TermId>("monthly");
+  const term = terms.find((t) => t.id === termId) ?? terms[0];
+  // Prices count up once on first view; after a currency or term switch they change instantly.
   const [switched, setSwitched] = useState(false);
   const cur = currencies.find((c) => c.code === currency) ?? currencies[0];
   const format = (n: number) => `${cur.symbol}${Math.round(n).toLocaleString("en-US")}`;
@@ -102,6 +114,32 @@ export function Pricing() {
             </button>
           ))}
         </div>
+        <div role="group" aria-label="Billing term" className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
+          {terms.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              aria-pressed={termId === t.id}
+              onClick={() => {
+                setTermId(t.id);
+                setSwitched(true);
+              }}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] transition-colors",
+                termId === t.id
+                  ? "border-accent bg-accent text-accent-fg"
+                  : "border-border text-secondary hover:border-white/25 hover:text-fg",
+              )}
+            >
+              {t.label}
+              {t.discount ? (
+                <span className={cn("font-mono text-[11px]", termId === t.id ? "text-accent-fg/80" : "text-accent-text")}>
+                  -{Math.round(t.discount * 100)}%
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
         <p className="text-[13px] text-secondary">Flat monthly subscription. No surprises.</p>
       </div>
 
@@ -117,6 +155,9 @@ export function Pricing() {
         {pricingPlans.map((plan) => {
           const isSales = plan.cta === siteConfig.cta.sales;
           const p = price(plan);
+          // Discounted monthly equivalent, rounded; the upfront total is built from it so the two always agree.
+          const perMonth = Math.round(p.monthly * (1 - term.discount));
+          const upfront = perMonth * term.months;
           return (
             <m.li key={plan.slug} variants={card} className={cn("min-w-0", plan.highlighted && "lg:-my-3")}>
               <Tilt max={3}>
@@ -149,16 +190,25 @@ export function Pricing() {
                   <div className="mt-8">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
                       {switched ? (
-                        <span className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{format(p.monthly)}</span>
+                        <span className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{format(perMonth)}</span>
                       ) : (
                         <CountUp to={p.monthly} format={format} className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums" />
                       )}
                       <span className="text-[15px] text-secondary">/mo</span>
+                      {term.discount ? (
+                        <span className="ml-1 text-[14px] text-subtle line-through">{format(p.monthly)}</span>
+                      ) : null}
                     </p>
                     <p className="mt-2 text-[14px] text-secondary">+ {format(p.setup)} setup</p>
-                    <p className="mt-1 text-[14px] text-secondary">
-                      Year 1: <span className="text-fg">{format(p.monthly * 12 + p.setup)}</span>
-                    </p>
+                    {term.discount ? (
+                      <p className="mt-1 text-[14px] text-secondary">
+                        Paid upfront: <span className="text-fg">{format(upfront)}</span> for {term.label.toLowerCase()}
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-[14px] text-secondary">
+                        Year 1: <span className="text-fg">{format(p.monthly * 12 + p.setup)}</span>
+                      </p>
+                    )}
                   </div>
 
                   <ul className="mt-8 space-y-3 border-t border-border pt-6">

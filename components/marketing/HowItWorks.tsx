@@ -10,20 +10,23 @@ import { ChapterHeader } from "@/components/ui/ChapterHeader";
 import { Reveal } from "@/components/ui/Reveal";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const ROTATE_MS = 4000;
+const ROTATE_MS = 3000;
 
 const features = [
-  { id: "capture", name: "Lead Capture", line: "Every enquiry becomes trackable." },
-  { id: "follow-up", name: "Follow-Up", line: "Important leads don't get forgotten." },
-  { id: "booking", name: "Booking", line: "Conversations become appointments." },
-  { id: "automation", name: "Automation", line: "The next step moves forward on its own." },
-  { id: "pipeline", name: "Pipeline", line: "See ownership and progress." },
-  { id: "reporting", name: "Reporting", line: "See where enquiries become customers." },
+  { id: "capture", name: "Lead Capture", line: "Every enquiry lands in one inbox. Nothing slips." },
+  { id: "follow-up", name: "Follow-Up", line: "Follow-ups run on Day 1, 3, 7, 30. Automatically." },
+  { id: "booking", name: "Booking", line: "Customers book directly from the chat. No back and forth." },
+  { id: "automation", name: "Automation", line: "Triggers fire the next action. No manual work." },
+  { id: "pipeline", name: "Pipeline", line: "See every lead, every owner, every stage. One view." },
+  { id: "reporting", name: "Reporting", line: "Daily brief. Flags urgent. Reports performance." },
 ] as const;
 
 type FeatureId = (typeof features)[number]["id"];
 
-const flow = ["Captured", "Assigned", "Responded", "Booked", "Followed up", "Visible"];
+const flow = {
+  before: ["Missed", "Unassigned", "Unanswered", "No booking", "Forgotten", "Invisible"],
+  after: ["Captured", "Assigned", "Responded", "Booked", "Followed up", "Visible"],
+};
 
 /** Runs `fn` every `ms` while `on` is true. */
 function useTicker(on: boolean, ms: number, fn: () => void) {
@@ -45,17 +48,16 @@ export function HowItWorks() {
   const inView = useInView(rootRef, { margin: "-20% 0px" });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [active, setActive] = useState(0);
-  const [stopped, setStopped] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [focused, setFocused] = useState(false);
   const [withTenX, setWithTenX] = useState(false);
 
-  // Auto-rotate every 4s. Stops for good once the visitor picks a feature; pauses on hover or focus.
+  // Auto-play every 3s and loop. A pick restarts the timer; hover or keyboard focus pauses it.
   useEffect(() => {
-    if (reduced || stopped || hovering || focused || !inView) return;
+    if (reduced || hovering || focused || !inView) return;
     const t = setTimeout(() => setActive((a) => (a + 1) % features.length), ROTATE_MS);
     return () => clearTimeout(t);
-  }, [active, reduced, stopped, hovering, focused, inView]);
+  }, [active, reduced, hovering, focused, inView]);
 
   // Keep the active tab visible in the horizontal tab row on mobile. Scrolls the row only, never the page.
   useEffect(() => {
@@ -66,7 +68,6 @@ export function HowItWorks() {
   }, [active, reduced]);
 
   const select = (i: number, focus = false) => {
-    setStopped(true);
     setActive(i);
     if (focus) tabRefs.current[i]?.focus();
   };
@@ -200,32 +201,31 @@ export function HowItWorks() {
               ))}
             </div>
             <div aria-live="polite" className="mt-4 min-h-[36px]">
-              {withTenX ? (
-                <m.ol
-                  key="with"
-                  initial="hidden"
-                  animate="show"
-                  variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
-                  className="flex flex-wrap items-center gap-x-1.5 gap-y-2"
-                >
-                  {flow.map((step, i) => (
-                    <m.li
-                      key={step}
-                      variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.3 } } }}
-                      className="flex items-center gap-1.5"
+              <m.ol
+                key={withTenX ? "after" : "before"}
+                initial="hidden"
+                animate="show"
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+                className="flex flex-wrap items-center gap-x-1.5 gap-y-2"
+              >
+                {(withTenX ? flow.after : flow.before).map((step, i, arr) => (
+                  <m.li
+                    key={step}
+                    variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.3 } } }}
+                    className="flex items-center gap-1.5"
+                  >
+                    <span
+                      className={cn(
+                        "rounded-full px-3 py-1.5 text-[14px] ring-1 ring-inset",
+                        withTenX ? "bg-accent/10 text-accent-text ring-accent/30" : "bg-warning/10 text-warning-text ring-warning/30",
+                      )}
                     >
-                      <span className="rounded-full bg-accent/10 px-3 py-1.5 text-[14px] text-accent-text ring-1 ring-inset ring-accent/30">
-                        {step}
-                      </span>
-                      {i < flow.length - 1 ? <ChevronRight aria-hidden className="size-3.5 text-subtle" /> : null}
-                    </m.li>
-                  ))}
-                </m.ol>
-              ) : (
-                <p className="py-1.5 text-[15px] text-secondary">
-                  Enquiries sit in different chats. Nobody owns the next step. Follow-ups depend on memory.
-                </p>
-              )}
+                      {step}
+                    </span>
+                    {i < arr.length - 1 ? <ChevronRight aria-hidden className="size-3.5 text-subtle" /> : null}
+                  </m.li>
+                ))}
+              </m.ol>
             </div>
           </div>
         </Reveal>
