@@ -17,16 +17,34 @@ import { PricingViewTracker } from "./PricingViewTracker";
 const EASE = [0.16, 1, 0.3, 1] as const;
 const launch = pricingPlans.find((p) => p.slug === "launch") ?? pricingPlans[0];
 
-type Currency = "RM" | "USD";
+type Price = { monthly: number; setup: number };
 
-/** USD prices, set separately from RM (not converted). */
-const usd: Record<string, { monthly: number; setup: number }> = {
-  launch: { monthly: 99, setup: 75 },
-  growth: { monthly: 189, setup: 149 },
-  scale: { monthly: 349, setup: 249 },
-};
+/** Fixed prices per currency, set by hand (not converted). RM comes from lib/pricing. */
+const currencies = [
+  { code: "RM", symbol: "RM", prices: null },
+  {
+    code: "USD",
+    symbol: "$",
+    prices: { launch: { monthly: 99, setup: 75 }, growth: { monthly: 179, setup: 149 }, scale: { monthly: 339, setup: 249 } },
+  },
+  {
+    code: "SGD",
+    symbol: "S$",
+    prices: { launch: { monthly: 129, setup: 99 }, growth: { monthly: 239, setup: 199 }, scale: { monthly: 449, setup: 329 } },
+  },
+  {
+    code: "EUR",
+    symbol: "€",
+    prices: { launch: { monthly: 89, setup: 69 }, growth: { monthly: 169, setup: 139 }, scale: { monthly: 319, setup: 239 } },
+  },
+  {
+    code: "AUD",
+    symbol: "A$",
+    prices: { launch: { monthly: 149, setup: 109 }, growth: { monthly: 279, setup: 229 }, scale: { monthly: 499, setup: 369 } },
+  },
+] as const satisfies readonly { code: string; symbol: string; prices: Record<string, Price> | null }[];
 
-const formatUSD = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
+type CurrencyCode = (typeof currencies)[number]["code"];
 
 const grid: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const card: Variants = {
@@ -36,10 +54,15 @@ const card: Variants = {
 
 /** Chapter 06 header and plans. Growth is the one featured card. */
 export function Pricing() {
-  const [currency, setCurrency] = useState<Currency>("RM");
-  const format = currency === "RM" ? formatRM : formatUSD;
-  const price = (plan: (typeof pricingPlans)[number]) =>
-    currency === "RM" ? { monthly: plan.monthly, setup: plan.setup } : (usd[plan.slug] ?? { monthly: plan.monthly, setup: plan.setup });
+  const [currency, setCurrency] = useState<CurrencyCode>("RM");
+  // Prices count up once on first view; after a currency switch they change instantly.
+  const [switched, setSwitched] = useState(false);
+  const cur = currencies.find((c) => c.code === currency) ?? currencies[0];
+  const format = (n: number) => `${cur.symbol}${Math.round(n).toLocaleString("en-US")}`;
+  const price = (plan: (typeof pricingPlans)[number]): Price => {
+    const table: Record<string, Price> | null = cur.prices;
+    return table?.[plan.slug] ?? { monthly: plan.monthly, setup: plan.setup };
+  };
 
   return (
     <>
@@ -51,21 +74,29 @@ export function Pricing() {
           title={pricingCopy.title}
           lead={`${format(price(launch).monthly)} per month. ${format(price(launch).monthly / 30)} per day. If 10X helps you close one extra deal this year, it pays for itself.`}
         />
-        <div role="group" aria-label="Currency" className="inline-flex shrink-0 self-start rounded-full border border-border bg-bg p-1">
-          {(["RM", "USD"] as const).map((c) => (
-            <button
-              key={c}
-              type="button"
-              aria-pressed={currency === c}
-              onClick={() => setCurrency(c)}
-              className={cn(
-                "min-w-14 rounded-full px-3.5 py-1.5 font-mono text-[13px] transition-colors",
-                currency === c ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
-              )}
-            >
-              {c}
-            </button>
-          ))}
+        <div className="flex shrink-0 flex-col gap-3 lg:items-end">
+          <div role="group" aria-label="Currency" className="flex flex-wrap gap-1.5 sm:gap-2">
+            {currencies.map(({ code }) => (
+              <button
+                key={code}
+                type="button"
+                aria-pressed={currency === code}
+                onClick={() => {
+                  setCurrency(code);
+                  setSwitched(true);
+                }}
+                className={cn(
+                  "min-w-12 rounded-full border px-2.5 py-1.5 font-mono text-[13px] transition-colors sm:min-w-[52px] sm:px-3",
+                  currency === code
+                    ? "border-accent bg-accent text-accent-fg"
+                    : "border-border text-secondary hover:border-white/25 hover:text-fg",
+                )}
+              >
+                {code}
+              </button>
+            ))}
+          </div>
+          <p className="text-[13px] text-secondary">Flat monthly subscription. No surprises.</p>
         </div>
       </div>
 
@@ -112,12 +143,11 @@ export function Pricing() {
 
                   <div className="mt-8">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
-                      <CountUp
-                        key={currency}
-                        to={p.monthly}
-                        format={format}
-                        className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums"
-                      />
+                      {switched ? (
+                        <span className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{format(p.monthly)}</span>
+                      ) : (
+                        <CountUp to={p.monthly} format={format} className="text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums" />
+                      )}
                       <span className="text-[15px] text-secondary">/mo</span>
                     </p>
                     <p className="mt-2 text-[14px] text-secondary">+ {format(p.setup)} setup</p>
@@ -164,7 +194,6 @@ export function Pricing() {
           <span className="text-fg">{formatRM(launch.monthly)}/month</span>. Year 1:{" "}
           <span className="text-fg">{formatRM(yearOne(launch))}</span>.
         </p>
-        <p className="mt-3 text-[15px] text-secondary">Flat monthly subscription. No surprises.</p>
       </Reveal>
     </>
   );
