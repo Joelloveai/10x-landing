@@ -14,6 +14,7 @@ import { Tilt } from "@/components/ui/Tilt";
 import { PricingViewTracker } from "./PricingViewTracker";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const launch = pricingPlans.find((p) => p.slug === "launch") ?? pricingPlans[0];
 
 const grid: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const card: Variants = {
@@ -114,8 +115,13 @@ export function Pricing() {
         </m.ul>
       </div>
 
-      <Reveal>
-        <p className="mx-auto mt-10 max-w-2xl text-balance text-center text-[16px] text-secondary">{pricingCopy.compare}</p>
+      <Reveal className="mx-auto mt-10 max-w-2xl text-center">
+        <p className="text-balance text-[16px] text-secondary">
+          Compare: one junior hire costs RM2,500-3,500/month. 10X {launch.name} costs{" "}
+          <span className="text-fg">{formatRM(launch.monthly)}/month</span>. Year 1:{" "}
+          <span className="text-fg">{formatRM(yearOne(launch))}</span>.
+        </p>
+        <p className="mt-3 text-[15px] text-secondary">Flat monthly subscription. No surprises.</p>
       </Reveal>
     </>
   );

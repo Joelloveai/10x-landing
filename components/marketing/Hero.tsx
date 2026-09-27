@@ -5,6 +5,12 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { HeroDemo } from "./HeroDemo";
 import { HeroSpotlight } from "./HeroSpotlight";
 
+const proof = [
+  { name: "Marcus T. K. Loke", role: "Property Agent", quote: "Helps me keep track of follow-ups. Now less messy." },
+  { name: "Audrey Wong", role: "Property Agent", quote: "Actually helped me stay more organised with follow-ups." },
+  { name: "Elaine Choo", role: "Aesthetic Clinic Owner", quote: "Manage bookings and follow-ups better." },
+];
+
 const lines = [
   { text: "Stop Losing Leads", className: "text-fg" },
   { text: "After 6 PM", className: "text-fg" },
@@ -92,6 +98,22 @@ export function Hero() {
           </span>
           <p className="text-secondary">{siteConfig.cta.microcopy}</p>
         </div>
+
+        <p className="mx-auto mt-10 max-w-md text-pretty text-[14px] text-secondary">
+          Built by a small Malaysian team. Tested on our own business first.
+        </p>
+        <ul aria-label="What early users say" className="mx-auto mt-4 grid max-w-4xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
+          {proof.map((t) => (
+            <li key={t.name} className="rounded-xl border border-border bg-white/[0.02] px-4 py-3.5">
+              <figure>
+                <blockquote className="text-pretty text-[14px] leading-[1.5] text-secondary">&ldquo;{t.quote}&rdquo;</blockquote>
+                <figcaption className="mt-2.5 text-[12px] text-subtle">
+                  <span className="text-secondary">{t.name}</span> · {t.role}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="container-x relative mt-14 pb-8 sm:mt-16">
