@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { m, useMotionValue, useSpring, type Variants } from "framer-motion";
-import { FileText, Moon, Repeat, Zap, type LucideIcon } from "lucide-react";
+import { FileText, Moon, Repeat, Target, type LucideIcon } from "lucide-react";
 import { sectionIds } from "@/lib/site-config";
 import { useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -11,26 +11,26 @@ import { Reveal } from "@/components/ui/Reveal";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const capabilities: { icon: LucideIcon; title: string; body: string }[] = [
+const team: { icon: LucideIcon; title: string; body: string }[] = [
   {
-    icon: Zap,
-    title: "Responds in seconds, not hours",
-    body: "Instant, natural replies day or night. Handles FAQs, pricing, availability. Speaks English, Bahasa Malaysia, Chinese.",
+    icon: Target,
+    title: "Your AI Sales Director",
+    body: "Captures every lead 24/7. Qualifies budget, timeline, intent. Books viewings into your calendar.",
   },
   {
     icon: Repeat,
-    title: "Never forgets a follow-up",
-    body: "Day 1, 3, 7, 30 sequences run automatically. Reactivates cold leads from your history.",
+    title: "Your AI Follow-up Specialist",
+    body: "Runs Day 1, 3, 7, 30 sequences. Reactivates cold leads. Nurtures until ready to buy.",
   },
   {
     icon: Moon,
-    title: "Works while everyone sleeps",
-    body: "Your team goes home at 6 PM. The AI does not. You wake up to a fully worked pipeline.",
+    title: "Your AI Operations Manager",
+    body: "Summarises overnight activity. Flags urgent leads. Reports response time, bookings, revenue.",
   },
   {
     icon: FileText,
-    title: "Gives you a daily brief",
-    body: "Summarises what happened while you slept. Flags leads that need attention. Reports team performance.",
+    title: "Your AI Admin Assistant",
+    body: "Drafts quotes, proposals, follow-ups. Manages reminders. Answers team questions from your data.",
   },
 ];
 
@@ -82,16 +82,16 @@ export function TiltCard({ children, className }: { children: ReactNode; classNa
   );
 }
 
-export function AIEmployee() {
+export function AITeam() {
   return (
     <section id={sectionIds.ai} data-chapter aria-labelledby="ai-title" className="border-t border-border py-24 md:py-32">
       <div className="container-x">
         <ChapterHeader
           num="04"
-          label="Your AI employee"
+          label="Your AI team"
           id="ai-title"
-          title="Your business runs 24/7. Your team doesn't have to."
-          lead="Your AI employee handles repetitive work so your team can focus on what matters."
+          title="Meet your AI team. It never sleeps."
+          lead="Not a chatbot. A team of AI specialists working together."
         />
 
         <m.ul
@@ -101,7 +101,7 @@ export function AIEmployee() {
           viewport={{ once: true, margin: "-100px" }}
           className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2"
         >
-          {capabilities.map(({ icon: Icon, title, body }) => (
+          {team.map(({ icon: Icon, title, body }) => (
             <li key={title}>
               <TiltCard>
                 <span className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent-text ring-1 ring-inset ring-accent/25">
@@ -116,8 +116,7 @@ export function AIEmployee() {
 
         <Reveal className="mx-auto mt-16 max-w-3xl text-center">
           <p className="text-balance text-[clamp(1.375rem,1.05rem+1.2vw,2rem)] font-semibold leading-[1.25] tracking-[-0.025em]">
-            The work that used to take 3 people now takes one system. You save time. You reduce cost. You close more
-            deals.
+            The work of a five-person team. Handled by one system. You own the system.
           </p>
         </Reveal>
       </div>

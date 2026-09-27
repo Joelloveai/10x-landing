@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { BusinessProvider } from "@/components/providers/BusinessProvider";
-import { AIEmployee } from "@/components/marketing/AIEmployee";
+import { AITeam } from "@/components/marketing/AITeam";
 import { AuditCTA } from "@/components/marketing/AuditCTA";
 import { CommandPalette } from "@/components/marketing/CommandPalette";
 import { DepthBackground } from "@/components/marketing/DepthBackground";
@@ -21,7 +21,7 @@ import { Workflow } from "@/components/marketing/Workflow";
 import { homepageJsonLd, jsonLdScript } from "@/lib/structured-data";
 
 /**
- * Order: hero, problem, how it works, one person company, AI employee, features,
+ * Order: hero, problem, how it works, one person company, AI team, features,
  * testimonials, pricing, final CTA. A fixed depth background sits behind at z-0.
  * Suspense boundaries let React hydrate chapters in separate, interruptible chunks.
  */
@@ -49,9 +49,9 @@ export default function HomePage() {
           <Suspense fallback={null}>
             <OnePersonCompany />
           </Suspense>
-          {/* AI employee */}
+          {/* AI team */}
           <Suspense fallback={null}>
-            <AIEmployee />
+            <AITeam />
           </Suspense>
           {/* Features */}
           <Suspense fallback={null}>

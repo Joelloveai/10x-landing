@@ -3,12 +3,12 @@
 import { m } from "framer-motion";
 import { Clock, TrendingUp, Wallet, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { staggerGrid, TiltCard } from "./AIEmployee";
+import { staggerGrid, TiltCard } from "./AITeam";
 
 const body = [
-  "We are a small team in Malaysia. We run our own business, and we built 10X to run it with just two people.",
+  "We are a small team in Malaysia. We built 10X to run our business with two people.",
   "Not because we could not afford to hire. Because we did not need to.",
-  "One system. Every lead captured. Every follow-up sent. Every booking confirmed. Every report generated. The work that used to require a team of five is now handled by one system. The same system we are offering you.",
+  "One system. Every lead captured. Every follow-up sent. Every booking confirmed. The work of a five-person team, handled by one system.",
   "We do not sell anything we have not tested on ourselves first.",
   "This is what we mean by 10X. Not 10 times the effort. 10 times the output, with the same number of people.",
 ];
@@ -26,11 +26,8 @@ export function OnePersonCompany() {
       <div className="container-x">
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 id="opc-title" className="text-display text-balance">
-            Built by a small team. Tested on our own business.
+            We run our own business with two people. Here&apos;s the system that makes it possible.
           </h2>
-          <p className="text-lead mt-5 text-secondary">
-            We run our own company with two people. This is the system that makes it possible.
-          </p>
         </Reveal>
 
         <Reveal delay={80} className="mx-auto mt-10 max-w-[56ch] space-y-5 text-center text-[17px] leading-relaxed text-secondary">

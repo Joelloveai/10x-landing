@@ -6,8 +6,8 @@ import { HeroProduct } from "./HeroProduct";
 import { HeroSpotlight } from "./HeroSpotlight";
 
 const lines = [
-  { text: "Your competitor replied in 30 seconds.", className: "text-fg" },
-  { text: "You replied in 4 hours.", className: "text-secondary" },
+  { text: "Hire an AI operations team.", className: "text-fg" },
+  { text: "Not another tool.", className: "text-secondary" },
 ];
 
 /** Chapter 01. Focus order: headline, CTA, then product. */
@@ -26,10 +26,10 @@ export function Hero() {
           The AI system that runs your business 24/7
         </p>
 
-        {/* Fixed line breaks from md up, so the web-font swap never reflows the headline (no CLS). */}
+        {/* Fixed line breaks (mobile: after "AI"), so the web-font swap never reflows the headline (no CLS). */}
         <h1
           id="hero-title"
-          className="text-hero mx-auto mt-7 text-balance text-[clamp(2.25rem,0.9rem+3.4vw,3.5rem)] leading-[1.06] sm:mt-8 md:whitespace-nowrap"
+          className="text-hero mx-auto mt-7 text-balance text-[clamp(2.25rem,1rem+4vw,4.5rem)] leading-[1.04] sm:mt-8 md:whitespace-nowrap"
         >
           {lines.map((line, li) => (
             <span key={line.text} className={`block ${line.className}`}>
@@ -41,7 +41,7 @@ export function Hero() {
                       {w}
                     </span>
                     {wi < arr.length - 1 ? " " : null}
-                    {li === 0 && wi === 2 ? <br className="hidden md:block xl:hidden" /> : null}
+                    {li === 0 && wi === 2 ? <br className="md:hidden" /> : null}
                   </span>
                 );
               })}
@@ -50,8 +50,8 @@ export function Hero() {
         </h1>
 
         <p className="text-lead mx-auto mt-6 max-w-[40rem] text-pretty text-secondary sm:mt-7">
-          Every lead you lose is money your competitor makes. 10X replies in seconds, books the appointment, follows up
-          while your team sleeps.
+          10X captures every lead, replies in seconds, qualifies them, and books the appointment. It runs 24/7, so your
+          team can focus on closing.
         </p>
 
         <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
