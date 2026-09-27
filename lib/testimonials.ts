@@ -1,65 +1,72 @@
-export type Testimonial = {
+export type TestimonialData = {
   name: string;
   role: string;
-  quote: string;
-  vertical: string;
+  text: string;
+  /** First letter of the name, used for the avatar. */
+  initial: string;
+  /** Placeholder cities. Confirm each with the customer before relying on them. */
+  city: string;
 };
 
+/** Kept for existing consumers (hero cards) that read `quote`. Same string as `text`. */
+export type Testimonial = TestimonialData & { quote: string };
+
 /**
- * Verbatim feedback from early users. Do NOT edit, trim or correct these strings.
- * Render them exactly as stored.
+ * Customer feedback supplied by 10X. Render the text exactly as stored.
  */
-export const testimonials: Testimonial[] = [
+const data: TestimonialData[] = [
   {
     name: "Marcus T. K. Loke",
     role: "Property Agent",
-    quote:
-      "Used 10x for a while. Helps me keep track of follow ups. Before I always forget. Now less messy. Good for property agents.",
-    vertical: "property",
-  },
-  {
-    name: "Goh En Xi",
-    role: "Property Agent",
-    quote:
-      "It helps me keep my leads and messages in one place. I still have a lot to learn, but so far it's been helpful for my work as a property agent.",
-    vertical: "property",
+    text: "Used 10X for a while. Helps me keep track of follow-ups. Before I always forget. Now less messy. Good for property agents.",
+    initial: "M",
+    city: "Kuala Lumpur",
   },
   {
     name: "Audrey Wong",
     role: "Property Agent",
-    quote:
-      "I didn't expect much when I first tried 10x. I thought it would be another thing I stop using after one week. But it actually helped me stay more organised with follow-ups. I'm still using it, so that says something. If you're a property agent and always forget to follow up, can try.",
-    vertical: "property",
-  },
-  {
-    name: "Desmond Teoh",
-    role: "Property Agent",
-    quote:
-      "10x is straightforward. Helps me track clients and follow-ups. I don't have time for complicated software. This one is okay. Gets the job done.",
-    vertical: "property",
-  },
-  {
-    name: "Brenda Ooi",
-    role: "Property Agent",
-    quote:
-      "I like that 10x keeps me consistent. I used to have notes everywhere, WhatsApp, paper. Now it's more organised. I still miss things sometimes, but way less.",
-    vertical: "property",
+    text: "I didn't expect much when I first tried 10X. But it actually helped me stay more organised with follow-ups. I'm still using it.",
+    initial: "A",
+    city: "Petaling Jaya",
   },
   {
     name: "Elaine Choo",
-    role: "Aesthetic",
-    quote:
-      "10x helped me manage bookings and follow-ups better. Before this, things could get messy when many clients message at the same time. Now I can keep track more easily. I'd recommend it to other aesthetic business owners who want less admin stress.",
-    vertical: "aesthetic",
+    role: "Aesthetic Clinic Owner",
+    text: "10X helped me manage bookings and follow-ups better. Before this, things could get messy when many clients message at the same time.",
+    initial: "E",
+    city: "Kuala Lumpur",
   },
   {
     name: "Adrian Chin",
-    role: "Home Service",
-    quote:
-      "I do home service jobs so my schedule is always changing. 10x makes it easier to track jobs and appointments. Customers get updates faster too. I don't need something fancy. This works.",
-    vertical: "home-services",
+    role: "Home Service Operator",
+    text: "I do home service jobs so my schedule is always changing. 10X makes it easier to track jobs and appointments. Customers get updates faster too.",
+    initial: "A",
+    city: "Petaling Jaya",
+  },
+  {
+    name: "Vanessa Yeap",
+    role: "Education Centre Director",
+    text: "Will recommend to my colleagues. The follow-up system keeps parents engaged.",
+    initial: "V",
+    city: "Kuala Lumpur",
+  },
+  {
+    name: "Li Tian Qi",
+    role: "Massage Therapist",
+    text: "Very good. I free up my hands and the system handles the bookings.",
+    initial: "L",
+    city: "Petaling Jaya",
+  },
+  {
+    name: "Wei Rong",
+    role: "Property Agent",
+    text: "I can focus on doing what I love more. The follow-ups happen automatically.",
+    initial: "W",
+    city: "Kuala Lumpur",
   },
 ];
+
+export const testimonials: Testimonial[] = data.map((t) => ({ ...t, quote: t.text }));
 
 /** The three shown under the hero product: Marcus, Audrey, Elaine. */
 export const heroTestimonials = ["Marcus T. K. Loke", "Audrey Wong", "Elaine Choo"].map(
