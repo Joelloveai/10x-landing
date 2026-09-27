@@ -1,16 +1,13 @@
 import { ArrowRight } from "lucide-react";
 import { sectionIds, siteConfig } from "@/lib/site-config";
-import { heroTestimonials } from "@/lib/testimonials";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { Reveal } from "@/components/ui/Reveal";
 import { HeroProduct } from "./HeroProduct";
 import { HeroSpotlight } from "./HeroSpotlight";
-import { TestimonialCard } from "./TestimonialCard";
 
 const words = ["Stop", "Losing", "Leads", "After", "6 PM"];
 
-/** Chapter 01. Focus order: headline, CTA, product, then testimonials as the trust signal. */
+/** Chapter 01. Focus order: headline, CTA, then product. */
 export function Hero() {
   return (
     <section
@@ -21,10 +18,9 @@ export function Hero() {
     >
       <HeroSpotlight />
       <div className="container-x relative text-center">
-        <p className="mx-auto inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-full border border-border bg-white/[0.03] px-3 py-1.5 text-[12px] text-secondary sm:px-3.5 sm:text-[13px]">
+        <p className="mx-auto inline-flex max-w-full items-center gap-2 text-balance rounded-full border border-border bg-white/[0.03] px-3 py-1.5 text-[12px] text-secondary min-[360px]:whitespace-nowrap sm:px-3.5 sm:text-[13px]">
           <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-accent" />
-          <span className="sm:hidden">For businesses that live on enquiries</span>
-          <span className="hidden sm:inline">For businesses that run on enquiries and appointments</span>
+          The AI system that runs your business 24/7
         </p>
 
         {/* Explicit line breaks keep the layout identical before and after the web font loads (no CLS). */}
@@ -87,20 +83,9 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="container-x relative mt-14 sm:mt-16">
+      <div className="container-x relative mt-14 pb-8 sm:mt-16">
         <HeroProduct />
         <p className="mt-4 text-center text-[13px] text-secondary">Product demo. Names and data are illustrative.</p>
-      </div>
-
-      <div className="container-x pb-8 pt-20 sm:pt-24">
-        <Reveal>
-          <h2 className="eyebrow mb-6 text-center">From early users</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {heroTestimonials.map((t) => (
-              <TestimonialCard key={t.name} t={t} />
-            ))}
-          </div>
-        </Reveal>
       </div>
     </section>
   );
