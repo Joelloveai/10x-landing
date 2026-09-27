@@ -47,13 +47,15 @@ export default function HomePage() {
           </Suspense>
           {/* 05 Product + proof */}
           <Suspense fallback={null}>
-            <ProductFeatures>
-              <Testimonials />
-            </ProductFeatures>
+            <ProductFeatures />
           </Suspense>
           {/* 06 Pricing + trust + FAQ */}
           <Suspense fallback={null}>
             <PricingFAQ />
+          </Suspense>
+          {/* Testimonials: second to last, just before the final CTA */}
+          <Suspense fallback={null}>
+            <Testimonials />
           </Suspense>
           {/* 07 Book a conversation */}
           <Suspense fallback={null}>

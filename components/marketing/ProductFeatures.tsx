@@ -1,12 +1,11 @@
 "use client";
 
 /**
- * Chapter 05. One product window, six features, a compact before/after toggle,
- * then real testimonials (passed in as children from the server).
+ * Chapter 05. One product window, six features and a compact before/after toggle.
  * All product UI is illustrative with fictional data.
  */
 
-import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import {
   ArrowRight,
@@ -41,7 +40,7 @@ const features = [
   { key: "reporting", icon: BarChart3, name: "Reporting", line: "See where enquiries become customers.", state: "Enquiries → Appointments → Outcomes" },
 ] as const;
 
-export function ProductFeatures({ children }: { children?: ReactNode }) {
+export function ProductFeatures() {
   const [active, setActive] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const f = features[active]!;
@@ -145,7 +144,6 @@ export function ProductFeatures({ children }: { children?: ReactNode }) {
 
         <BeforeAfter />
 
-        {children}
 
         <Reveal>
           <p className="mt-10 text-center text-[14px] text-secondary">

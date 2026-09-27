@@ -15,7 +15,7 @@ import { testimonials, type Testimonial } from "@/lib/testimonials";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const HEADLINE = "Real feedback. Not paid. Not actors.".split(" ");
+const HEADLINE = "From early users, in their own words.".split(" ");
 
 const fadeUp = (delay: number): Variants => ({
   hidden: { opacity: 0, y: 12 },
@@ -73,7 +73,7 @@ export function Testimonials() {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-100px" }}
-      className="relative isolate mx-[calc(50%-50vw)] mt-24 overflow-hidden py-24 md:py-28"
+      className="relative isolate overflow-hidden border-t border-border py-24 md:py-28"
     >
       {/* Background layers */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -112,11 +112,11 @@ export function Testimonials() {
       {/* Header */}
       <div className="container-x">
         <m.div variants={fadeUp(0)} className="flex items-center justify-between gap-4">
-          <p className="font-mono text-[12px] text-accent-text">// real feedback</p>
+          <p className="font-mono text-[12px] text-accent-text">// what users say</p>
           <p className="font-mono text-[12px] text-subtle">{testimonials.length} real reviews</p>
         </m.div>
 
-        <m.h3
+        <m.h2
           variants={headlineVariants}
           className="mt-5 max-w-3xl text-balance text-[clamp(32px,4.5vw,52px)] font-extrabold leading-[1.05] tracking-[-0.035em]"
         >
@@ -128,14 +128,14 @@ export function Testimonials() {
               {i < HEADLINE.length - 1 ? " " : null}
             </span>
           ))}
-        </m.h3>
+        </m.h2>
 
         <m.div variants={fadeUp(0.1)} className="mt-6">
           <span aria-hidden className="tm-divider block h-[2px] w-10 bg-[linear-gradient(90deg,#2563EB,transparent)]" />
         </m.div>
 
         <m.p variants={fadeUp(0.2)} className="mt-5 text-[16px] text-secondary">
-          Real people. Real businesses. Real results.
+          Lightly edited for clarity.
         </m.p>
       </div>
 
@@ -215,32 +215,18 @@ function Card({ t, index, duplicate, tilt }: { t: Testimonial; index: number; du
             aria-hidden
             className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2563EB,#1E40AF)] text-[13px] font-semibold text-white"
           >
-            {t.initial}
+            {t.name.charAt(0).toUpperCase()}
           </span>
           <span className="min-w-0">
             <span className="block truncate text-[15px] font-medium text-fg">{t.name}</span>
             <span className="block truncate text-[13px] text-secondary">{t.role}</span>
-            <span className="block truncate text-[12px] text-subtle">{t.city}</span>
           </span>
         </figcaption>
-        <Stars />
         <blockquote className="mt-4 text-[15px] leading-[1.65] text-secondary">
           <p>{t.text}</p>
         </blockquote>
       </m.figure>
     </li>
-  );
-}
-
-function Stars() {
-  return (
-    <span aria-hidden className="mt-4 flex gap-[2px]">
-      {Array.from({ length: 5 }, (_, i) => (
-        <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="#2563EB">
-          <path d="M12 2.5l2.95 6.3 6.9.75-5.15 4.7 1.45 6.8L12 17.6l-6.15 3.45 1.45-6.8-5.15-4.7 6.9-.75L12 2.5z" />
-        </svg>
-      ))}
-    </span>
   );
 }
 
