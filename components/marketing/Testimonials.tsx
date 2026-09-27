@@ -111,9 +111,8 @@ export function Testimonials() {
 
       {/* Header */}
       <div className="container-x">
-        <m.div variants={fadeUp(0)} className="flex items-center justify-between gap-4">
+        <m.div variants={fadeUp(0)}>
           <p className="font-mono text-[12px] text-accent-text">// what users say</p>
-          <p className="font-mono text-[12px] text-subtle">{testimonials.length} real reviews</p>
         </m.div>
 
         <m.h2
