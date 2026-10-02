@@ -7,10 +7,10 @@ import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { SectionItem, SectionWrapper } from "./SectionWrapper";
 
-/** The audit form card inside chapter 07. The final CTA scrolls here. */
+/** The audit form card inside chapter 06. The final CTA scrolls here. */
 export const AUDIT_FORM_ID = "audit-form";
 
-/** Chapter 07 opener and CTA. The contact form is passed in as children. */
+/** Chapter 06 opener and CTA. The contact form is passed in as children. */
 export function FinalCTA({ children }: { children: ReactNode }) {
   return (
     <>
@@ -18,7 +18,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
         <SectionItem>
           <p className="mb-5 flex items-center justify-center gap-3">
             <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
-              07
+              06
             </span>
             <span className="eyebrow">Join the waitlist</span>
           </p>

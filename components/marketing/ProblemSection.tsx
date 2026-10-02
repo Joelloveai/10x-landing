@@ -45,7 +45,7 @@ export function ProblemSection() {
           <SectionItem>
             <p className="mb-5 flex items-center justify-center gap-3">
               <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
-                02
+                03
               </span>
               <span className="eyebrow">The leak</span>
             </p>

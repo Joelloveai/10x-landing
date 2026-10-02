@@ -138,7 +138,7 @@ export function Pricing() {
     <>
       <div>
         <ChapterHeader
-          num="06"
+          num="05"
           label="Pricing & trust"
           id="pricing-title"
           title={pricingCopy.title}

@@ -9,6 +9,7 @@ import { FocusSystem } from "@/components/marketing/FocusSystem";
 import { Footer } from "@/components/marketing/Footer";
 import { Hero } from "@/components/marketing/Hero";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
+import { MeetYourTeam } from "@/components/marketing/MeetYourTeam";
 import { Navbar } from "@/components/marketing/Navbar";
 import { PricingFAQ } from "@/components/marketing/PricingFAQ";
 import { ProblemSection } from "@/components/marketing/ProblemSection";
@@ -18,7 +19,7 @@ import { Testimonials } from "@/components/marketing/Testimonials";
 import { homepageJsonLd, jsonLdScript } from "@/lib/structured-data";
 
 /**
- * Order: hero, problem + calculator, how it works, testimonials, pricing + FAQ, final CTA.
+ * Order: hero, meet your team, problem + calculator, how it works, testimonials, pricing + FAQ, final CTA.
  * OnePersonCompany, AITeam, ProductFeatures and the standalone calculator stay in the repo, unrendered.
  * A fixed depth background sits behind at z-0, the cursor glow above it.
  * Suspense boundaries let React hydrate chapters in separate, interruptible chunks.
@@ -37,6 +38,8 @@ export default function HomePage() {
         <main id="main" tabIndex={-1} className="relative z-10 focus:outline-none">
           {/* Hero */}
           <Hero />
+          {/* Meet your team: four agents */}
+          <MeetYourTeam />
           {/* Problem, with the calculator inline */}
           <Suspense fallback={null}>
             <ProblemSection />

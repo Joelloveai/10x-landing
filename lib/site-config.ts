@@ -36,6 +36,7 @@ export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeU
 
 export const sectionIds = {
   hero: "top",
+  team: "team",
   leak: "solutions",
   calculator: "calculator",
   howItWorks: "how-it-works",
@@ -49,6 +50,7 @@ export const sectionIds = {
 export const navLinks = [
   { label: "Solutions", href: `#${sectionIds.leak}` },
   { label: "How It Works", href: `#${sectionIds.howItWorks}` },
+  { label: "AI Team", href: `#${sectionIds.team}` },
   { label: "Pricing", href: `#${sectionIds.pricing}` },
   { label: "Security", href: `#${sectionIds.security}` },
 ] as const;
@@ -56,8 +58,9 @@ export const navLinks = [
 /** The chapters rendered on the page, used by the focus rail and active navigation. */
 export const chapters = [
   { id: sectionIds.hero, num: "01", label: "Overview" },
-  { id: sectionIds.leak, num: "02", label: "The leak" },
-  { id: sectionIds.howItWorks, num: "03", label: "How it works" },
-  { id: sectionIds.pricing, num: "04", label: "Pricing & trust" },
-  { id: sectionIds.audit, num: "05", label: "Waitlist" },
+  { id: sectionIds.team, num: "02", label: "Your AI team" },
+  { id: sectionIds.leak, num: "03", label: "The leak" },
+  { id: sectionIds.howItWorks, num: "04", label: "How it works" },
+  { id: sectionIds.pricing, num: "05", label: "Pricing & trust" },
+  { id: sectionIds.audit, num: "06", label: "Waitlist" },
 ] as const;

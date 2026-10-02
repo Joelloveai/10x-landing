@@ -344,6 +344,7 @@
 
 /* Active chapter marker. Unlayered on purpose so it wins over utility classes. */
 html[data-focus="top"] #top .chapter-marker,
+html[data-focus="team"] #team .chapter-marker,
 html[data-focus="solutions"] #solutions .chapter-marker,
 html[data-focus="how-it-works"] #how-it-works .chapter-marker,
 html[data-focus="ai-employee"] #ai-employee .chapter-marker,
