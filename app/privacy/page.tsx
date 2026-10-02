@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       <h2>What we collect</h2>
       <ul>
         <li>
-          <strong className="text-fg">Audit requests.</strong> When you request a Lead Leakage Audit or a sales call, we collect your
+          <strong className="text-fg">Waitlist requests.</strong> When you join the waitlist, we collect your
           WhatsApp number and, if you choose to tell us, your business type and approximate monthly enquiry volume.
         </li>
         <li>
@@ -36,14 +36,14 @@ export default function PrivacyPage() {
 
       <h2>How we use it</h2>
       <ul>
-        <li>To contact you about the audit you requested.</li>
+        <li>To contact you about the waitlist.</li>
         <li>To prepare for that conversation.</li>
         <li>To understand which parts of the website are useful, in aggregate.</li>
       </ul>
 
       <h2>Where it goes</h2>
       <p>
-        Audit requests are forwarded to the systems we use to manage enquiries. We do not sell your information.
+        Waitlist requests are forwarded to the systems we use to manage enquiries. We do not sell your information.
         [Final list of processors and data locations to be confirmed during legal review.]
       </p>
 

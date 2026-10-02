@@ -37,8 +37,11 @@ export default function TermsPage() {
         legal review.]
       </p>
 
-      <h2>Free Lead Leakage Audit</h2>
-      <p>The audit is free and carries no obligation to buy.</p>
+      <h2>Waitlist</h2>
+      <p>
+        Joining the waitlist is free. We will contact you at the email or WhatsApp number you provide when we are ready
+        to onboard you. You can ask to be removed at any time by emailing {contact.email}.
+      </p>
 
       <h2>Contact</h2>
       <p>
