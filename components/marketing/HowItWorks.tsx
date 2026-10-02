@@ -1,16 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   m,
   useInView,
   useMotionValueEvent,
   useScroll,
+  useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { Check, ChevronRight, Flag, Inbox, MessageCircle, TrendingUp } from "lucide-react";
+import {
+  CalendarDays,
+  ChartColumn,
+  Check,
+  ChevronRight,
+  Flag,
+  Inbox,
+  ListChecks,
+  MessageCircle,
+  Repeat,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import { sectionIds } from "@/lib/site-config";
 import { useReducedMotionPref } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -19,17 +32,19 @@ import { ChapterHeader } from "@/components/ui/ChapterHeader";
 const EASE = [0.16, 1, 0.3, 1] as const;
 const FADE = { duration: 0.4, ease: "easeInOut" } as const;
 
-const steps = [
-  { num: "01", label: "Capture", title: "Lead Capture", line: "Every enquiry lands in one inbox. Nothing slips." },
-  { num: "02", label: "Respond", title: "Respond", line: "AI replies in seconds. Day or night." },
-  { num: "03", label: "Qualify", title: "Qualify", line: "Asks the right questions. Scores the lead." },
-  { num: "04", label: "Book", title: "Book", line: "Customer books directly into your calendar." },
-  { num: "05", label: "Follow Up", title: "Follow Up", line: "Day 1, 3, 7, 30. Automatically." },
-  { num: "06", label: "Report", title: "Report", line: "Daily brief. Flags urgent. Reports performance." },
-] as const;
+const steps: readonly { num: string; label: string; title: string; line: string; icon: LucideIcon }[] = [
+  { num: "01", label: "Capture", title: "Lead Capture", line: "Every enquiry lands in one inbox. Nothing slips.", icon: Inbox },
+  { num: "02", label: "Respond", title: "Respond", line: "AI replies in seconds. Day or night.", icon: MessageCircle },
+  { num: "03", label: "Qualify", title: "Qualify", line: "Asks the right questions. Scores the lead.", icon: ListChecks },
+  { num: "04", label: "Book", title: "Book", line: "Customer books directly into your calendar.", icon: CalendarDays },
+  { num: "05", label: "Follow Up", title: "Follow Up", line: "Day 1, 3, 7, 30. Automatically.", icon: Repeat },
+  { num: "06", label: "Report", title: "Report", line: "Daily brief. Flags urgent. Reports performance.", icon: ChartColumn },
+];
 
 // Scroll progress where each step begins. The last step runs to 1.
 const STARTS = [0, 0.16, 0.33, 0.5, 0.66, 0.83];
+// Connector length at each step start: it reaches step i's node as step i lights up.
+const LINE_AT = STARTS.map((_, i) => i / (STARTS.length - 1));
 
 const flow = {
   before: ["Missed", "Unassigned", "Unanswered", "No booking", "Forgotten", "Invisible"],
@@ -47,38 +62,37 @@ function useSequence(total: number, ms: number, animate: boolean, delay = 0) {
   return n;
 }
 
-/** Crossfades between two text colours with opacity only. */
-function Swap({ on, onClass, offClass, children }: { on: boolean; onClass: string; offClass: string; children: ReactNode }) {
-  const base = "[grid-area:1/1] transition-opacity duration-[400ms] ease-[ease] motion-reduce:transition-none";
-  return (
-    <span className="grid">
-      <span className={cn(base, offClass, on ? "opacity-0" : "opacity-100")}>{children}</span>
-      <span aria-hidden className={cn(base, onClass, on ? "opacity-100" : "opacity-0")}>
-        {children}
-      </span>
-    </span>
-  );
-}
-
-/** Chapter 03. A scroll-driven walk through six steps: the list on the left tracks progress, the panel on the right shows each step working. */
+/**
+ * Chapter 03, the centrepiece. A scroll-driven walk through six stages: a rail of stages
+ * (horizontal on desktop, a vertical stack on mobile) lights the active one, a connector draws
+ * between them, and the panel below shows the step working.
+ * Lighting: active = scale 1.05 + accent glow + one icon turn; past = 0.6; future = 0.35.
+ * Reduced motion: no sticky scroll, stages are tap-driven, nothing scales or turns.
+ */
 export function HowItWorks() {
   const reduced = useReducedMotionPref();
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const seen = useInView(stickyRef, { once: true, amount: 0.4 });
   const [active, setActive] = useState(0);
+  const [picked, setPicked] = useState(0);
   const [withTenX, setWithTenX] = useState(false);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
   const activeStep = useTransform(scrollYProgress, (v) => STARTS.filter((s) => s > 0 && v >= s).length);
   useMotionValueEvent(activeStep, "change", (v) => setActive(v));
+  const line = useSpring(useTransform(scrollYProgress, STARTS, LINE_AT), { stiffness: 140, damping: 30, restDelta: 0.001 });
 
-  const step = reduced ? 0 : active;
+  const step = reduced ? picked : active;
   const current = steps[step];
 
   const goTo = (i: number) => {
     const el = containerRef.current;
-    if (!el || reduced) return;
+    if (reduced) {
+      setPicked(i);
+      return;
+    }
+    if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const range = el.offsetHeight - window.innerHeight;
     window.scrollTo({ top: top + range * (STARTS[i] + 0.02), behavior: "smooth" });
@@ -101,22 +115,11 @@ export function HowItWorks() {
           ref={stickyRef}
           className={cn(!reduced && "sticky top-0 flex h-svh flex-col justify-center pb-6 pt-20 lg:h-screen lg:pb-10 lg:pt-24")}
         >
-          <div className="container-x flex min-h-0 w-full flex-1 flex-col gap-4 lg:grid lg:flex-none lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-8">
+          <div className="container-x flex min-h-0 w-full flex-1 flex-col gap-4 lg:flex-none lg:gap-8">
             <div>
-              <ol aria-label="Steps" className="grid grid-cols-3 gap-2 lg:grid-cols-1">
-                {steps.map((s, i) => (
-                  <StepItem
-                    key={s.num}
-                    index={i}
-                    on={i === step}
-                    progress={scrollYProgress}
-                    reduced={reduced}
-                    onSelect={() => goTo(i)}
-                  />
-                ))}
-              </ol>
-              {/* On mobile only the active step's line shows, under the grid. */}
-              <div className="mt-3 grid min-h-[24px] lg:hidden">
+              <StepRail step={step} line={reduced ? step / (steps.length - 1) : line} reduced={reduced} onSelect={goTo} />
+              {/* Only the active step's line shows, under the rail. */}
+              <div className="mt-3 grid min-h-[24px] lg:mt-6 lg:justify-items-center">
                 <AnimatePresence initial={false}>
                   <m.p
                     key={current.num}
@@ -124,7 +127,7 @@ export function HowItWorks() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={FADE}
-                    className="text-[15px] text-fg [grid-area:1/1]"
+                    className="text-[15px] text-fg [grid-area:1/1] lg:text-[17px]"
                   >
                     {current.line}
                   </m.p>
@@ -132,7 +135,7 @@ export function HowItWorks() {
               </div>
             </div>
 
-            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-elevated lg:min-h-[440px]">
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-elevated lg:mx-auto lg:min-h-[420px] lg:w-full lg:max-w-4xl">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_65%_35%,#2563EB,transparent_70%)] opacity-[0.06]"
@@ -144,7 +147,7 @@ export function HowItWorks() {
                 <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-subtle">Illustrative</span>
               </div>
               {/* Panels share one grid cell, so the old one fades out while the new one fades in. */}
-              <div className="relative grid min-h-0 flex-1 items-center overflow-hidden p-5">
+              <div className="relative grid min-h-0 flex-1 items-center overflow-hidden p-4 sm:p-5">
                 <AnimatePresence initial={false}>
                   {seen || reduced ? (
                     <m.div
@@ -219,59 +222,107 @@ export function HowItWorks() {
   );
 }
 
+/** The six stages plus the connector that draws between them as the visitor scrolls. */
+function StepRail({
+  step,
+  line,
+  reduced,
+  onSelect,
+}: {
+  step: number;
+  line: MotionValue<number> | number;
+  reduced: boolean;
+  onSelect: (i: number) => void;
+}) {
+  return (
+    <ol aria-label="Steps" className="relative flex flex-col lg:grid lg:grid-cols-6">
+      {/* Connector: across the node centres on desktop, down the node column on mobile. */}
+      <Connector line={line} className="absolute left-[calc(100%/12)] top-[23px] hidden h-[2px] w-[calc(100%*10/12)] lg:block" vertical={false} />
+      <Connector line={line} className="absolute left-[25px] top-[22px] h-[calc(100%-44px)] w-[2px] lg:hidden" vertical />
+      {steps.map((s, i) => (
+        <StepItem key={s.num} index={i} state={i === step ? "on" : i < step ? "past" : "future"} reduced={reduced} onSelect={() => onSelect(i)} />
+      ))}
+    </ol>
+  );
+}
+
+function Connector({ line, className, vertical }: { line: MotionValue<number> | number; className: string; vertical: boolean }) {
+  const d = vertical ? "M1 0 V100" : "M0 1 H100";
+  return (
+    <svg aria-hidden viewBox={vertical ? "0 0 2 100" : "0 0 100 2"} preserveAspectRatio="none" className={className}>
+      <path d={d} stroke="rgb(255 255 255 / 0.1)" strokeWidth={2} fill="none" />
+      <m.path d={d} stroke="#2563EB" strokeWidth={2} fill="none" style={{ pathLength: line }} />
+    </svg>
+  );
+}
+
+const LIGHT = { on: 1, past: 0.6, future: 0.35 } as const;
+
 function StepItem({
   index,
-  on,
-  progress,
+  state,
   reduced,
   onSelect,
 }: {
   index: number;
-  on: boolean;
-  progress: MotionValue<number>;
+  state: keyof typeof LIGHT;
   reduced: boolean;
   onSelect: () => void;
 }) {
   const s = steps[index];
-  const start = STARTS[index];
-  const end = STARTS[index + 1] ?? 1;
-  const fill = useTransform(progress, [start, end], [0, 1], { clamp: true });
+  const on = state === "on";
+  const Icon = s.icon;
 
   return (
-    <li>
-      <button
+    <li className="relative">
+      <m.button
         type="button"
         aria-current={on ? "step" : undefined}
         onClick={onSelect}
-        className="relative block w-full rounded-xl px-3 py-2.5 text-left lg:px-5 lg:py-3.5"
+        initial={false}
+        animate={{ scale: on && !reduced ? 1.05 : 1 }}
+        transition={{ duration: 0.4, ease: EASE }}
+        className="flex w-full origin-left items-center gap-3 rounded-xl px-2 py-1 text-left lg:origin-center lg:flex-col lg:gap-3 lg:px-2 lg:py-0 lg:text-center"
       >
-        {/* Active state: border, tint and glow fade in together. */}
-        <span
-          aria-hidden
-          className={cn(
-            "absolute inset-0 rounded-xl border-l-[3px] border-accent bg-accent/[0.08] shadow-[0_0_32px_-8px_rgba(37,99,235,0.45)] transition-opacity duration-[400ms] ease-[ease] motion-reduce:transition-none",
-            on ? "opacity-100" : "opacity-0",
-          )}
-        />
-        <span className="relative flex items-baseline gap-2 font-mono text-[12px] uppercase tracking-[0.08em] lg:gap-3 lg:text-[13px]">
-          <Swap on={on} onClass="text-accent-text" offClass="text-subtle">
-            {s.num}
-          </Swap>
-          <Swap on={on} onClass="text-accent-text" offClass="text-secondary">
-            <span className="whitespace-nowrap">{s.label}</span>
-          </Swap>
+        <span className="relative grid size-9 shrink-0 place-items-center lg:size-12">
+          {/* Solid disc under the node so the connector never shows through a dimmed stage. */}
+          <span aria-hidden className="absolute inset-0 rounded-full bg-bg" />
+          <span
+            aria-hidden
+            className={cn(
+              "absolute inset-0 rounded-full shadow-[0_0_28px_2px_rgba(37,99,235,0.55)] transition-opacity duration-[400ms] motion-reduce:transition-none",
+              on ? "opacity-100" : "opacity-0",
+            )}
+          />
+          <m.span
+            initial={false}
+            animate={{ opacity: LIGHT[state] }}
+            transition={{ duration: 0.4 }}
+            className={cn(
+              "relative grid size-full place-items-center rounded-full ring-1 ring-inset",
+              on ? "bg-accent/15 text-accent-text ring-accent" : "bg-surface text-fg ring-white/15",
+            )}
+          >
+            <m.span
+              initial={false}
+              animate={{ rotate: on && !reduced ? 360 : 0 }}
+              transition={on ? { duration: 1.6, ease: [0.45, 0, 0.55, 1] } : { duration: 0 }}
+              className="grid place-items-center"
+            >
+              <Icon aria-hidden className="size-4 lg:size-5" />
+            </m.span>
+          </m.span>
         </span>
-        <span className="relative mt-1 hidden text-[15px] lg:block">
-          <Swap on={on} onClass="text-fg" offClass="text-secondary">
-            {s.line}
-          </Swap>
-        </span>
-        {reduced ? null : (
-          <span aria-hidden className="absolute inset-x-3 bottom-0 h-[2px] overflow-hidden rounded-full bg-white/[0.08] lg:inset-x-5">
-            <m.span style={{ scaleX: fill }} className="block h-full origin-left bg-accent" />
-          </span>
-        )}
-      </button>
+        <m.span
+          initial={false}
+          animate={{ opacity: LIGHT[state] }}
+          transition={{ duration: 0.4 }}
+          className="flex items-baseline gap-2 font-mono text-[12px] uppercase tracking-[0.08em] lg:text-[13px]"
+        >
+          <span className={on ? "text-accent-text" : "text-fg"}>{s.num}</span>
+          <span className="whitespace-nowrap text-fg">{s.label}</span>
+        </m.span>
+      </m.button>
     </li>
   );
 }

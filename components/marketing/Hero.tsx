@@ -3,6 +3,7 @@ import { sectionIds, siteConfig } from "@/lib/site-config";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { HeroDemo } from "./HeroDemo";
+import { HeroLayer } from "./HeroLayer";
 import { HeroSpotlight } from "./HeroSpotlight";
 
 const lines = [
@@ -10,7 +11,10 @@ const lines = [
   { text: "Your AI team handles the rest.", className: "text-secondary" },
 ];
 
-/** Chapter 01. Focus order: headline, CTA, then product. */
+/**
+ * Chapter 01. Focus order: headline, CTA, then product.
+ * Three depth layers pull apart on scroll (80 / 120 / 160px) and fade up 0.08s apart on mount.
+ */
 export function Hero() {
   return (
     <section
@@ -21,6 +25,7 @@ export function Hero() {
     >
       <HeroSpotlight />
       <div className="container-x relative text-center">
+        <HeroLayer depth={80} index={0}>
         <p className="mx-auto inline-flex max-w-full items-center gap-2 text-balance rounded-full border border-border bg-white/[0.03] px-3 py-1.5 text-[12px] text-secondary min-[360px]:whitespace-nowrap sm:px-3.5 sm:text-[13px]">
           <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-accent" />
           The AI system that runs your business 24/7
@@ -47,7 +52,9 @@ export function Hero() {
             </span>
           ))}
         </h1>
+        </HeroLayer>
 
+        <HeroLayer depth={120} index={1}>
         <p className="text-lead mx-auto mt-6 max-w-[40rem] text-balance text-secondary sm:mt-7">
           AI replies in seconds. Books the appointment. Follows up. While you sleep.
         </p>
@@ -55,6 +62,9 @@ export function Hero() {
         <p className="mx-auto mt-7 max-w-md text-pretty text-[14px] text-secondary">
           Every feature tested on a real business before it ships.
         </p>
+        </HeroLayer>
+
+        <HeroLayer depth={160} index={2}>
 
         <div className="mt-5 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
           <Magnetic>
@@ -100,11 +110,16 @@ export function Hero() {
         <p className="mx-auto mt-8 max-w-md text-pretty text-[14px] text-secondary">
           Trusted by property teams, clinics, and home service businesses in Malaysia.
         </p>
+        </HeroLayer>
       </div>
 
       <div className="container-x relative mt-14 pb-8 sm:mt-16">
-        <HeroDemo />
-        <p className="mt-4 text-center text-[13px] text-secondary">Product demo. Names and data are illustrative.</p>
+        <HeroLayer depth={0} index={3}>
+          <div className="[perspective:1200px]">
+            <HeroDemo />
+          </div>
+          <p className="mt-4 text-center text-[13px] text-secondary">Product demo. Names and data are illustrative.</p>
+        </HeroLayer>
       </div>
     </section>
   );

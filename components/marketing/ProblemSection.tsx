@@ -1,5 +1,7 @@
 "use client";
 
+import { m, type Variants } from "framer-motion";
+import { useReducedMotionPref } from "@/lib/hooks/useMediaQuery";
 import { sectionIds } from "@/lib/site-config";
 import { CountUp } from "@/components/ui/CountUp";
 import { CtaLink } from "@/components/ui/CtaLink";
@@ -13,8 +15,24 @@ const stats: { value?: number; label: string }[] = [
   { value: 78, label: "of customers buy from whoever replies first. Not the cheapest. Not the best. First." },
 ];
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/** Pain cards slide in from the left, 0.1s apart, after the heading. */
+const cardGrid: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.24 } } };
+const cardIn: Variants = {
+  hidden: { opacity: 0, x: -24, y: 30 },
+  show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5, ease: EASE } },
+};
+
+/** Once the cards are in and the count-up has landed, the figure nudges once to mark the loss. */
+const nudge: Variants = {
+  hidden: { x: 0 },
+  show: { x: [0, -3, 3, 0], transition: { delay: 1.9, duration: 0.4, ease: "easeInOut" } },
+};
+
 /** Chapter 02. The after-hours gap, two count-up stats, then the calculator inline. */
 export function ProblemSection() {
+  const reduced = useReducedMotionPref();
   return (
     <section
       id={sectionIds.leak}
@@ -42,9 +60,9 @@ export function ProblemSection() {
               The lead books with another agent. You never knew they existed.
             </p>
           </SectionItem>
-          <div className="mt-12 grid grid-cols-1 gap-4 text-left sm:grid-cols-2">
+          <m.div variants={cardGrid} className="mt-12 grid grid-cols-1 gap-4 text-left sm:grid-cols-2">
             {stats.map((s) => (
-              <SectionItem key={s.label} className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+              <m.div key={s.label} variants={cardIn} className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
                 {s.value === undefined ? (
                   <p className="text-balance text-[clamp(1.5rem,1.2rem+1.2vw,2rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-fg">
                     {s.label}
@@ -52,14 +70,16 @@ export function ProblemSection() {
                 ) : (
                   <>
                     <p className="text-[clamp(2.75rem,2rem+3vw,4rem)] font-semibold leading-none tracking-[-0.04em]">
-                      <CountUp to={s.value} format={pct} className="tabular-nums text-accent-text" />
+                      <m.span variants={reduced ? undefined : nudge} className="inline-block">
+                        <CountUp to={s.value} format={pct} className="tabular-nums text-accent-text" />
+                      </m.span>
                     </p>
                     <p className="mt-4 text-pretty text-[17px] leading-[1.45] text-secondary">{s.label}</p>
                   </>
                 )}
-              </SectionItem>
+              </m.div>
             ))}
-          </div>
+          </m.div>
         </SectionWrapper>
 
         <div id={sectionIds.calculator} className="mx-auto mt-12 max-w-5xl scroll-mt-24 md:mt-16">

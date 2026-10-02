@@ -6,10 +6,10 @@
  * fictional. Labelled "Illustrative" in the UI. Reduced motion shows the finished state.
  */
 
-import { useEffect } from "react";
-import { m, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { m, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { CalendarDays, Check, Inbox, UserRound } from "lucide-react";
-import { useRichPointer } from "@/lib/hooks/useMediaQuery";
+import { useReducedMotionPref, useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 
 const SLOTS = ["10:00 AM", "11:30 AM", "2:00 PM", "4:30 PM"];
@@ -18,13 +18,18 @@ const FOLLOW_UPS = ["Day 1", "Day 3", "Day 7", "Day 30"];
 
 export function HeroDemo() {
   const rich = useRichPointer();
+  const reduced = useReducedMotionPref();
+  const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 18, mass: 0.6 });
   const sy = useSpring(my, { stiffness: 60, damping: 18, mass: 0.6 });
-  // Base tilt rotateX(2deg) rotateY(-1.5deg), plus up to ±2deg following the cursor.
-  const rotateX = useTransform(sy, (v) => 2 - v * 2);
-  const rotateY = useTransform(sx, (v) => -1.5 + v * 2);
+  // Scroll leans the window back 4deg as it passes the middle of the viewport, then levels out.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const lean = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0, 4, 0]), { stiffness: 100, damping: 24 });
+  // Desktop adds a base tilt rotateX(2deg) rotateY(-1.5deg), plus up to ±2deg following the cursor.
+  const rotateX = useTransform([sy, lean], ([v, l]: number[]) => (rich ? 2 - v * 2 : 0) + l);
+  const rotateY = useTransform(sx, (v) => (rich ? -1.5 + v * 2 : 0));
 
   useEffect(() => {
     if (!rich) {
@@ -42,7 +47,8 @@ export function HeroDemo() {
 
   return (
     <m.div
-      style={rich ? { transformPerspective: 1200, rotateX, rotateY } : undefined}
+      ref={ref}
+      style={reduced ? undefined : { rotateX, rotateY }}
       className="hero-3d mx-auto max-w-[1000px] rounded-[20px] border border-white/[0.08] bg-surface text-left shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_1px_0_0_rgba(255,255,255,0.06)_inset,0_60px_120px_-30px_rgba(0,0,0,0.85),0_30px_60px_-30px_rgba(37,99,235,0.28)]"
     >
       {/* Browser chrome */}

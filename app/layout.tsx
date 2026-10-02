@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-MY" className={`${inter.variable} ${jetbrains.variable}`}>
       <head>
         <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+          <style>{`.reveal,.hero-in{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
       <body className="min-h-dvh bg-bg font-sans text-fg antialiased">{children}</body>

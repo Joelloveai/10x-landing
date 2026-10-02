@@ -1,8 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { m, type Variants } from "framer-motion";
+import type { PointerEvent, ReactNode } from "react";
+import { m, useMotionValue, useSpring, type Variants } from "framer-motion";
 import { FileText, Moon, Repeat, Target, type LucideIcon } from "lucide-react";
+import { useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { sectionIds } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { ChapterHeader } from "@/components/ui/ChapterHeader";
@@ -85,6 +86,57 @@ export function TiltCard({
   );
 }
 
+const MAGNET = { stiffness: 150, damping: 15 } as const;
+const PULL = 10;
+const TILT = 6;
+
+/**
+ * AI team card. Desktop fine pointers: drifts up to 10px toward the cursor and tilts up to 6deg,
+ * on springs (stiffness 150, damping 15). Touch: a 0.98 press only. Reduced motion: static.
+ */
+function MagneticCard({ children }: { children: ReactNode }) {
+  const rich = useRichPointer();
+  const x = useSpring(useMotionValue(0), MAGNET);
+  const y = useSpring(useMotionValue(0), MAGNET);
+  const rotateX = useSpring(useMotionValue(0), MAGNET);
+  const rotateY = useSpring(useMotionValue(0), MAGNET);
+
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (!rich) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const dx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    const dy = ((e.clientY - r.top) / r.height) * 2 - 1;
+    x.set(dx * PULL);
+    y.set(dy * PULL);
+    rotateY.set(dx * TILT);
+    rotateX.set(-dy * TILT);
+  };
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
+  return (
+    <m.div variants={cardIn} className="h-full [perspective:1000px]">
+      <m.div
+        onPointerMove={onMove}
+        onPointerLeave={reset}
+        whileTap={rich ? undefined : { scale: 0.98 }}
+        style={rich ? { x, y, rotateX, rotateY } : undefined}
+        className={cn(
+          "group h-full rounded-2xl border border-border bg-surface p-6 sm:p-7",
+          "transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_16px_48px_-16px_rgba(37,99,235,0.35)]",
+        )}
+      >
+        {children}
+      </m.div>
+    </m.div>
+  );
+}
+
 export function AITeam() {
   return (
     <section id={sectionIds.ai} data-chapter aria-labelledby="ai-title" className="border-t border-border py-24 md:py-32">
@@ -106,7 +158,7 @@ export function AITeam() {
         >
           {team.map(({ icon: Icon, title, body }) => (
             <li key={title}>
-              <TiltCard max={4} glare lift={4}>
+              <MagneticCard>
                 <span className="icon-pulse flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent-text ring-1 ring-inset ring-accent/25">
                   <Icon className="size-5" aria-hidden />
                 </span>
@@ -114,7 +166,7 @@ export function AITeam() {
                   {title}
                 </m.h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-secondary">{body}</p>
-              </TiltCard>
+              </MagneticCard>
             </li>
           ))}
         </m.ul>

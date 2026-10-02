@@ -7,8 +7,8 @@
  * cursor glow and tilt. Touch devices get native drag instead of tilt and glow.
  */
 
-import { useRef, useState, type PointerEvent } from "react";
-import { AnimatePresence, m, useMotionValue, useSpring, type Variants } from "framer-motion";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { AnimatePresence, m, useMotionValue, useScroll, useSpring, useTransform, type Variants } from "framer-motion";
 import { trackOnce } from "@/lib/analytics";
 import { useReducedMotionPref, useRichPointer } from "@/lib/hooks/useMediaQuery";
 import { testimonials, type Testimonial } from "@/lib/testimonials";
@@ -64,6 +64,19 @@ export function Testimonials() {
 
   const interacted = () => trackOnce("testimonial_interacted");
 
+  // Parallax depth: quote cards travel at 0.92x scroll speed, the background blobs at 1.08x.
+  // Over the section's pass through the viewport (height + viewport px), that is a ±8% offset.
+  const [travel, setTravel] = useState(0);
+  useEffect(() => {
+    const measure = () => setTravel((sectionRef.current?.offsetHeight ?? 0) + window.innerHeight);
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const cardsY = useTransform(scrollYProgress, (p) => (p - 0.5) * travel * 0.08);
+  const blobY = useTransform(scrollYProgress, (p) => (0.5 - p) * travel * 0.08);
+
   return (
     <m.div
       ref={sectionRef}
@@ -79,8 +92,10 @@ export function Testimonials() {
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(37,99,235,0.06),transparent_60%)]" />
         <div className="tm-grid absolute inset-0" />
-        <div className="tm-orb-a absolute left-[12%] top-[18%] size-[200px] rounded-full bg-[rgba(37,99,235,0.05)] blur-3xl motion-reduce:hidden" />
-        <div className="tm-orb-b absolute bottom-[12%] right-[10%] hidden size-[300px] rounded-full bg-[rgba(37,99,235,0.05)] blur-3xl md:motion-safe:block" />
+        <m.div style={reduced ? undefined : { y: blobY }} className="absolute inset-0">
+          <div className="tm-orb-a absolute left-[12%] top-[18%] size-[200px] rounded-full bg-[rgba(37,99,235,0.05)] blur-3xl motion-reduce:hidden" />
+          <div className="tm-orb-b absolute bottom-[12%] right-[10%] hidden size-[300px] rounded-full bg-[rgba(37,99,235,0.05)] blur-3xl md:motion-safe:block" />
+        </m.div>
         <div className="tm-noise absolute inset-0" />
         {glowEnabled ? (
           <m.div
@@ -139,6 +154,7 @@ export function Testimonials() {
       </div>
 
       {/* Marquee */}
+      <m.div style={reduced ? undefined : { y: cardsY }}>
       <m.div variants={fadeUp(0.3)} className="relative mt-12">
         <div
           className="tm-marquee scrollbar-none overflow-x-auto md:overflow-hidden"
@@ -167,6 +183,7 @@ export function Testimonials() {
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#0A0A0A_0%,transparent_8%,transparent_92%,#0A0A0A_100%)]"
         />
+      </m.div>
       </m.div>
     </m.div>
   );

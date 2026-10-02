@@ -46,7 +46,7 @@ Inter (variable) for everything; JetBrains Mono for timestamps, stage numbers an
 
 - `FocusSystem` tracks the chapter in view and sets `<html data-focus="chapter-id">`.
 - The chapter's numbered marker (`ChapterHeader`) lights blue with a soft halo only while active. Active nav link gets a blue underline glow. Desktop ≥1360px shows a small side rail; mobile uses only the 2px top progress line.
-- Workflow stages: active = 100% opacity + blue ring + `.halo`; previous = 75%; future = 65%. Keep dimmed text white so it still passes contrast.
+- Workflow stages: active = 100% opacity, scale 1.05, blue ring + glow, one slow icon turn; previous = 60%; future = 35%. A blue connector draws between stages with scroll. Keep dimmed text white.
 - Selected tabs (business type, AI, product features) use `.halo` + `bg-accent/10`. Growth pricing uses `.halo`. The contact card uses `.halo`.
 - `.halo` = 1px blue ring + ~0.10 glow. `.halo-soft` = ~0.06 glow for active product panels. Never glow more than one thing per view.
 
@@ -54,13 +54,13 @@ Inter (variable) for everything; JetBrains Mono for timestamps, stage numbers an
 
 | Level | Allowed |
 | --- | --- |
-| 1 Core | Hero word reveal (CSS, 0.06s stagger), section fade-up (SectionWrapper: once, -100px, 0.08s stagger), product state changes |
-| 2 Premium | Hero demo (3D window, 12s CSS loop, ±2deg mouse-follow), focus glow, the single sticky workflow story, testimonial marquee (45s, pauses on hover, 3s hover progress bar), count-ups (40%, 78%, prices), calculator result spring |
-| 3 Optional | Magnetic CTAs (within 80px, max 6px): hero, pricing, final CTA. Card tilt (±3deg pricing, ±4deg AI team, glare, 4px lift). Cursor glow. Cmd/Ctrl+K palette. No text scramble. |
+| 1 Core | Hero word reveal (CSS, 0.06s stagger), hero layers fade up on mount (20px, 0.08s apart), section fade-up (once, 40px, 0.5s, 0.08s stagger), product state changes, 2px scroll progress line (spring) |
+| 2 Premium | Hero parallax (headline / sub / CTA rise 80 / 120 / 160px), hero demo (3D window, 12s CSS loop, ±2deg mouse-follow, scroll lean 0 to 4 to 0deg), focus glow, the single sticky workflow story, problem cards slide in from the left (0.1s apart), testimonial depth (cards 0.92x, blobs 1.08x scroll), testimonial marquee (45s, pauses on hover, 3s hover progress bar), count-ups (78%, prices), calculator result spring |
+| 3 Optional | Magnetic CTAs (within 80px, max 6px): hero, pricing, final CTA. Pricing: Growth floats (5px, 3.5s), hover scale (Growth 1.03, others 0.97), CTAs pulse once on view (1.04). AI team cards: magnetic (max 10px, ±6deg, spring 150/15), press 0.98 on touch. Card tilt (±3deg pricing). Cursor glow. Cmd/Ctrl+K palette. No text scramble. |
 
-Calm only: no flashes, zooms, shakes or moving backgrounds. The one pulse is the Growth badge (opacity 0.8 to 1, 3s). Animate transform and opacity only.
+Calm only: no flashes, zooms or moving backgrounds. The single exception to "no shakes" is a one-time 3px nudge on the 78% stat after it counts up. Pulses: the Growth badge (opacity 0.8 to 1, 3s) and a single pricing CTA pulse on first view. Animate transform and opacity only (the workflow connector uses SVG pathLength).
 
-`prefers-reduced-motion` disables spotlight, parallax, tilt, magnetic pull, cursor glow, count-ups and pulses, and shows the hero demo in its finished state. The workflow becomes tap-driven and everything stays readable. The testimonial marquee stays on by request. Touch devices get no cursor-follow, magnetic pull or tilt.
+`prefers-reduced-motion` disables spotlight, parallax, scroll lean, tilt, magnetic pull, float, nudge, cursor glow, count-ups and pulses, and shows the hero demo in its finished state. The workflow becomes tap-driven and everything stays readable. The testimonial marquee stays on by request. Touch devices get no cursor-follow, magnetic pull or tilt.
 
 ## 6. Layout
 

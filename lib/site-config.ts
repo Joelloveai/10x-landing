@@ -1,6 +1,8 @@
 export const siteConfig = {
   name: "10X",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://tenx.my").replace(/\/$/, ""),
+  /** The signed-in product. "CRM" is a forbidden word, so the button says "Open app". */
+  appUrl: "https://app.tenx.my",
   title: "10X | Your AI Operations Team",
   description:
     "Hire an AI operations team for a fraction of a human hire. Built for Malaysian service businesses.",
@@ -24,6 +26,8 @@ export const siteConfig = {
     formSubmit: "Get My Free Audit",
     salesSubmit: "Request a Sales Call",
     microcopy: "Free 15-minute review. No obligation.",
+    app: "Open app",
+    checkout: "Get started",
   },
   copyrightYear: 2026,
 } as const;

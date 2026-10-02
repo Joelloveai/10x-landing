@@ -7,7 +7,7 @@ import { useActiveChapter } from "@/lib/hooks/useActiveChapter";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
-import { CtaLink } from "@/components/ui/CtaLink";
+import { ctaClasses, CtaLink } from "@/components/ui/CtaLink";
 import { Logo } from "@/components/ui/Logo";
 
 export function Navbar() {
@@ -103,6 +103,9 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2">
+          <a href={siteConfig.appUrl} className={cn(ctaClasses("ghost", "sm"), "hidden ring-1 ring-inset ring-white/12 hover:ring-white/25 lg:inline-flex")}>
+            {siteConfig.cta.app}
+          </a>
           <span className="hidden sm:contents">
             <CtaLink
               href={`#${sectionIds.audit}`}
@@ -180,6 +183,9 @@ export function Navbar() {
             >
               {siteConfig.cta.sales}
             </CtaLink>
+            <a href={siteConfig.appUrl} onClick={close} className={cn(ctaClasses("ghost", "lg"), "w-full ring-1 ring-inset ring-white/12")}>
+              {siteConfig.cta.app}
+            </a>
             <p className="pt-2 text-center text-[14px] text-secondary">
               {siteConfig.contact.label} ·{" "}
               <a href={salesMailto} className="text-fg underline decoration-white/30 underline-offset-4">

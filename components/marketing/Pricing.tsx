@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { m, type Variants } from "framer-motion";
 import { Check } from "lucide-react";
-import { pricingCopy, pricingPlans, yearOne } from "@/lib/pricing";
-import { sectionIds, siteConfig } from "@/lib/site-config";
-import { cn, formatRM } from "@/lib/utils";
+import { track } from "@/lib/analytics";
+import { useReducedMotionPref } from "@/lib/hooks/useMediaQuery";
+import { pricingCopy, pricingPlans } from "@/lib/pricing";
+import { siteConfig } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 import { ChapterHeader } from "@/components/ui/ChapterHeader";
 import { CountUp } from "@/components/ui/CountUp";
-import { CtaLink } from "@/components/ui/CtaLink";
+import { ctaClasses } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Reveal } from "@/components/ui/Reveal";
 import { Tilt } from "@/components/ui/Tilt";
@@ -65,8 +67,61 @@ const card: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
+/** Posts the tier to /api/checkout and sends the visitor to Stripe in the same tab. */
+function CheckoutButton({ tier, name, primary, reduced }: { tier: string; name: string; primary: boolean; reduced: boolean }) {
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+
+  const start = async () => {
+    if (state === "loading") return;
+    setState("loading");
+    track("pricing_cta_clicked", { plan: tier, location: "pricing" });
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier }),
+      });
+      const data = (await res.json()) as { url?: string };
+      if (!res.ok || !data.url) throw new Error("checkout_failed");
+      window.location.assign(data.url);
+    } catch {
+      setState("error");
+    }
+  };
+
+  return (
+    <>
+      <m.button
+        type="button"
+        // Pulses once (scale 1 to 1.04 to 1) the first time it comes into view.
+        whileInView={reduced ? undefined : { scale: [1, 1.04, 1] }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ delay: 0.6, duration: 0.6, ease: "easeInOut" }}
+        onClick={start}
+        aria-busy={state === "loading"}
+        aria-label={`${siteConfig.cta.checkout} (${name} plan)`}
+        className={cn(ctaClasses(primary ? "primary" : "secondary", "md", "w-full"), state === "loading" && "opacity-70")}
+      >
+        {state === "loading" ? "Opening checkout" : siteConfig.cta.checkout}
+      </m.button>
+      <p role="status" className="mt-2 min-h-5 text-center text-[13px] text-secondary">
+        {state === "error" ? (
+          <>
+            Checkout did not open. Try again or email{" "}
+            <a href={`mailto:${siteConfig.contact.email}`} className="text-fg underline decoration-white/30 underline-offset-4">
+              {siteConfig.contact.email}
+            </a>
+            .
+          </>
+        ) : null}
+      </p>
+    </>
+  );
+}
+
 /** Chapter 06 header and plans. Growth is the one featured card. */
 export function Pricing() {
+  const reduced = useReducedMotionPref();
   const [currency, setCurrency] = useState<CurrencyCode>("RM");
   const [termId, setTermId] = useState<TermId>("monthly");
   const term = terms.find((t) => t.id === termId) ?? terms[0];
@@ -153,13 +208,25 @@ export function Pricing() {
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-stretch"
         >
         {pricingPlans.map((plan) => {
-          const isSales = plan.cta === siteConfig.cta.sales;
           const p = price(plan);
           // Discounted monthly equivalent, rounded; the upfront total is built from it so the two always agree.
           const perMonth = Math.round(p.monthly * (1 - term.discount));
           const upfront = perMonth * term.months;
           return (
-            <m.li key={plan.slug} variants={card} className={cn("min-w-0", plan.highlighted && "lg:-my-3")}>
+            <m.li
+              key={plan.slug}
+              variants={card}
+              whileHover={reduced ? undefined : { scale: plan.highlighted ? 1.03 : 0.97 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              className={cn("min-w-0", plan.highlighted && "lg:-my-3")}
+            >
+              {/* Growth floats gently; the others stay still. */}
+              <m.div
+                className="h-full"
+                animate={plan.highlighted && !reduced ? { y: [0, -5, 0] } : undefined}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                style={plan.highlighted && !reduced ? { willChange: "transform" } : undefined}
+              >
               <Tilt max={3}>
                 <article
                   aria-labelledby={`plan-${plan.slug}`}
@@ -222,21 +289,12 @@ export function Pricing() {
 
                   <div className="mt-auto pt-8">
                     <Magnetic>
-                      <CtaLink
-                        href={`#${sectionIds.audit}`}
-                        intent={isSales ? "sales" : "audit"}
-                        event={isSales ? "talk_to_sales_clicked" : "pricing_cta_clicked"}
-                        eventProps={{ plan: plan.slug, location: "pricing" }}
-                        variant={plan.highlighted ? "primary" : "secondary"}
-                        className="w-full"
-                        aria-label={`${plan.cta} (${plan.name} plan)`}
-                      >
-                        {plan.cta}
-                      </CtaLink>
+                      <CheckoutButton tier={plan.slug} name={plan.name} primary={!!plan.highlighted} reduced={reduced} />
                     </Magnetic>
                   </div>
                 </article>
               </Tilt>
+              </m.div>
             </m.li>
           );
         })}
