@@ -8,7 +8,6 @@ export type PricingPlan = {
   description: string;
   features: string[];
   highlighted?: boolean;
-  cta: string;
 };
 
 export const pricingPlans: PricingPlan[] = [
@@ -20,7 +19,6 @@ export const pricingPlans: PricingPlan[] = [
     description: "Small teams that need a clear system.",
     // "CRM" is a forbidden word (DESIGN.md §8).
     features: ["Lead capture and pipeline", "Booking page", "Basic automation", "Daily brief"],
-    cta: "Get Free Audit",
   },
   {
     slug: "growth",
@@ -36,7 +34,6 @@ export const pricingPlans: PricingPlan[] = [
       "Team reporting",
     ],
     highlighted: true,
-    cta: "Get Free Audit",
   },
   {
     slug: "scale",
@@ -51,7 +48,6 @@ export const pricingPlans: PricingPlan[] = [
       "Multiple pipelines",
       "Priority support",
     ],
-    cta: "Talk to Sales",
   },
 ];
 

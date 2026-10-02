@@ -11,7 +11,6 @@
 
 export type AnalyticsEvent =
   | "hero_cta_clicked"
-  | "talk_to_sales_clicked"
   | "see_how_it_works_clicked"
   | "vertical_selected"
   | "calculator_used"
@@ -30,7 +29,6 @@ export type AnalyticsEvent =
   | "scroll_depth_75"
   | "scroll_depth_100"
   | "nav_cta_clicked"
-  | "sticky_cta_clicked"
   | "cta_clicked"
   | "email_clicked"
   | "testimonial_interacted"

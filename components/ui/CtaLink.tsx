@@ -5,10 +5,6 @@ import { track, type AnalyticsEvent, type AnalyticsProps } from "@/lib/analytics
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
-/** Fired before scrolling to the contact chapter so the form opens in the right mode. */
-export const INTENT_EVENT = "tenx:intent";
-export type Intent = "audit" | "sales";
-
 type Variant = "primary" | "secondary" | "ghost" | "link";
 type Size = "sm" | "md" | "lg" | "inline";
 
@@ -49,8 +45,6 @@ type Props = {
   onNavigate?: () => void;
   /** Allow the label to wrap onto two lines (long, contextual CTAs). */
   wrap?: boolean;
-  /** Switch the contact form to this mode when navigating to it. */
-  intent?: Intent;
   "aria-label"?: string;
 };
 
@@ -64,7 +58,6 @@ export function CtaLink({
   className,
   onNavigate,
   wrap,
-  intent,
   ...rest
 }: Props) {
   return (
@@ -73,7 +66,6 @@ export function CtaLink({
       className={ctaClasses(variant, size, className, wrap)}
       onClick={(e) => {
         track(event, eventProps);
-        if (intent) window.dispatchEvent(new CustomEvent<Intent>(INTENT_EVENT, { detail: intent }));
         onNavigate?.();
         if (href.startsWith("#") && !e.metaKey && !e.ctrlKey) {
           if (scrollToId(href.slice(1))) e.preventDefault();

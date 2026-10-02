@@ -9,7 +9,7 @@ import { normalizeMalaysianMobile } from "@/lib/phone";
 import { salesMailto, sectionIds, siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { useBusiness } from "@/components/providers/BusinessProvider";
-import { ctaClasses, INTENT_EVENT, type Intent } from "@/components/ui/CtaLink";
+import { ctaClasses } from "@/components/ui/CtaLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { TrackedAnchor } from "@/components/ui/TrackedAnchor";
 import { AUDIT_FORM_ID, FinalCTA } from "./FinalCTA";
@@ -30,22 +30,12 @@ const PHONE_ERRORS = {
   invalid: "That number doesn't look right. Please check it and try again.",
 } as const;
 
-const copy: Record<Intent, { tab: string; title: string; body: string; submit: string; source: string }> = {
-  audit: {
-    tab: "Free audit",
-    title: "Find the leaks before you buy more leads.",
-    body: "We'll review how enquiries move through your business and show you where response, follow-up or booking breaks down.",
-    submit: siteConfig.cta.formSubmit,
-    source: "audit_form",
-  },
-  sales: {
-    tab: "Talk to Sales",
-    title: "Talk to Sales",
-    body: "Tell us how your business currently handles enquiries and appointments. We'll show you where 10X fits.",
-    submit: siteConfig.cta.salesSubmit,
-    source: "talk_to_sales",
-  },
-};
+const copy = {
+  title: "Join the waitlist.",
+  body: "Leave your WhatsApp number and we will be in touch. Tell us about your business after, if you like.",
+  submit: siteConfig.cta.formSubmit,
+  source: "audit_form",
+} as const;
 
 function attribution() {
   const params = new URLSearchParams(window.location.search);
@@ -85,14 +75,13 @@ async function submitLead(body: Record<string, unknown>) {
   return data;
 }
 
-/** Chapter 07. The audit and the sales conversation share one form. */
+/** Chapter 07. One form: join the waitlist. */
 export function AuditCTA() {
   const { business, chosen } = useBusiness();
   const inputId = useId();
   const errorId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const mountedAt = useRef(0);
-  const [intent, setIntent] = useState<Intent>("audit");
   const [phone, setPhone] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -102,15 +91,7 @@ export function AuditCTA() {
 
   useEffect(() => {
     mountedAt.current = performance.now();
-    const onIntent = (e: Event) => {
-      const detail = (e as CustomEvent<Intent>).detail;
-      if (detail === "audit" || detail === "sales") setIntent(detail);
-    };
-    window.addEventListener(INTENT_EVENT, onIntent);
-    return () => window.removeEventListener(INTENT_EVENT, onIntent);
   }, []);
-
-  const c = copy[intent];
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -120,7 +101,7 @@ export function AuditCTA() {
     const result = normalizeMalaysianMobile(phone);
     if (!result.ok) {
       setFieldError(PHONE_ERRORS[result.reason]);
-      track("audit_error", { reason: `phone_${result.reason}`, intent });
+      track("audit_error", { reason: `phone_${result.reason}` });
       inputRef.current?.focus();
       return;
     }
@@ -131,14 +112,14 @@ export function AuditCTA() {
       await submitLead({
         whatsapp: result.e164,
         businessType: chosen ? business : undefined,
-        source: c.source,
+        source: copy.source,
         company_website: honeypot,
         elapsedMs: Math.round(performance.now() - mountedAt.current),
         ...attribution(),
       });
       setNormalized(result.e164);
       setStatus("success");
-      track("audit_submitted", { intent, vertical: chosen ? business : "unknown" });
+      track("audit_submitted", { vertical: chosen ? business : "unknown" });
     } catch (err) {
       const e2 = err as { code?: string; userMessage?: string };
       if (e2.code === "invalid_phone") {
@@ -149,7 +130,7 @@ export function AuditCTA() {
         setStatus("error");
         setFormError(e2.code === "rate_limited" && e2.userMessage ? e2.userMessage : "Something went wrong. Please try again.");
       }
-      track("audit_error", { reason: e2.code ?? "network", intent });
+      track("audit_error", { reason: e2.code ?? "network" });
     }
   };
 
@@ -171,32 +152,10 @@ export function AuditCTA() {
               <AnimatePresence mode="wait" initial={false}>
                 {status !== "success" ? (
                   <m.div key="form" exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-                    <div role="tablist" aria-label="What would you like?" className="mb-6 grid grid-cols-2 rounded-full border border-border bg-bg p-1">
-                      {(["audit", "sales"] as const).map((k) => (
-                        <button
-                          key={k}
-                          type="button"
-                          role="tab"
-                          aria-selected={intent === k}
-                          aria-controls="contact-form"
-                          onClick={() => {
-                            setIntent(k);
-                            if (k === "sales") track("talk_to_sales_clicked", { location: "form_tab" });
-                          }}
-                          className={cn(
-                            "rounded-full px-3 py-2 text-[14px] transition-colors",
-                            intent === k ? "bg-accent text-accent-fg" : "text-secondary hover:text-fg",
-                          )}
-                        >
-                          {copy[k].tab}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div id="contact-form" role="tabpanel">
+                    <div id="contact-form">
                     <form noValidate onSubmit={onSubmit} aria-describedby="audit-micro">
-                      <h3 className="text-title text-balance">{c.title}</h3>
-                      <p className="mt-2 text-[15px] text-secondary">{c.body}</p>
+                      <h3 className="text-title text-balance">{copy.title}</h3>
+                      <p className="mt-2 text-[15px] text-secondary">{copy.body}</p>
 
                       <label htmlFor={inputId} className="mt-6 block text-[15px] font-medium">
                         WhatsApp number
@@ -208,13 +167,13 @@ export function AuditCTA() {
                         type="tel"
                         inputMode="tel"
                         autoComplete="tel"
-                        placeholder="012-345 6789"
+                        placeholder="012-000 0000"
                         value={phone}
                         onChange={(e) => {
                           setPhone(e.target.value);
                           if (fieldError) setFieldError(null);
                         }}
-                        onFocus={() => trackOnce("audit_started", { intent })}
+                        onFocus={() => trackOnce("audit_started")}
                         aria-invalid={fieldError ? true : undefined}
                         aria-describedby={fieldError ? errorId : undefined}
                         maxLength={20}
@@ -255,13 +214,13 @@ export function AuditCTA() {
                           </>
                         ) : (
                           <>
-                            {c.submit}
+                            {copy.submit}
                             <ArrowRight className="size-4" aria-hidden />
                           </>
                         )}
                       </button>
                       <p id="audit-micro" className="mt-3 text-center text-[14px] text-secondary">
-                        {intent === "audit" ? siteConfig.cta.microcopy : "Our sales team replies within 1 business day."}
+                        {siteConfig.cta.microcopy}
                       </p>
                       <div role="status" aria-live="polite">
                         {formError ? (
@@ -357,7 +316,7 @@ function SuccessStep({
           <Check className="size-4" aria-hidden />
         </span>
         <h3 ref={headingRef} tabIndex={-1} className="text-[20px] font-semibold tracking-[-0.02em] focus:outline-none">
-          Got it. Our sales team will contact you shortly.
+          Got it. You are on the waitlist.
         </h3>
       </div>
 

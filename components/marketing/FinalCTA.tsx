@@ -20,7 +20,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
             <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
               07
             </span>
-            <span className="eyebrow">Book a conversation</span>
+            <span className="eyebrow">Join the waitlist</span>
           </p>
         </SectionItem>
         <SectionItem>
@@ -30,7 +30,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
         </SectionItem>
         <SectionItem>
           <p className="text-lead mx-auto mt-5 max-w-xl text-secondary">
-            Free Lead Leakage Audit. We review your process. No obligation.
+            Leave your WhatsApp number. We will be in touch. No obligation.
           </p>
         </SectionItem>
         <SectionItem className="mt-9 flex justify-center">
@@ -39,7 +39,6 @@ export function FinalCTA({ children }: { children: ReactNode }) {
             <div className="rounded-full shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_14px_28px_-10px_rgba(37,99,235,0.55),0_30px_60px_-20px_rgba(0,0,0,0.9)]">
               <CtaLink
                 href={`#${AUDIT_FORM_ID}`}
-                intent="audit"
                 event="cta_clicked"
                 eventProps={{ location: "final_cta" }}
                 size="lg"

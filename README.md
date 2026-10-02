@@ -2,9 +2,9 @@
 
 Marketing site for **10X** by BTB SOLUTIONS, Malaysia. https://tenx.my
 
-One job: make the right business owner want to speak to 10X. Primary action: **Get Your Free Lead Leakage Audit**. Secondary: **Talk to Sales**.
+One job: make the right business owner want to speak to 10X. Primary action: **Join the waitlist**, the only filled button above the fold. Everything else is a text link.
 
-The page is seven chapters: Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Book a conversation.
+The page is seven chapters: Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Join the waitlist.
 
 ## Stack
 
@@ -39,7 +39,7 @@ Copy `.env.example` to `.env.local`. Nothing secret is exposed to the browser.
 
 ```json
 {
-  "whatsapp": "012-345 6789",
+  "whatsapp": "012-000 0000",
   "businessType": "property | clinics | education | home-services | appointments | other",
   "monthlyLeads": "under-50 | 50-200 | 200-500 | 500-plus | not-sure",
   "source": "audit_form | talk_to_sales | audit_form_qualification",
@@ -66,7 +66,7 @@ Edit data, not JSX:
 
 ## Product truth
 
-Demo UI uses fictional data and is labelled "Illustrative". The homepage does not publish internal roadmap status; anything that depends on a customer's setup is routed to Talk to Sales. Never present an unreleased capability as live.
+Demo UI uses fictional data and is labelled "Illustrative". The homepage does not publish internal roadmap status; anything that depends on a customer's setup is routed to the waitlist form. Never present an unreleased capability as live.
 
 ## Legal pages
 

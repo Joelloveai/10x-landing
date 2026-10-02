@@ -7,8 +7,8 @@ import { HeroLayer } from "./HeroLayer";
 import { HeroSpotlight } from "./HeroSpotlight";
 
 const lines = [
-  { text: "Stop Losing Leads After 6 PM.", className: "text-fg" },
-  { text: "Your AI team handles the rest.", className: "text-secondary" },
+  { text: "Stop losing leads", className: "text-fg" },
+  { text: "to slow follow-up.", className: "text-secondary" },
 ];
 
 /**
@@ -56,7 +56,7 @@ export function Hero() {
 
         <HeroLayer depth={120} index={1}>
         <p className="text-lead mx-auto mt-6 max-w-[40rem] text-balance text-secondary sm:mt-7">
-          AI replies in seconds. Books the appointment. Follows up. While you sleep.
+          Lead capture, follow-up and booking for Malaysian businesses that run on WhatsApp.
         </p>
 
         <p className="mx-auto mt-7 max-w-md text-pretty text-[14px] text-secondary">
@@ -70,7 +70,6 @@ export function Hero() {
           <Magnetic>
             <CtaLink
               href={`#${sectionIds.audit}`}
-              intent="audit"
               event="hero_cta_clicked"
               size="lg"
               className="w-full sm:w-auto"
@@ -78,17 +77,6 @@ export function Hero() {
               {siteConfig.cta.primary}
             </CtaLink>
           </Magnetic>
-          <CtaLink
-            href={`#${sectionIds.audit}`}
-            intent="sales"
-            event="talk_to_sales_clicked"
-            eventProps={{ location: "hero" }}
-            variant="secondary"
-            size="lg"
-            className="w-full sm:w-auto"
-          >
-            {siteConfig.cta.sales}
-          </CtaLink>
         </div>
         <div className="mt-5 flex flex-col items-center gap-2 text-[14px] sm:flex-row sm:justify-center sm:gap-4">
           <CtaLink
@@ -107,9 +95,6 @@ export function Hero() {
           <p className="text-secondary">{siteConfig.cta.microcopy}</p>
         </div>
 
-        <p className="mx-auto mt-8 max-w-md text-pretty text-[14px] text-secondary">
-          Trusted by property teams, clinics, and home service businesses in Malaysia.
-        </p>
         </HeroLayer>
       </div>
 

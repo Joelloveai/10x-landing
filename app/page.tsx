@@ -9,7 +9,6 @@ import { FocusSystem } from "@/components/marketing/FocusSystem";
 import { Footer } from "@/components/marketing/Footer";
 import { Hero } from "@/components/marketing/Hero";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
-import { MobileStickyCTA } from "@/components/marketing/MobileStickyCTA";
 import { Navbar } from "@/components/marketing/Navbar";
 import { PricingFAQ } from "@/components/marketing/PricingFAQ";
 import { ProblemSection } from "@/components/marketing/ProblemSection";
@@ -62,7 +61,6 @@ export default function HomePage() {
         <div className="relative z-10">
           <Footer />
         </div>
-        <MobileStickyCTA />
         <ScrollDepthTracker />
       </BusinessProvider>
     </MotionProvider>

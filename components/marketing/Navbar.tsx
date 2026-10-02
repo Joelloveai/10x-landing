@@ -7,7 +7,7 @@ import { useActiveChapter } from "@/lib/hooks/useActiveChapter";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
-import { ctaClasses, CtaLink } from "@/components/ui/CtaLink";
+import { CtaLink } from "@/components/ui/CtaLink";
 import { Logo } from "@/components/ui/Logo";
 
 export function Navbar() {
@@ -103,24 +103,18 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2">
-          <a href={siteConfig.appUrl} className={cn(ctaClasses("ghost", "sm"), "hidden ring-1 ring-inset ring-white/12 hover:ring-white/25 lg:inline-flex")}>
+          <a
+            href={siteConfig.appUrl}
+            className="hidden px-2 py-2 text-[14px] text-secondary transition-colors hover:text-fg lg:inline-block"
+          >
             {siteConfig.cta.app}
           </a>
-          <span className="hidden sm:contents">
-            <CtaLink
-              href={`#${sectionIds.audit}`}
-              intent="sales"
-              event="talk_to_sales_clicked"
-              eventProps={{ location: "nav" }}
-              variant="secondary"
-              size="sm"
-            >
-              {siteConfig.cta.sales}
-            </CtaLink>
-          </span>
-          <CtaLink href={`#${sectionIds.audit}`} intent="audit" event="nav_cta_clicked" size="sm">
-            {siteConfig.cta.primaryShort}
-          </CtaLink>
+          <a
+            href={siteConfig.signInUrl}
+            className="px-2 py-2 text-[14px] font-medium text-fg transition-colors hover:text-secondary"
+          >
+            {siteConfig.cta.signIn}
+          </a>
           <button
             type="button"
             className="-mr-2 inline-flex size-10 items-center justify-center rounded-full text-fg lg:hidden"
@@ -160,32 +154,27 @@ export function Navbar() {
             ))}
           </ul>
           <div className="container-x space-y-3 pb-10 pt-2">
+            <a
+              href={siteConfig.signInUrl}
+              onClick={close}
+              className="block py-2 text-[18px] font-medium text-fg"
+            >
+              {siteConfig.cta.signIn}
+            </a>
+            <a href={siteConfig.appUrl} onClick={close} className="block py-2 text-[18px] text-secondary">
+              {siteConfig.cta.app}
+            </a>
             <CtaLink
               href={`#${sectionIds.audit}`}
-              intent="audit"
               event="nav_cta_clicked"
               eventProps={{ location: "mobile_menu" }}
-              size="lg"
-              className="w-full"
+              variant="link"
+              size="inline"
+              className="py-2 text-[18px]"
               onNavigate={close}
             >
               {siteConfig.cta.primary}
             </CtaLink>
-            <CtaLink
-              href={`#${sectionIds.audit}`}
-              intent="sales"
-              event="talk_to_sales_clicked"
-              eventProps={{ location: "mobile_menu" }}
-              variant="secondary"
-              size="lg"
-              className="w-full"
-              onNavigate={close}
-            >
-              {siteConfig.cta.sales}
-            </CtaLink>
-            <a href={siteConfig.appUrl} onClick={close} className={cn(ctaClasses("ghost", "lg"), "w-full ring-1 ring-inset ring-white/12")}>
-              {siteConfig.cta.app}
-            </a>
             <p className="pt-2 text-center text-[14px] text-secondary">
               {siteConfig.contact.label} ·{" "}
               <a href={salesMailto} className="text-fg underline decoration-white/30 underline-offset-4">

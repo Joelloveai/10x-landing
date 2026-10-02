@@ -3,6 +3,7 @@ export const siteConfig = {
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://tenx.my").replace(/\/$/, ""),
   /** The signed-in product. "CRM" is a forbidden word, so the button says "Open app". */
   appUrl: "https://app.tenx.my",
+  signInUrl: "https://app.tenx.my/sign-in",
   title: "10X | Your AI Operations Team",
   description:
     "Hire an AI operations team for a fraction of a human hire. Built for Malaysian service businesses.",
@@ -19,20 +20,19 @@ export const siteConfig = {
     email: "admin@tenx.my",
   },
   cta: {
-    primary: "Get Your Free Lead Leakage Audit",
-    primaryShort: "Get Free Audit",
-    sales: "Talk to Sales",
+    primary: "Join the waitlist",
+    primaryShort: "Join the waitlist",
     secondary: "See How It Works",
-    formSubmit: "Get My Free Audit",
-    salesSubmit: "Request a Sales Call",
-    microcopy: "Free 15-minute review. No obligation.",
+    formSubmit: "Join the waitlist",
+    microcopy: "We will message you on WhatsApp. No obligation.",
     app: "Open app",
+    signIn: "Sign in",
     checkout: "Get started",
   },
   copyrightYear: 2026,
 } as const;
 
-export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent("Talk to Sales: 10X")}`;
+export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent("10X waitlist")}`;
 
 export const sectionIds = {
   hero: "top",

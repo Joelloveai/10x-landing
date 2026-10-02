@@ -118,8 +118,7 @@ export function BusinessSelector() {
               <div className="mt-auto pt-8">
                 <CtaLink
                   href={`#${sectionIds.audit}`}
-                  intent="sales"
-                  event="talk_to_sales_clicked"
+                  event="cta_clicked"
                   eventProps={{ location: "business_selector", vertical: b.slug }}
                   variant="link"
                   size="inline"

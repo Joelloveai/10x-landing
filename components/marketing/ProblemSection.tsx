@@ -89,14 +89,13 @@ export function ProblemSection() {
         <div className="mt-8 text-center">
           <CtaLink
             href={`#${sectionIds.audit}`}
-            intent="audit"
             event="cta_clicked"
             eventProps={{ location: "problem" }}
             variant="link"
             size="inline"
             className="text-[16px]"
           >
-            Get your free audit
+            Join the waitlist
             <span aria-hidden>→</span>
           </CtaLink>
         </div>

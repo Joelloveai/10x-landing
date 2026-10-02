@@ -4,7 +4,7 @@
 - Read `DESIGN.md` before any visual or copy change. It defines tokens, motion rules, forbidden words and product-truth rules.
 - Content lives in `lib/` (`site-config.ts`, `businesses.ts`, `pricing.ts`, `testimonials.ts`, `faq.ts`). Edit data there, not in JSX.
 - Testimonial quotes are verbatim. Never edit them.
-- Never present unreleased capabilities as live, and never publish internal roadmap labels (coming soon, rollout, integration-dependent). Route setup-dependent questions to Talk to Sales.
+- Never present unreleased capabilities as live, and never publish internal roadmap labels (coming soon, rollout, integration-dependent). Route setup-dependent questions to the waitlist form.
 - Public contact is `Sales Team` / `admin@tenx.my` and the company is `BTB SOLUTIONS`. Never add personal or founder phone numbers.
 - The page has seven chapters. Do not add sections.
 - Checks: `npm run typecheck` and `npm run build` must pass.

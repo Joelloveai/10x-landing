@@ -9,7 +9,7 @@ If a change conflicts with this file, update this file first.
 2. **One focal point at a time.** At any scroll position there is one primary element, one secondary, everything else quiet.
 3. **Seven chapters, no more.** Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Book a conversation. Do not add sections; merge into a chapter or cut.
 4. **Honest confidence.** No fake numbers, logos, ratings, customers or photos. Demo UI says "Illustrative". Real testimonials only, verbatim, with initials avatars.
-5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to Talk to Sales. Never claim something is live when it is not.
+5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to the waitlist form. Never claim something is live when it is not.
 6. **Public contact only.** Company: `BTB SOLUTIONS` (exactly). Contact: `Sales Team`, `admin@tenx.my`. Never show a personal or founder phone number.
 
 ## 2. Color tokens (`app/globals.css` → `@theme`)
@@ -73,7 +73,7 @@ Calm only: no flashes, zooms or moving backgrounds. The single exception to "no 
 - Server Components by default; client only for interaction.
 - Content in `lib/`: `site-config.ts` (contact, CTAs, chapters), `businesses.ts` (five business types), `pricing.ts`, `testimonials.ts` (verbatim, never edit), `faq.ts`.
 - Logo mark: `lib/brand.ts`, rendered via `Logo` / `LogoMark`. White on dark; never recolor or redraw.
-- CTA routing: every CTA goes to `#audit`. `CtaLink intent="sales"` opens the form in Talk to Sales mode; `intent="audit"` in Free audit mode.
+- CTA routing: one primary action, "Join the waitlist", the only filled button above the fold. It goes to `#audit`, a single form with one mode. Every other action is a text link. Nav carries text links for Open app and Sign in.
 
 ## 8. Words
 

@@ -23,10 +23,10 @@ export const faqs: FaqItem[] = [
   },
   {
     question: "Can I see how it would work for my business?",
-    answer: "Yes. Talk to the sales team and we'll walk through the workflow with you.",
+    answer: "Yes. Join the waitlist and we'll walk through the workflow with you.",
   },
   {
     question: "How do I get started?",
-    answer: "Start with the free Lead Leakage Audit.",
+    answer: "Join the waitlist with your WhatsApp number. We will be in touch.",
   },
 ];

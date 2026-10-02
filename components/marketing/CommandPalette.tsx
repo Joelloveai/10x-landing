@@ -7,7 +7,6 @@ import { track } from "@/lib/analytics";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { scrollToId } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
-import { INTENT_EVENT } from "@/components/ui/CtaLink";
 
 export const OPEN_PALETTE_EVENT = "tenx:open-palette";
 
@@ -17,7 +16,7 @@ const commands = [
   { label: "Go to Calculator", target: sectionIds.calculator },
   { label: "Go to Pricing", target: sectionIds.pricing },
   { label: "Go to Audit Form", target: sectionIds.audit },
-  { label: "Get Free Audit", target: sectionIds.audit, primary: true, intent: "audit" },
+  { label: "Join the waitlist", target: sectionIds.audit, primary: true },
 ] as const;
 
 /** Cmd/Ctrl+K quick navigation: five sections and one action. A convenience, never the main path. */
@@ -63,10 +62,7 @@ export function CommandPalette() {
     const cmd = results[index];
     if (!cmd) return;
     setOpen(false);
-    if ("intent" in cmd) {
-      track("cta_clicked", { location: "command_palette" });
-      window.dispatchEvent(new CustomEvent(INTENT_EVENT, { detail: cmd.intent }));
-    }
+    if ("primary" in cmd) track("cta_clicked", { location: "command_palette" });
     requestAnimationFrame(() => scrollToId(cmd.target));
   };
 
