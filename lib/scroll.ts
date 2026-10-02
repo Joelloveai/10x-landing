@@ -1,3 +1,6 @@
+/** Jumps longer than this skip the smooth animation, which would otherwise crawl across the page. */
+const SMOOTH_MAX_PX = 1500;
+
 export function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -12,7 +15,9 @@ export function scrollToId(id: string) {
   const rect = el.getBoundingClientRect();
   const alreadyThere = rect.top >= 0 && rect.top < window.innerHeight * 0.25;
   if (!alreadyThere) {
-    el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    // "instant" overrides the html scroll-behavior: smooth rule in globals.css.
+    const smooth = !prefersReducedMotion() && Math.abs(rect.top) <= SMOOTH_MAX_PX;
+    el.scrollIntoView({ behavior: smooth ? "smooth" : "instant", block: "start" });
   }
   const focusTarget = el.querySelector<HTMLElement>("[data-focus-target]") ?? el;
   if (!focusTarget.hasAttribute("tabindex")) focusTarget.setAttribute("tabindex", "-1");
