@@ -49,18 +49,15 @@ export const sectionIds = {
 export const navLinks = [
   { label: "Solutions", href: `#${sectionIds.leak}` },
   { label: "How It Works", href: `#${sectionIds.howItWorks}` },
-  { label: "AI Team", href: `#${sectionIds.ai}` },
   { label: "Pricing", href: `#${sectionIds.pricing}` },
   { label: "Security", href: `#${sectionIds.security}` },
 ] as const;
 
-/** The seven chapters of the page, used by the focus rail and active navigation. */
+/** The chapters rendered on the page, used by the focus rail and active navigation. */
 export const chapters = [
   { id: sectionIds.hero, num: "01", label: "Overview" },
   { id: sectionIds.leak, num: "02", label: "The leak" },
   { id: sectionIds.howItWorks, num: "03", label: "How it works" },
-  { id: sectionIds.ai, num: "04", label: "AI team" },
-  { id: sectionIds.product, num: "05", label: "Product & proof" },
-  { id: sectionIds.pricing, num: "06", label: "Pricing & trust" },
-  { id: sectionIds.audit, num: "07", label: "Talk to us" },
+  { id: sectionIds.pricing, num: "04", label: "Pricing & trust" },
+  { id: sectionIds.audit, num: "05", label: "Waitlist" },
 ] as const;
