@@ -48,7 +48,7 @@ Copy `.env.example` to `.env.local`. Nothing secret is exposed to the browser.
 }
 ```
 
-Forwarded payload: `{ "type": "lead_leakage_audit" | "sales_request", "lead": { "whatsapp": "+60123456789", ... , "submittedAt": "..." } }`.
+Forwarded payload: `{ "type": "lead_leakage_audit" | "sales_request", "lead": { "whatsapp": "+60120000000", ... , "submittedAt": "..." } }`.
 
 Protection: Malaysian mobile validation and normalisation to E.164, honeypot field, minimum fill time, per-IP rate limit (in memory, per instance, so add a platform rate limit for multi-instance deployments), duplicate suppression, masked phone numbers in logs, generic error messages.
 

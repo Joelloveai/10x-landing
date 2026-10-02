@@ -3,8 +3,8 @@
  * /api/waitlist (server).
  *
  * Accepted input examples:
- *   +60123456780, +60 12-345 6780, 60123456780, 0123456780, 012-345 6780, 0060123456780
- *   011 numbers carry one extra digit: 011-2345 6789
+ *   +60120000000, +60 12-000 0000, 60120000000, 0120000000, 012-000 0000, 0060120000000
+ *   011 numbers carry one extra digit: 011-000 00000
  */
 
 export type PhoneResult =
