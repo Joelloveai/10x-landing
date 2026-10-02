@@ -2,13 +2,14 @@ import { ArrowRight } from "lucide-react";
 import { sectionIds, siteConfig } from "@/lib/site-config";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
+import { AgentRoster } from "./AgentRoster";
 import { HeroDemo } from "./HeroDemo";
 import { HeroLayer } from "./HeroLayer";
 import { HeroSpotlight } from "./HeroSpotlight";
 
 const lines = [
-  { text: "Stop losing leads", className: "text-fg" },
-  { text: "to slow follow-up.", className: "text-secondary" },
+  { text: "Hire your AI sales team.", className: "text-fg" },
+  { text: "Today.", className: "text-secondary" },
 ];
 
 /**
@@ -28,7 +29,7 @@ export function Hero() {
         <HeroLayer depth={80} index={0}>
         <p className="mx-auto inline-flex max-w-full items-center gap-2 text-balance rounded-full border border-border bg-white/[0.03] px-3 py-1.5 text-[12px] text-secondary min-[360px]:whitespace-nowrap sm:px-3.5 sm:text-[13px]">
           <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-accent" />
-          The AI system that runs your business 24/7
+          Built for Malaysian businesses that run on WhatsApp
         </p>
 
         {/* Fixed line breaks, so the web-font swap never reflows the headline (no CLS). Words reveal 0.06s apart. */}
@@ -56,7 +57,7 @@ export function Hero() {
 
         <HeroLayer depth={120} index={1}>
         <p className="text-lead mx-auto mt-6 max-w-[40rem] text-balance text-secondary sm:mt-7">
-          Lead capture, follow-up and booking for Malaysian businesses that run on WhatsApp.
+          Four AI agents that answer your questions about every lead, draft your WhatsApp replies and help you find any record. One subscription.
         </p>
 
         <p className="mx-auto mt-7 max-w-md text-pretty text-[14px] text-secondary">
@@ -94,6 +95,7 @@ export function Hero() {
           </span>
           <p className="text-secondary">{siteConfig.cta.microcopy}</p>
         </div>
+        <AgentRoster />
 
         </HeroLayer>
       </div>
