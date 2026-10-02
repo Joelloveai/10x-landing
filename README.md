@@ -29,7 +29,7 @@ Copy `.env.example` to `.env.local`. Nothing secret is exposed to the browser.
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL (defaults to `https://tenx.my`) |
-| `WAITLIST_WEBHOOK_URL` | Where audit requests are POSTed as JSON |
+| `WAITLIST_WEBHOOK_URL` | Where waitlist requests are POSTed as JSON |
 | `WAITLIST_WEBHOOK_SECRET` | Optional, sent as `X-Webhook-Secret` |
 | `TENX_API_URL` / `TENX_API_KEY` | Optional 10X ingestion endpoint (Bearer auth) |
 
@@ -42,13 +42,13 @@ Copy `.env.example` to `.env.local`. Nothing secret is exposed to the browser.
   "whatsapp": "012-000 0000",
   "businessType": "property | clinics | education | home-services | appointments | other",
   "monthlyLeads": "under-50 | 50-200 | 200-500 | 500-plus | not-sure",
-  "source": "audit_form | talk_to_sales | audit_form_qualification",
+  "source": "waitlist_form | waitlist_form_qualification",
   "page": "/",
   "utmSource": "", "utmMedium": "", "utmCampaign": "", "referral": ""
 }
 ```
 
-Forwarded payload: `{ "type": "lead_leakage_audit" | "sales_request", "lead": { "whatsapp": "+60120000000", ... , "submittedAt": "..." } }`.
+Forwarded payload: `{ "type": "waitlist", "lead": { "whatsapp": "+60120000000", ... , "submittedAt": "..." } }`.
 
 Protection: Malaysian mobile validation and normalisation to E.164, honeypot field, minimum fill time, per-IP rate limit (in memory, per instance, so add a platform rate limit for multi-instance deployments), duplicate suppression, masked phone numbers in logs, generic error messages.
 

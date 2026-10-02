@@ -4,7 +4,7 @@ import { maskPhone, normalizeMalaysianMobile } from "@/lib/phone";
 /**
  * POST /api/waitlist
  *
- * Receives Lead Leakage Audit requests.
+ * Receives waitlist requests.
  * - Development: stores in memory when no destination is configured.
  * - Production: forwards to WAITLIST_WEBHOOK_URL and/or TENX_API_URL.
  *   With no destination configured it returns 503. It never reports success
@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 const BUSINESS_TYPES = new Set(["property", "clinics", "education", "home-services", "appointments", "other"]);
 const MONTHLY_LEADS = new Set(["under-50", "50-200", "200-500", "500-plus", "not-sure"]);
-const SOURCES = new Set(["audit_form", "talk_to_sales", "audit_form_qualification"]);
+const SOURCES = new Set(["waitlist_form", "waitlist_form_qualification"]);
 const MIN_FILL_MS = 1200;
 
 type ErrorCode =
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
   const phone = normalizeMalaysianMobile(typeof body.whatsapp === "string" ? body.whatsapp : "");
   if (!phone.ok) return fail("invalid_phone", 422);
 
-  const source = str(body.source, 40) ?? "audit_form";
+  const source = str(body.source, 40) ?? "waitlist_form";
   if (!SOURCES.has(source)) return fail("invalid_request", 400);
 
   const businessType = str(body.businessType, 30);
@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, stored: "memory" });
   }
 
-  const payload = { type: source === "talk_to_sales" ? "sales_request" : "lead_leakage_audit", lead };
+  const payload = { type: "waitlist", lead };
   const deliveries: Promise<void>[] = [];
   if (webhookUrl) {
     const secret = process.env.WAITLIST_WEBHOOK_SECRET;

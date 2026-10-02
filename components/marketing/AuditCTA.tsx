@@ -34,7 +34,7 @@ const copy = {
   title: "Join the waitlist.",
   body: "Leave your WhatsApp number and we will be in touch. Tell us about your business after, if you like.",
   submit: siteConfig.cta.formSubmit,
-  source: "audit_form",
+  source: "waitlist_form",
 } as const;
 
 function attribution() {
@@ -298,7 +298,7 @@ function SuccessStep({
         whatsapp,
         businessType: business,
         monthlyLeads: leads,
-        source: "audit_form_qualification",
+        source: "waitlist_form_qualification",
         elapsedMs: Math.round(performance.now() - formMountedAt),
         ...attribution(),
       });
