@@ -59,74 +59,20 @@
   50% { opacity: 0.6; }
 }
 
-/* Hero demo: one 12s loop. Each step fades in at its moment and everything clears at 92-97%.
-   Base styles are the finished state, so reduced motion (animation: none) shows the full story. */
-@keyframes demo-lead {
-  0%, 3% { opacity: 0; transform: translate3d(-16px, 0, 0); }
-  9%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+/* Hero demo: four screens, 2.5s each, crossfading. Each frame runs the same 10s cycle, offset by its delay.
+   Without animation (reduced motion) only the first frame shows. */
+@keyframes hero-frame {
+  0% { opacity: 0; }
+  4%, 25% { opacity: 1; }
+  29%, 100% { opacity: 0; }
 }
-@keyframes demo-assign {
-  0%, 14% { opacity: 0; transform: scale(0.9); }
-  18%, 92% { opacity: 1; transform: scale(1); }
-  97%, 100% { opacity: 0; transform: scale(1); }
+.hero-frame { opacity: 0; }
+.hero-frame:first-child { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-frame {
+    animation: hero-frame 10s linear infinite both;
+  }
 }
-@keyframes demo-reply {
-  0%, 22% { opacity: 0; transform: translate3d(0, 8px, 0); }
-  28%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-@keyframes demo-cal {
-  0%, 34% { opacity: 0; transform: translate3d(0, 8px, 0); }
-  40%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-@keyframes demo-slot {
-  0%, 46% { opacity: 0; }
-  50%, 92% { opacity: 1; }
-  97%, 100% { opacity: 0; }
-}
-@keyframes demo-booked {
-  0%, 56% { opacity: 0; transform: scale(0.9); }
-  60%, 92% { opacity: 1; transform: scale(1); }
-  97%, 100% { opacity: 0; transform: scale(1); }
-}
-@keyframes demo-chip-1 {
-  0%, 66% { opacity: 0; transform: translate3d(0, 6px, 0); }
-  69%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-@keyframes demo-chip-2 {
-  0%, 70% { opacity: 0; transform: translate3d(0, 6px, 0); }
-  73%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-@keyframes demo-chip-3 {
-  0%, 74% { opacity: 0; transform: translate3d(0, 6px, 0); }
-  77%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-@keyframes demo-chip-4 {
-  0%, 78% { opacity: 0; transform: translate3d(0, 6px, 0); }
-  81%, 92% { opacity: 1; transform: translate3d(0, 0, 0); }
-  97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-.demo-step {
-  animation-duration: 12s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  animation-iteration-count: infinite;
-  animation-fill-mode: both;
-}
-.demo-lead { animation-name: demo-lead; }
-.demo-assign { animation-name: demo-assign; }
-.demo-reply { animation-name: demo-reply; }
-.demo-cal { animation-name: demo-cal; }
-.demo-slot { animation-name: demo-slot; }
-.demo-booked { animation-name: demo-booked; }
-.demo-chip-1 { animation-name: demo-chip-1; }
-.demo-chip-2 { animation-name: demo-chip-2; }
-.demo-chip-3 { animation-name: demo-chip-3; }
-.demo-chip-4 { animation-name: demo-chip-4; }
 
 /* Hero demo base tilt before hydration (desktop only). Framer takes over with the same values. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -388,7 +334,7 @@
   }
   .reveal { opacity: 1; transform: none; }
   .hero-word { animation: none; }
-  .demo-step, .badge-pulse, .icon-pulse { animation: none !important; }
+  .hero-frame, .badge-pulse, .icon-pulse { animation: none !important; }
   /* The testimonial marquee stays on by request; it pauses on hover and focus. */
   .tm-track {
     animation-duration: 45s !important;
