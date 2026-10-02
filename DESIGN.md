@@ -7,9 +7,9 @@ If a change conflicts with this file, update this file first.
 
 1. **Quietly powerful.** Big typography, restrained color, product UI as the hero. No decoration without meaning.
 2. **One focal point at a time.** At any scroll position there is one primary element, one secondary, everything else quiet.
-3. **Seven chapters, no more.** Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Book a conversation. Do not add sections; merge into a chapter or cut.
-4. **Honest confidence.** No fake numbers, logos, ratings, customers or photos. Demo UI says "Illustrative". Real testimonials only, verbatim, with initials avatars.
-5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to the waitlist form. Never claim something is live when it is not.
+3. **Six chapters rendered, no more.** Hero → Meet your team → The leak → How it works (the 11pm story) → Pricing & trust → Waitlist. Product & proof is built but not rendered; if it returns it sits between How it works and Pricing. Do not add sections beyond this list; merge into a chapter or cut.
+4. **Honest confidence.** No fake numbers, logos, ratings, customers or photos. Agent faces are initials in a circle (Aisyah accent, the others muted); never photos or generated images. Demo UI says "Illustrative". Real testimonials only, verbatim, with initials avatars.
+5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to the waitlist form. Never claim something is live when it is not. The AI answers and drafts. Sending is off and auto-booking does not exist, so never write copy that implies the AI sends, books or acts on its own.
 6. **Public contact only.** Company: `BTB SOLUTIONS` (exactly). Contact: `Sales Team`, `admin@tenx.my`. Never show a personal or founder phone number.
 
 ## 2. Color tokens (`app/globals.css` → `@theme`)
@@ -55,12 +55,12 @@ Inter (variable) for everything; JetBrains Mono for timestamps, stage numbers an
 | Level | Allowed |
 | --- | --- |
 | 1 Core | Hero word reveal (CSS, 0.06s stagger), hero layers fade up on mount (20px, 0.08s apart), section fade-up (once, 40px, 0.5s, 0.08s stagger), product state changes, 2px scroll progress line (spring) |
-| 2 Premium | Hero parallax (headline / sub / CTA rise 80 / 120 / 160px), hero demo (3D window, 12s CSS loop, ±2deg mouse-follow, scroll lean 0 to 4 to 0deg), focus glow, the single sticky workflow story, problem cards slide in from the left (0.1s apart), testimonial depth (cards 0.92x, blobs 1.08x scroll), testimonial marquee (45s, pauses on hover, 3s hover progress bar), count-ups (78%, prices), calculator result spring |
+| 2 Premium | Hero parallax (headline / sub / CTA rise 80 / 120 / 160px), hero demo (3D window, four illustrative screens crossfading in a 10s CSS loop, 2.5s each, ±2deg mouse-follow, scroll lean 0 to 4 to 0deg), focus glow, the single sticky workflow story, problem cards slide in from the left (0.1s apart), testimonial depth (cards 0.92x, blobs 1.08x scroll), testimonial marquee (45s, pauses on hover, 3s hover progress bar), count-ups (78%, prices), calculator result spring |
 | 3 Optional | Magnetic CTAs (within 80px, max 6px): hero, pricing, final CTA. Pricing: Growth floats (5px, 3.5s), hover scale (Growth 1.03, others 0.97), CTAs pulse once on view (1.04). AI team cards: magnetic (max 10px, ±6deg, spring 150/15), press 0.98 on touch. Card tilt (±3deg pricing). Cursor glow. Cmd/Ctrl+K palette. No text scramble. |
 
 Calm only: no flashes, zooms or moving backgrounds. The single exception to "no shakes" is a one-time 3px nudge on the 78% stat after it counts up. Pulses: the Growth badge (opacity 0.8 to 1, 3s) and a single pricing CTA pulse on first view. Animate transform and opacity only (the workflow connector uses SVG pathLength).
 
-`prefers-reduced-motion` disables spotlight, parallax, scroll lean, tilt, magnetic pull, float, nudge, cursor glow, count-ups and pulses, and shows the hero demo in its finished state. The workflow becomes tap-driven and everything stays readable. The testimonial marquee stays on by request. Touch devices get no cursor-follow, magnetic pull or tilt.
+`prefers-reduced-motion` disables spotlight, parallax, scroll lean, tilt, magnetic pull, float, nudge, cursor glow, count-ups and pulses, and freezes the hero demo on its first screen. The workflow becomes tap-driven and everything stays readable. The testimonial marquee stays on by request. Touch devices get no cursor-follow, magnetic pull or tilt.
 
 ## 6. Layout
 
