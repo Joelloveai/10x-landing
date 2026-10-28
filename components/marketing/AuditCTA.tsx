@@ -31,7 +31,7 @@ const PHONE_ERRORS = {
 } as const;
 
 const copy = {
-  title: "Join the waitlist.",
+  title: "Talk to our sales team.",
   body: "Leave your WhatsApp number and we will be in touch. Tell us about your business after, if you like.",
   submit: siteConfig.cta.formSubmit,
   source: "waitlist_form",
@@ -75,7 +75,7 @@ async function submitLead(body: Record<string, unknown>) {
   return data;
 }
 
-/** Chapter 07. One form: join the waitlist. */
+/** Chapter 07. One form: talk to our sales team. */
 export function AuditCTA() {
   const { business, chosen } = useBusiness();
   const inputId = useId();
@@ -316,7 +316,7 @@ function SuccessStep({
           <Check className="size-4" aria-hidden />
         </span>
         <h3 ref={headingRef} tabIndex={-1} className="text-[20px] font-semibold tracking-[-0.02em] focus:outline-none">
-          Got it. You are on the waitlist.
+          Got it. We will message you on WhatsApp.
         </h3>
       </div>
 

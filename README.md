@@ -2,9 +2,9 @@
 
 Marketing site for **10X** by BTB SOLUTIONS, Malaysia. https://tenx.my
 
-One job: make the right business owner want to speak to 10X. Primary action: **Join the waitlist**, the only filled button above the fold. Everything else is a text link.
+One job: make the right business owner want to speak to 10X. Primary action: **Start 7-Day Free Trial**, the only filled button above the fold. Everything else is a text link.
 
-The page is seven chapters: Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Join the waitlist.
+The page is seven chapters: Hero → The leak → How it works → AI employee → Product & proof → Pricing & trust → Talk to our sales team.
 
 ## Stack
 
@@ -66,7 +66,7 @@ Edit data, not JSX:
 
 ## Product truth
 
-Demo UI uses fictional data and is labelled "Illustrative". The homepage does not publish internal roadmap status; anything that depends on a customer's setup is routed to the waitlist form. Never present an unreleased capability as live.
+Demo UI uses fictional data and is labelled "Illustrative". The homepage does not publish internal roadmap status; anything that depends on a customer's setup is routed to the sales form. Never present an unreleased capability as live.
 
 ## Legal pages
 

@@ -16,7 +16,7 @@ const commands = [
   { label: "Go to Calculator", target: sectionIds.calculator },
   { label: "Go to Pricing", target: sectionIds.pricing },
   { label: "Go to Audit Form", target: sectionIds.audit },
-  { label: "Join the waitlist", target: sectionIds.audit, primary: true },
+  { label: "Talk to our sales team", target: sectionIds.audit, primary: true },
 ] as const;
 
 /** Cmd/Ctrl+K quick navigation: five sections and one action. A convenience, never the main path. */

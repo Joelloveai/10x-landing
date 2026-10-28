@@ -4,6 +4,8 @@ export const siteConfig = {
   /** The signed-in product. "CRM" is a forbidden word, so the button says "Open app". */
   appUrl: "https://app.tenx.my",
   signInUrl: "https://app.tenx.my/sign-in",
+  signupUrl: "https://app.tenx.my/register",
+  demoUrl: "https://app.tenx.my/book/btb-solutions",
   title: "10X | Your AI Operations Team",
   description:
     "Hire an AI operations team for a fraction of a human hire. Built for Malaysian service businesses.",
@@ -20,19 +22,19 @@ export const siteConfig = {
     email: "admin@tenx.my",
   },
   cta: {
-    primary: "Join the waitlist",
-    primaryShort: "Join the waitlist",
+    primary: "Start 7-Day Free Trial",
+    primaryShort: "Start 7-Day Free Trial",
     secondary: "See How It Works",
-    formSubmit: "Join the waitlist",
-    microcopy: "We will message you on WhatsApp. No obligation.",
+    demo: "Or book a 15-minute demo",
+    formSubmit: "Talk to our sales team",
+    microcopy: "7 days free. Full access. We set it up with you.",
     app: "Open app",
     signIn: "Sign in",
-    checkout: "Get started",
   },
   copyrightYear: 2026,
 } as const;
 
-export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent("10X waitlist")}`;
+export const salesMailto = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent("10X enquiry")}`;
 
 export const sectionIds = {
   hero: "top",
@@ -62,5 +64,5 @@ export const chapters = [
   { id: sectionIds.leak, num: "03", label: "The leak" },
   { id: sectionIds.howItWorks, num: "04", label: "How it works" },
   { id: sectionIds.pricing, num: "05", label: "Pricing & trust" },
-  { id: sectionIds.audit, num: "06", label: "Waitlist" },
+  { id: sectionIds.audit, num: "06", label: "Talk to us" },
 ] as const;

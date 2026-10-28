@@ -7,9 +7,9 @@ If a change conflicts with this file, update this file first.
 
 1. **Quietly powerful.** Big typography, restrained color, product UI as the hero. No decoration without meaning.
 2. **One focal point at a time.** At any scroll position there is one primary element, one secondary, everything else quiet.
-3. **Six chapters rendered, no more.** Hero → Meet your team → The leak → How it works (the 11pm story) → Pricing & trust → Waitlist. Product & proof is built but not rendered; if it returns it sits between How it works and Pricing. Do not add sections beyond this list; merge into a chapter or cut.
+3. **Six chapters rendered, no more.** Hero → Meet your team → The leak → How it works (the 11pm story) → Pricing & trust → Sales contact. Product & proof is built but not rendered; if it returns it sits between How it works and Pricing. Do not add sections beyond this list; merge into a chapter or cut.
 4. **Honest confidence.** No fake numbers, logos, ratings, customers or photos. Agent faces are initials in a circle (Aisyah accent, the others muted); never photos or generated images. Demo UI says "Illustrative". Real testimonials only, verbatim, with initials avatars.
-5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to the waitlist form. Never claim something is live when it is not. The AI answers and drafts. Sending is off and auto-booking does not exist, so never write copy that implies the AI sends, books or acts on its own.
+5. **Public story, not internal roadmap.** Never show "coming soon", "rollout in progress", "integration-dependent" or engineering blockers. Where a capability depends on the customer's setup, say so plainly and route to the sales form. Never claim something is live when it is not. The AI answers and drafts. Sending is off and auto-booking does not exist, so never write copy that implies the AI sends, books or acts on its own.
 6. **Public contact only.** Company: `BTB SOLUTIONS` (exactly). Contact: `Sales Team`, `admin@tenx.my`. Never show a personal or founder phone number.
 
 ## 2. Color tokens (`app/globals.css` → `@theme`)
@@ -73,7 +73,7 @@ Calm only: no flashes, zooms or moving backgrounds. The single exception to "no 
 - Server Components by default; client only for interaction.
 - Content in `lib/`: `site-config.ts` (contact, CTAs, chapters), `businesses.ts` (five business types), `pricing.ts`, `testimonials.ts` (verbatim, never edit), `faq.ts`.
 - Logo mark: `lib/brand.ts`, rendered via `Logo` / `LogoMark`. White on dark; never recolor or redraw.
-- CTA routing: one primary action, "Join the waitlist", the only filled button above the fold. It goes to `#audit`, a single form with one mode. Every other action is a text link. Nav carries text links for Open app and Sign in.
+- CTA routing: one primary action, "Start 7-Day Free Trial", the only filled button above the fold. It goes to `siteConfig.signupUrl`. A text link under it books a 15-minute demo. `#audit` is a single sales contact form with one mode. Every other action is a text link. Nav carries text links for Open app and Sign in.
 
 ## 8. Words
 

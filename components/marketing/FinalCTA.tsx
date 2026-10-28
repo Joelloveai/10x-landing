@@ -20,7 +20,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
             <span className="chapter-marker flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 font-mono text-[11px] text-subtle ring-1 ring-inset ring-white/12 transition-all duration-500">
               06
             </span>
-            <span className="eyebrow">Join the waitlist</span>
+            <span className="eyebrow">Talk to our sales team</span>
           </p>
         </SectionItem>
         <SectionItem>
@@ -30,7 +30,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
         </SectionItem>
         <SectionItem>
           <p className="text-lead mx-auto mt-5 max-w-xl text-secondary">
-            Leave your WhatsApp number. We will be in touch. No obligation.
+            Leave your WhatsApp number. We will message you. No obligation.
           </p>
         </SectionItem>
         <SectionItem className="mt-9 flex justify-center">
@@ -43,7 +43,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
                 eventProps={{ location: "final_cta" }}
                 size="lg"
               >
-                {siteConfig.cta.primary}
+                {siteConfig.cta.formSubmit}
                 <ArrowRight className="size-4" aria-hidden />
               </CtaLink>
             </div>

@@ -1,7 +1,7 @@
 import { sectionIds } from "@/lib/site-config";
 import { Reveal } from "@/components/ui/Reveal";
 import { BusinessSelector } from "./BusinessSelector";
-import { LossCalculator } from "./LossCalculator";
+import { LostRevenueCalculator } from "./lost-revenue-calculator";
 import { ProblemSection } from "./ProblemSection";
 
 /** Chapter 02. The after-hours problem, then one selector for five business types and a compact estimate. */
@@ -20,7 +20,7 @@ export function LeakSection() {
         </Reveal>
         <Reveal className="mt-4" delay={80}>
           <div id={sectionIds.calculator}>
-            <LossCalculator />
+            <LostRevenueCalculator />
           </div>
         </Reveal>
       </div>

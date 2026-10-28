@@ -115,6 +115,16 @@ export function Navbar() {
           >
             {siteConfig.cta.signIn}
           </a>
+          <CtaLink
+            href={siteConfig.signupUrl}
+            event="nav_cta_clicked"
+            eventProps={{ location: "nav" }}
+            variant="link"
+            size="inline"
+            className="hidden px-2 py-2 font-medium sm:inline-flex"
+          >
+            {siteConfig.cta.primary}
+          </CtaLink>
           <button
             type="button"
             className="-mr-2 inline-flex size-10 items-center justify-center rounded-full text-fg lg:hidden"
@@ -165,7 +175,7 @@ export function Navbar() {
               {siteConfig.cta.app}
             </a>
             <CtaLink
-              href={`#${sectionIds.audit}`}
+              href={siteConfig.signupUrl}
               event="nav_cta_clicked"
               eventProps={{ location: "mobile_menu" }}
               variant="link"

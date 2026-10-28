@@ -37,10 +37,10 @@ export default function TermsPage() {
         legal review.]
       </p>
 
-      <h2>Waitlist</h2>
+      <h2>Enquiries</h2>
       <p>
-        Joining the waitlist is free. We will contact you at the email or WhatsApp number you provide when we are ready
-        to onboard you. You can ask to be removed at any time by emailing {contact.email}.
+        Sending an enquiry is free. We will contact you at the email or WhatsApp number you provide to arrange your
+        onboarding. You can ask to be removed at any time by emailing {contact.email}.
       </p>
 
       <h2>Contact</h2>

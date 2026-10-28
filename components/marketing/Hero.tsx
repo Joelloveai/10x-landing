@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { sectionIds, siteConfig } from "@/lib/site-config";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Magnetic } from "@/components/ui/Magnetic";
@@ -60,9 +59,6 @@ export function Hero() {
           Four AI agents that answer your questions about every lead, draft your WhatsApp replies and help you find any record. One subscription.
         </p>
 
-        <p className="mx-auto mt-7 max-w-md text-pretty text-[14px] text-secondary">
-          Every feature tested on a real business before it ships.
-        </p>
         </HeroLayer>
 
         <HeroLayer depth={160} index={2}>
@@ -70,7 +66,7 @@ export function Hero() {
         <div className="mt-5 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
           <Magnetic>
             <CtaLink
-              href={`#${sectionIds.audit}`}
+              href={siteConfig.signupUrl}
               event="hero_cta_clicked"
               size="lg"
               className="w-full sm:w-auto"
@@ -79,20 +75,16 @@ export function Hero() {
             </CtaLink>
           </Magnetic>
         </div>
-        <div className="mt-5 flex flex-col items-center gap-2 text-[14px] sm:flex-row sm:justify-center sm:gap-4">
+        <div className="mt-5 flex flex-col items-center gap-2 text-[14px]">
           <CtaLink
-            href={`#${sectionIds.howItWorks}`}
-            event="see_how_it_works_clicked"
-            eventProps={{ location: "hero" }}
+            href={siteConfig.demoUrl}
+            event="cta_clicked"
+            eventProps={{ location: "hero_demo" }}
             variant="link"
             size="inline"
           >
-            {siteConfig.cta.secondary}
-            <ArrowRight className="size-3.5" aria-hidden />
+            {siteConfig.cta.demo}
           </CtaLink>
-          <span aria-hidden className="hidden text-subtle sm:inline">
-            ·
-          </span>
           <p className="text-secondary">{siteConfig.cta.microcopy}</p>
         </div>
         <AgentRoster />

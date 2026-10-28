@@ -4,8 +4,7 @@ import { m, type Variants } from "framer-motion";
 import { useReducedMotionPref } from "@/lib/hooks/useMediaQuery";
 import { sectionIds } from "@/lib/site-config";
 import { CountUp } from "@/components/ui/CountUp";
-import { CtaLink } from "@/components/ui/CtaLink";
-import { LossCalculator } from "./LossCalculator";
+import { LostRevenueCalculator } from "./lost-revenue-calculator";
 import { SectionItem, SectionWrapper } from "./SectionWrapper";
 
 const pct = (n: number) => `${Math.round(n)}%`;
@@ -83,22 +82,9 @@ export function ProblemSection() {
         </SectionWrapper>
 
         <div id={sectionIds.calculator} className="mx-auto mt-12 max-w-5xl scroll-mt-24 md:mt-16">
-          <LossCalculator />
+          <LostRevenueCalculator />
         </div>
 
-        <div className="mt-8 text-center">
-          <CtaLink
-            href={`#${sectionIds.audit}`}
-            event="cta_clicked"
-            eventProps={{ location: "problem" }}
-            variant="link"
-            size="inline"
-            className="text-[16px]"
-          >
-            Join the waitlist
-            <span aria-hidden>→</span>
-          </CtaLink>
-        </div>
       </div>
     </section>
   );
