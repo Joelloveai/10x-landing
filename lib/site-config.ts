@@ -25,7 +25,7 @@ export const siteConfig = {
     primary: "Start 7-Day Free Trial",
     primaryShort: "Start 7-Day Free Trial",
     secondary: "See How It Works",
-    demo: "Or book a 15-minute demo",
+    demo: "Book a 30-Min Google Meet",
     formSubmit: "Talk to our sales team",
     microcopy: "7 days free. Full access. We set it up with you.",
     app: "Open app",

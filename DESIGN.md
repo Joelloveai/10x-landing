@@ -73,7 +73,7 @@ Calm only: no flashes, zooms or moving backgrounds. The single exception to "no 
 - Server Components by default; client only for interaction.
 - Content in `lib/`: `site-config.ts` (contact, CTAs, chapters), `businesses.ts` (five business types), `pricing.ts`, `testimonials.ts` (verbatim, never edit), `faq.ts`.
 - Logo mark: `lib/brand.ts`, rendered via `Logo` / `LogoMark`. White on dark; never recolor or redraw.
-- CTA routing: one primary action, "Start 7-Day Free Trial", the only filled button above the fold. It goes to `siteConfig.signupUrl`. A text link under it books a 15-minute demo. `#audit` is a single sales contact form with one mode. Every other action is a text link. Nav carries text links for Open app and Sign in.
+- CTA routing: one primary action, "Start 7-Day Free Trial", the only filled button above the fold. It goes to `siteConfig.signupUrl`. A text link under it books a 30-Min Google Meet. The final CTA repeats it as a large filled button (below the fold). `#audit` is a single sales contact form with one mode. Every other action is a text link. Nav carries text links for Open app and Sign in.
 
 ## 8. Words
 

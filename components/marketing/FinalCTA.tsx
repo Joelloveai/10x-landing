@@ -30,7 +30,7 @@ export function FinalCTA({ children }: { children: ReactNode }) {
         </SectionItem>
         <SectionItem>
           <p className="text-lead mx-auto mt-5 max-w-xl text-secondary">
-            Leave your WhatsApp number. We will message you. No obligation.
+            Ready to stop losing leads? Let's set up your account together on a 30-minute Google Meet.
           </p>
         </SectionItem>
         <SectionItem className="mt-9 flex justify-center">
@@ -38,12 +38,13 @@ export function FinalCTA({ children }: { children: ReactNode }) {
             {/* Depth shadow sits on a wrapper so it never fights the button's own classes. */}
             <div className="rounded-full shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_14px_28px_-10px_rgba(37,99,235,0.55),0_30px_60px_-20px_rgba(0,0,0,0.9)]">
               <CtaLink
-                href={`#${AUDIT_FORM_ID}`}
+                href={siteConfig.demoUrl}
                 event="cta_clicked"
                 eventProps={{ location: "final_cta" }}
                 size="lg"
+                className="h-16 px-9 text-[18px] sm:h-[72px] sm:px-12 sm:text-[20px]"
               >
-                {siteConfig.cta.formSubmit}
+                {siteConfig.cta.demo}
                 <ArrowRight className="size-4" aria-hidden />
               </CtaLink>
             </div>

@@ -82,6 +82,7 @@ export function Hero() {
             eventProps={{ location: "hero_demo" }}
             variant="link"
             size="inline"
+            className="text-[16px] font-medium"
           >
             {siteConfig.cta.demo}
           </CtaLink>
